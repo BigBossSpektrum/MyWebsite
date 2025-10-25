@@ -1,0 +1,83 @@
+# Python
+*.py[cod]
+__pycache__/
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+bin/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+.Python
+*.manifest
+*.spec
+pip-log.txt
+.coverage
+.tox/
+nosetests.xml
+.pytest_cache/
+coverage.xml
+*.cover
+htmlcov/
+
+# Django
+*.log
+*.pot
+*.pyc
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+local_settings.py
+
+# Virtual Environment
+env/
+venv/
+ENV/
+.env
+.venv
+env.bak/
+venv.bak/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Database backups
+*.sql
+*.sqlite3-backup
+
+# Compiled static files
+*.css.map
+*.js.map
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Django migration files
+*/migrations/*.py
+!*/migrations/__init__.py
+
+# Node modules (if using any JavaScript tools)
+node_modules/
+npm-debug.log
+
+# Local development settings
+dev_settings.py

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Zultech{% endblock %}</title>
+    {% load static %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/app_website/sidebar.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <nav class="sidebar">
+        <div>
+            <a href="#">Dashboard</a>
+            <a href="#">Productos</a>
+            <a href="#">Categorías</a>
+            <a href="#">Carrito</a>
+            <a href="#">Mis Pedidos</a>
+            <a href="#">Perfil</a>
+            <a href="#">Configuración</a>
+            {% if user.is_authenticated %}
+                <a href="#">Cerrar Sesión</a>
+            {% else %}
+                <a href="#">Iniciar Sesión</a>
+                <a href="#">Registrarse</a>
+            {% endif %}
+        </div>
+    </nav>
+    <div class="main-content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

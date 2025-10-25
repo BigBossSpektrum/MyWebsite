@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Inicio - Zultech{% endblock %}
+
+{% block content %}
+<div class="dashboard-content">
+    <h1>Bienvenido a Zultech</h1>
+    <div class="dashboard-stats">
+        <div class="stat-card">
+            <h3>Productos Disponibles</h3>
+            <p>{{ total_products|default:"0" }}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Pedidos Pendientes</h3>
+            <p>{{ pending_orders|default:"0" }}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Productos en Carrito</h3>
+            <p>{{ cart_items|default:"0" }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .dashboard-content {
+        padding: 20px;
+    }
+    
+    .dashboard-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-top: 30px;
+    }
+    
+    .stat-card {
+        background: #1a1a1a;
+        padding: 20px;
+        border-radius: 12px;
+        color: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .stat-card h3 {
+        margin: 0 0 10px 0;
+        font-size: 1.2em;
+        color: #ffd700;
+    }
+    
+    .stat-card p {
+        margin: 0;
+        font-size: 2em;
+        font-weight: 800;
+    }
+</style>
+{% endblock %}
