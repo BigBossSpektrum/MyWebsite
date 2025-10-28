@@ -83,24 +83,24 @@ WSGI_APPLICATION = 'Zultech_main.wsgi.application'
 # SQLite configuration
 # Default Database configuration using SQLite.
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 # Alternatively, you can use dj_database_url for more complex configurations.
 # Uncomment the following lines and adjust the connection string as needed.
 # Db to Render configuration
 
-DATABASES = {
-    'default': dj_database_url.config(
-        # Replace this value with your local database's connection string.
-        default='postgresql://postgres:postgres@localhost:5432/Zultech_db',
-        conn_max_age=600
-    )
-}
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         # Replace this value with your local database's connection string.
+#         default='postgresql://postgres:postgres@localhost:5432/Zultech_db',
+#         conn_max_age=600
+#     )
+# }
 
 
 # Password validation

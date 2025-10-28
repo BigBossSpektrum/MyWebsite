@@ -1,3 +1,7 @@
+* {
+    font-family: 'Orbitron', sans-serif;
+}
+
 .login-container {
     min-height: 100vh;
     width: 100%;
@@ -104,6 +108,35 @@
     border-color: rgba(255, 255, 255, 0.3);
     color: #ffffff;
 }
+
+.back {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.back:hover {
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transform: scale(1.05);
+}
+
+.back img {
+    width: 24px;
+    height: 24px;
+}
+
+
 
 .forgot-password {
     color: rgba(255, 255, 255, 0.7);
