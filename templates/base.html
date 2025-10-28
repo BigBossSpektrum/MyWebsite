@@ -5,16 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Zultech{% endblock %}</title>
     {% load static %}
+    {% static "static/img/logos/" %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/app_website/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app_website/footer.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
 <body>
     <nav class="sidebar">
         <div>
-            <a href="#">Dashboard</a>
+            <a href="{% url 'Dashboard' %}">Dashboard</a>
             <a href="#">Productos</a>
             <a href="#">Categorías</a>
             <a href="#">Carrito</a>
@@ -22,10 +24,10 @@
             <a href="#">Perfil</a>
             <a href="#">Configuración</a>
             {% if user.is_authenticated %}
-                <a href="#">Cerrar Sesión</a>
+                <a href="{% url 'logout' %}">Cerrar Sesión</a>
             {% else %}
-                <a href="#">Iniciar Sesión</a>
-                <a href="#">Registrarse</a>
+                <a href="{% url 'login' %}">Iniciar Sesión</a>
+                <a href="{% url 'register' %}">Registrarse</a>
             {% endif %}
         </div>
     </nav>
@@ -35,5 +37,41 @@
     </div>
 
     {% block extra_js %}{% endblock %}
+<footer>
+  <div class="footer-content">
+    <div class="footer-brands">
+      <div class="footer-brands-track">
+        <!-- Primer grupo -->
+        <img src="{% static 'img/logos/dahua.png' %}" alt="Dahua">
+        <img src="{% static 'img/logos/hikvision.png' %}" alt="Hikvision">
+        <img src="{% static 'img/logos/imou.png' %}" alt="Imou">
+        <img src="{% static 'img/logos/asus.png' %}" alt="Asus">
+        <img src="{% static 'img/logos/hp.png' %}" alt="HP">
+        <img src="{% static 'img/logos/dell.png' %}" alt="Dell">
+        <img src="{% static 'img/logos/acer.png' %}" alt="Acer">
+        <img src="{% static 'img/logos/pysecure.png' %}" alt="PySecure Systems">
+        <img src="{% static 'img/logos/dsc.png' %}" alt="DSC">
+        <img src="{% static 'img/logos/intelbras.png' %}" alt="Intelbras">
+        <img src="{% static 'img/logos/hangroy.svg' %}" alt="Hangroy">
+
+        <!-- Segundo grupo (idéntico al primero) -->
+        <img src="{% static 'img/logos/dahua.png' %}" alt="Dahua">
+        <img src="{% static 'img/logos/hikvision.png' %}" alt="Hikvision">
+        <img src="{% static 'img/logos/imou.png' %}" alt="Imou">
+        <img src="{% static 'img/logos/asus.png' %}" alt="Asus">
+        <img src="{% static 'img/logos/hp.png' %}" alt="HP">
+        <img src="{% static 'img/logos/dell.png' %}" alt="Dell">
+        <img src="{% static 'img/logos/acer.png' %}" alt="Acer">
+        <img src="{% static 'img/logos/pysecure.png' %}" alt="PySecure Systems">
+        <img src="{% static 'img/logos/dsc.png' %}" alt="DSC">
+        <img src="{% static 'img/logos/intelbras.png' %}" alt="Intelbras">
+        <img src="{% static 'img/logos/hangroy.svg' %}" alt="Hangroy">
+      </div>
+    </div>
+    <div class="footer-text">
+      © 2025 PySecure Systems — Todos los derechos reservados
+    </div>
+  </div>
+</footer>
 </body>
 </html>
