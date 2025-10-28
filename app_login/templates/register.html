@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="text-center mb-0">Registro de Usuario</h3>
+                </div>
+                <div class="card-body p-4">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <!-- Información básica -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.username.id_for_label }}" class="form-label">Usuario *</label>
+                                {{ form.username.errors }}
+                                <input type="text" name="{{ form.username.name }}" 
+                                       class="form-control {% if form.username.errors %}is-invalid{% endif %}"
+                                       id="{{ form.username.id_for_label }}" required>
+                                <div class="invalid-feedback">
+                                    Por favor elige un nombre de usuario
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.email.id_for_label }}" class="form-label">Correo Electrónico *</label>
+                                {{ form.email.errors }}
+                                <input type="email" name="{{ form.email.name }}"
+                                       class="form-control {% if form.email.errors %}is-invalid{% endif %}"
+                                       id="{{ form.email.id_for_label }}" required>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.first_name.id_for_label }}" class="form-label">Nombre *</label>
+                                {{ form.first_name.errors }}
+                                <input type="text" name="{{ form.first_name.name }}"
+                                       class="form-control {% if form.first_name.errors %}is-invalid{% endif %}"
+                                       id="{{ form.first_name.id_for_label }}" required>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.last_name.id_for_label }}" class="form-label">Apellido *</label>
+                                {{ form.last_name.errors }}
+                                <input type="text" name="{{ form.last_name.name }}"
+                                       class="form-control {% if form.last_name.errors %}is-invalid{% endif %}"
+                                       id="{{ form.last_name.id_for_label }}" required>
+                            </div>
+
+                            <!-- Contraseñas -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.password1.id_for_label }}" class="form-label">Contraseña *</label>
+                                {{ form.password1.errors }}
+                                <input type="password" name="{{ form.password1.name }}"
+                                       class="form-control {% if form.password1.errors %}is-invalid{% endif %}"
+                                       id="{{ form.password1.id_for_label }}" required>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.password2.id_for_label }}" class="form-label">Confirmar Contraseña *</label>
+                                {{ form.password2.errors }}
+                                <input type="password" name="{{ form.password2.name }}"
+                                       class="form-control {% if form.password2.errors %}is-invalid{% endif %}"
+                                       id="{{ form.password2.id_for_label }}" required>
+                            </div>
+
+                            <!-- Información adicional -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.phone_number.id_for_label }}" class="form-label">Teléfono</label>
+                                {{ form.phone_number }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.date_of_birth.id_for_label }}" class="form-label">Fecha de Nacimiento</label>
+                                {{ form.date_of_birth }}
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label for="{{ form.address.id_for_label }}" class="form-label">Dirección</label>
+                                {{ form.address }}
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.city.id_for_label }}" class="form-label">Ciudad</label>
+                                {{ form.city }}
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.state.id_for_label }}" class="form-label">Estado/Provincia</label>
+                                {{ form.state }}
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.postal_code.id_for_label }}" class="form-label">Código Postal</label>
+                                {{ form.postal_code }}
+                            </div>
+
+                            <div class="col-12 mb-4">
+                                <label for="{{ form.profile_picture.id_for_label }}" class="form-label">Foto de Perfil</label>
+                                {{ form.profile_picture }}
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-user-plus me-2"></i>Crear Cuenta
+                            </button>
+                            <a href="{% url 'login' %}" class="btn btn-outline-secondary">
+                                ¿Ya tienes cuenta? Inicia Sesión
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+// Validación de formulario Bootstrap
+(function () {
+    'use strict'
+    var forms = document.querySelectorAll('.needs-validation')
+    Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+})()
+</script>
+{% endblock %}
+{% endblock %}
