@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Panel de Administración - Zultech{% endblock %}
+
+{% block content %}
+<div class="dashboard-content">
+    <h1>Panel de Administración - Zultech</h1>
+    <div class="dashboard-stats">
+        <div class="stat-card">
+            <h3>Usuarios Totales</h3>
+            <p>{{ total_users|default:"0" }}</p>
+            <a href="{% url 'admin_users' %}" class="admin-link">Gestionar Usuarios</a>
+        </div>
+        <div class="stat-card">
+            <h3>Productos</h3>
+            <p>{{ total_products|default:"0" }}</p>
+            <a href="#" class="admin-link">Gestionar Productos</a>
+        </div>
+        <div class="stat-card">
+            <h3>Pedidos Pendientes</h3>
+            <p>{{ pending_orders|default:"0" }}</p>
+            <a href="#" class="admin-link">Ver Pedidos</a>
+        </div>
+    </div>
+
+    <div class="admin-sections mt-5">
+        <div class="section-grid">
+            <div class="admin-section">
+                <h3>Últimos Usuarios Registrados</h3>
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover">
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Fecha</th>
+                                <th>Tipo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in latest_users %}
+                            <tr>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.date_joined|date:"d/m/Y" }}</td>
+                                <td>{{ user.get_role_display }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <h3>Últimos Pedidos</h3>
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Cliente</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in latest_orders %}
+                            <tr>
+                                <td>{{ order.id }}</td>
+                                <td>{{ order.user.username }}</td>
+                                <td>{{ order.get_status_display }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}

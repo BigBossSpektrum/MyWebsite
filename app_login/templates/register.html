@@ -1,23 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+{% extends 'base.html' %}
 {% load static %}
 
+{% block title %}Crear Cuenta - Zultech{% endblock %}
 
-<link rel="stylesheet" href="{% static 'css/login_app/login.css' %}">
+{% block content %}
 
 <div class="login-container">
     <div class="login-card">
         <div class="login-header">
-            <a class="back" href="{% url 'login' %}">
-                <img src="{% static 'img/home.png' %}" alt="btn-back">
-            </a>
             <h3>Crear Cuenta en Zultech</h3>
+            <p class="text-muted">Regístrate para comenzar a comprar</p>
         </div>
 
         <div class="login-body">
@@ -159,5 +151,28 @@
         })
 })()
 </script>
-</body>
-</html>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Validación de formulario Bootstrap
+(function () {
+    'use strict'
+    var forms = document.querySelectorAll('.needs-validation')
+    Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+})()
+</script>
+{% endblock %}

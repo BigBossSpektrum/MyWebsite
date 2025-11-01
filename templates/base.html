@@ -16,12 +16,12 @@
 <body>
     <nav class="sidebar">
       <div>
-        <a href="{% url 'Dashboard' %}">
+        <a href="{% url 'user_home' %}">
             <img src="{% static 'img/logos/zultech_logo.png' %}" alt="Zultech Logo" class="logo">
         </a>
       </div>
         <div>
-            <a href="{% url 'Dashboard' %}">Dashboard</a>
+            <a href="{% url 'user_home' %}">Dashboard</a>
             <a href="#">Productos</a>
             <a href="#">Categorías</a>
             <a href="#">Carrito</a>
@@ -31,7 +31,7 @@
               <a href="#">Perfil</a>
             {% endif %}
 
-            {% if user == admin %}
+            {% if user.is_admin %}
               <a href="#">Configuración</a>
             {% endif %}
 
