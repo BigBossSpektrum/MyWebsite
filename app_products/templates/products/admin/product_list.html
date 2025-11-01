@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Administrar Productos{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Administrar Productos</h2>
+        <a href="{% url 'products:admin_product_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Nuevo Producto
+        </a>
+    </div>
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <!-- Filtros -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row">
+                <div class="col-md-4">
+                    <label for="category">Categoría</label>
+                    <select name="category" id="category" class="form-control">
+                        <option value="">Todas las categorías</option>
+                        {% for cat in categories %}
+                        <option value="{{ cat.id }}" {% if selected_category == cat.id %}selected{% endif %}>
+                            {{ cat.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="search">Buscar</label>
+                    <input type="text" name="search" id="search" class="form-control" value="{{ search_query }}">
+                </div>
+                <div class="col-md-4">
+                    <label>&nbsp;</label>
+                    <button type="submit" class="btn btn-primary d-block">Filtrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Lista de Productos -->
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th>Nombre</th>
+                    <th>Categoría</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>
+                        {% if product.images.exists %}
+                        <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" style="max-height: 50px;">
+                        {% else %}
+                        <img src="{% static 'img/no-image.png' %}" alt="No image" style="max-height: 50px;">
+                        {% endif %}
+                    </td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.category.name }}</td>
+                    <td>${{ product.price }}</td>
+                    <td>{{ product.stock }}</td>
+                    <td>
+                        <span class="badge {% if product.available %}badge-success{% else %}badge-danger{% endif %}">
+                            {% if product.available %}Activo{% else %}Inactivo{% endif %}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a href="{% url 'products:admin_product_edit' product.id %}" class="btn btn-sm btn-info">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="{% url 'products:admin_product_images' product.id %}" class="btn btn-sm btn-warning">
+                                <i class="fas fa-images"></i>
+                            </a>
+                            <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" 
+                                    data-target="#deleteModal{{ product.id }}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+
+                        <!-- Modal de Eliminación -->
+                        <div class="modal fade" id="deleteModal{{ product.id }}" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Confirmar Eliminación</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        ¿Estás seguro de que deseas eliminar el producto "{{ product.name }}"?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                        <form method="post" action="{% url 'products:admin_product_delete' product.id %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center">No hay productos disponibles</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginación -->
+    {% if products.has_other_pages %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if products.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ products.previous_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Anterior</a>
+            </li>
+            {% endif %}
+
+            {% for num in products.paginator.page_range %}
+            <li class="page-item {% if products.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">{{ num }}</a>
+            </li>
+            {% endfor %}
+
+            {% if products.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ products.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Siguiente</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}
