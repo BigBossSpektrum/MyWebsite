@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Panel de Órdenes{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Panel de Órdenes</h2>
+
+    <!-- Filtros -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="status">Estado</label>
+                        <select name="status" id="status" class="form-control">
+                            <option value="">Todos los estados</option>
+                            <option value="pending" {% if selected_status == 'pending' %}selected{% endif %}>Pendiente</option>
+                            <option value="processing" {% if selected_status == 'processing' %}selected{% endif %}>En Proceso</option>
+                            <option value="shipped" {% if selected_status == 'shipped' %}selected{% endif %}>Enviado</option>
+                            <option value="delivered" {% if selected_status == 'delivered' %}selected{% endif %}>Entregado</option>
+                            <option value="completed" {% if selected_status == 'completed' %}selected{% endif %}>Completado</option>
+                            <option value="cancelled" {% if selected_status == 'cancelled' %}selected{% endif %}>Cancelado</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="search">Buscar</label>
+                        <input type="text" name="search" id="search" class="form-control" 
+                               value="{{ search_query }}" placeholder="ID de orden o email del cliente">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>&nbsp;</label>
+                        <button type="submit" class="btn btn-primary d-block w-100">Filtrar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Lista de Órdenes -->
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Cliente</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th>Total</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>{{ order.id|truncatechars:8 }}</td>
+                    <td>{{ order.user.get_full_name|default:order.user.email }}</td>
+                    <td>{{ order.created_at|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        <span class="badge {% if order.status == 'completed' %}badge-success
+                                         {% elif order.status == 'cancelled' %}badge-danger
+                                         {% elif order.status == 'processing' %}badge-info
+                                         {% elif order.status == 'shipped' %}badge-primary
+                                         {% else %}badge-warning{% endif %}">
+                            {{ order.get_status_display }}
+                        </span>
+                    </td>
+                    <td>${{ order.total }}</td>
+                    <td>
+                        <a href="{% url 'orders:admin_order_detail' order.id %}" class="btn btn-info btn-sm">
+                            Ver Detalles
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">No se encontraron órdenes</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginación -->
+    {% if orders.has_other_pages %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if orders.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ orders.previous_page_number }}{% if selected_status %}&status={{ selected_status }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">
+                    Anterior
+                </a>
+            </li>
+            {% endif %}
+
+            {% for num in orders.paginator.page_range %}
+            <li class="page-item {% if orders.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}{% if selected_status %}&status={{ selected_status }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">
+                    {{ num }}
+                </a>
+            </li>
+            {% endfor %}
+
+            {% if orders.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ orders.next_page_number }}{% if selected_status %}&status={{ selected_status }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">
+                    Siguiente
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

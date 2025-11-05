@@ -1,0 +1,39 @@
+.profile-info {
+    padding: 15px;
+}
+
+.profile-info p {
+    margin-bottom: 10px;
+}
+
+.profile-info strong {
+    color: #ffd700;
+}
+
+.profile-section {
+    background: #1a1a1a;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.profile-section h3 {
+    color: #ffd700;
+    margin-bottom: 20px;
+}
+
+.form-control {
+    background-color: #2d2d2d;
+    border: 1px solid #444;
+    color: white;
+}
+
+.form-control:focus {
+    background-color: #2d2d2d;
+    border-color: #ffd700;
+    color: white;
+}
+
+.form-label {
+    color: #ffd700;
+}

@@ -22,8 +22,15 @@ class CustomUserCreationForm(UserCreationForm):
         widget=forms.FileInput(attrs={'class': 'form-control'})
     )
 
+    role = forms.ChoiceField(
+        choices=CustomUser.Roles.choices,
+        initial=CustomUser.Roles.CUSTOMER,
+        label='Tipo de Usuario',
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
     class Meta:
         model = CustomUser
-        fields = ('username', 'Correo_Electronico', 'first_name', 'last_name', 'Telefono',
+        fields = ('username', 'Correo_Electronico', 'first_name', 'last_name', 'role', 'Telefono',
                  'Direccion', 'Ciudad', 'Estado', 'Codigo_Postal', 'Fecha_de_Nacimiento',
                  'Foto_Perfil', 'password1', 'password2')

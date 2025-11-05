@@ -1,26 +1,39 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/login_app/login.css' %}">
-{% endblock %}
+{% block title %}Iniciar Sesión - Zultech{% endblock %}
 
 {% block content %}
 <div class="login-container">
     <div class="login-card">
         <div class="login-header">
             <h3>Bienvenido a Zultech</h3>
+            <p class="text-muted">Inicia sesión para acceder a tu cuenta</p>
         </div>
         <div class="login-body">
-                    {% if messages %}
-                        {% for message in messages %}
-                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                                {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                    
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div id="role-selector" class="mb-4">
+                <div class="role-toggle">
+                    <input type="radio" class="btn-check" name="user-role" id="customer-role" value="CUSTOMER" checked>
+                    <label class="btn btn-outline-primary" for="customer-role">
+                        <i class="fas fa-user me-2"></i>Cliente
+                    </label>
+
+                    <input type="radio" class="btn-check" name="user-role" id="admin-role" value="ADMIN">
+                    <label class="btn btn-outline-warning" for="admin-role">
+                        <i class="fas fa-user-shield me-2"></i>Administrador
+                    </label>
+                </div>
+            </div>
+
                     <form method="POST" class="needs-validation" novalidate>
                         {% csrf_token %}
                         <div class="form-floating mb-3">
@@ -30,7 +43,7 @@
                                 Por favor ingresa tu nombre de usuario o correo electrónico
                             </div>
                         </div>
-                        
+
                         <div class="form-floating mb-4">
                             <input type="password" name="password" class="form-control" id="password" placeholder="Contraseña" required>
                             <label for="password">Contraseña</label>
@@ -53,8 +66,10 @@
                             </div>
                         </div>
 
+                        <input type="hidden" name="expected_role" id="expected-role" value="CUSTOMER">
+
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg">
+                            <button type="submit" class="btn btn-primary btn-lg" id="login-button">
                                 <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
                             </button>
                             <a href="{% url 'register' %}" class="btn btn-outline-secondary">
@@ -65,7 +80,10 @@
         </div>
     </div>
 </div>
+{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
 {% endblock %}
 
 {% block extra_js %}
@@ -85,5 +103,22 @@
             }, false)
         })
 })()
+
+// Manejo del selector de rol
+document.querySelectorAll('input[name="user-role"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        const expectedRole = this.value;
+        document.getElementById('expected-role').value = expectedRole;
+        
+        const loginButton = document.getElementById('login-button');
+        if (expectedRole === 'ADMIN') {
+            loginButton.classList.remove('btn-primary');
+            loginButton.classList.add('btn-warning');
+        } else {
+            loginButton.classList.remove('btn-warning');
+            loginButton.classList.add('btn-primary');
+        }
+    });
+});
 </script>
 {% endblock %}
