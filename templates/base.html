@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/app_website/sidebar.css' %}">
     <link rel="stylesheet" href="{% static 'css/app_website/footer.css' %}">
     {% block extra_css %}{% endblock %}
@@ -23,7 +24,7 @@
         <div>
             <a href="{% url 'user_home' %}">Dashboard</a>
             <a href="{% url 'products:product_list' %}">Productos</a>
-            <a href="{% url 'products:cart' %}">
+            <a href="{% url 'cart:cart_view' %}">
                 Carrito
                 {% if cart_count %}
                 <span class="badge badge-pill badge-primary">{{ cart_count }}</span>

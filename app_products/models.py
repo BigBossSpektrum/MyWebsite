@@ -42,6 +42,21 @@ class Product(models.Model):
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
+    def get_main_image(self):
+        """Retorna la imagen principal del producto o la primera imagen disponible"""
+        main_image = self.images.filter(is_main=True).first()
+        if main_image:
+            return main_image
+        return self.images.first()
+
+    def get_image_count(self):
+        """Retorna el número total de imágenes del producto"""
+        return self.images.count()
+
+    def has_multiple_images(self):
+        """Verifica si el producto tiene múltiples imágenes"""
+        return self.images.count() > 1
+
     def __str__(self):
         return self.name
 

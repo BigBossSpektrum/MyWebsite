@@ -4,6 +4,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.core.paginator import Paginator
 from .models import Category, Product, ProductImage
+from .forms import ProductForm
 from django.http import JsonResponse
 from django.db.models import Q
 
@@ -29,76 +30,26 @@ def product_list(request):
     }
     return render(request, 'products/product_list.html', context)
 
-def cart_view(request):
-    cart = request.session.get('cart', {})
-    cart_items = []
-    total = 0
+def product_detail(request, slug):
+    """Vista detallada de un producto con galería de imágenes"""
+    product = get_object_or_404(Product, slug=slug)
+    images = product.images.all()
+    main_image = product.get_main_image()
     
-    for product_id, quantity in cart.items():
-        try:
-            product = Product.objects.get(id=product_id)
-            subtotal = product.price * quantity
-            cart_items.append({
-                'product': product,
-                'quantity': quantity,
-                'subtotal': subtotal
-            })
-            total += subtotal
-        except Product.DoesNotExist:
-            pass
+    # Productos relacionados de la misma categoría
+    related_products = Product.objects.filter(
+        category=product.category,
+        available=True,
+        stock__gt=0
+    ).exclude(id=product.id)[:4]
     
-    return render(request, 'products/cart.html', {
-        'cart_items': cart_items,
-        'cart_total': total
-    })
-
-def add_to_cart(request, product_id):
-    if request.method == 'POST':
-        quantity = int(request.POST.get('quantity', 1))
-        product = get_object_or_404(Product, id=product_id)
-        
-        if product.stock < quantity:
-            messages.error(request, 'No hay suficiente stock disponible.')
-            return redirect('products:product_list')
-        
-        cart = request.session.get('cart', {})
-        cart[str(product_id)] = quantity
-        request.session['cart'] = cart
-        messages.success(request, 'Producto agregado al carrito.')
-        
-    return redirect('products:cart')
-
-def update_cart(request, product_id):
-    if request.method == 'POST':
-        quantity = int(request.POST.get('quantity', 0))
-        cart = request.session.get('cart', {})
-        
-        if quantity > 0:
-            product = get_object_or_404(Product, id=product_id)
-            if product.stock < quantity:
-                messages.error(request, 'No hay suficiente stock disponible.')
-            else:
-                cart[str(product_id)] = quantity
-        else:
-            cart.pop(str(product_id), None)
-            
-        request.session['cart'] = cart
-        
-    return redirect('products:cart')
-
-def remove_from_cart(request, product_id):
-    if request.method == 'POST':
-        cart = request.session.get('cart', {})
-        cart.pop(str(product_id), None)
-        request.session['cart'] = cart
-        messages.success(request, 'Producto eliminado del carrito.')
-    return redirect('products:cart')
-
-@login_required
-def checkout(request):
-    # Esta función se implementará cuando creemos el sistema de pedidos
-    messages.info(request, 'La función de checkout estará disponible próximamente.')
-    return redirect('products:cart')
+    context = {
+        'product': product,
+        'images': images,
+        'main_image': main_image,
+        'related_products': related_products,
+    }
+    return render(request, 'products/product_detail.html', context)
 
 # Vistas para administradores
 @staff_member_required
@@ -133,17 +84,27 @@ def admin_product_list(request):
 @staff_member_required
 def admin_product_create(request):
     if request.method == 'POST':
-        # Implementar la lógica de creación
-        pass
-    return render(request, 'products/admin/product_form.html')
+        form = ProductForm(request.POST)
+        if form.is_valid():
+            product = form.save()
+            messages.success(request, f'Producto "{product.name}" creado exitosamente.')
+            return redirect('products:admin_product_list')
+    else:
+        form = ProductForm()
+    return render(request, 'products/admin/product_form.html', {'form': form})
 
 @staff_member_required
 def admin_product_edit(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     if request.method == 'POST':
-        # Implementar la lógica de edición
-        pass
-    return render(request, 'products/admin/product_form.html', {'product': product})
+        form = ProductForm(request.POST, instance=product)
+        if form.is_valid():
+            product = form.save()
+            messages.success(request, f'Producto "{product.name}" actualizado exitosamente.')
+            return redirect('products:admin_product_list')
+    else:
+        form = ProductForm(instance=product)
+    return render(request, 'products/admin/product_form.html', {'form': form, 'product': product})
 
 @staff_member_required
 def admin_product_delete(request, product_id):
