@@ -7,7 +7,7 @@ footer {
     background: #0d0d0d;
     color: #f1f1f1;
     text-align: center;
-    padding: 10px 0;
+    padding: 2px 0;
     font-family: 'Poppins', sans-serif;
     box-shadow: 0 -2px 10px rgba(0,0,0,0.4);
     z-index: 999;
@@ -19,7 +19,7 @@ footer {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
+    gap: 1px;
 }
 
 /* === GALERÍA DE MARCAS === */
@@ -27,20 +27,20 @@ footer {
     position: relative;
     width: 100%;
     overflow: hidden;
-    height: 50px;
+    height: 25px;
 }
 
 .footer-brands-track {
     display: flex;
     align-items: center;
-    gap: 60px;
+    gap: 40px;
     width: max-content;
     animation: scrollBrands 40s linear infinite;
 }
 
 /* LOGOS INDIVIDUALES */
 .footer-brands-track img {
-    height: 40px;
+    height: 20px;
     filter: grayscale(100%) brightness(200%);
     transition: filter 0.3s ease, transform 0.3s ease;
 }
@@ -52,7 +52,7 @@ footer {
 
 /* TEXTO CENTRAL */
 .footer-text {
-    font-size: 0.9rem;
+    font-size: 0.65rem;
     color: #cfcfcf;
 }
 
@@ -69,9 +69,9 @@ footer {
 /* RESPONSIVE */
 @media (max-width: 768px) {
     .footer-brands-track img {
-        height: 30px;
+        height: 18px;
     }
     .footer-text {
-        font-size: 0.8rem;
+        font-size: 0.6rem;
     }
 }
