@@ -3,97 +3,165 @@
 
 {% block title %}Historial de Pedidos{% endblock %}
 
-{% block content %}
-<div class="container mt-4">
-    <h2>Historial de Pedidos</h2>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/orders/orders.css' %}">
+{% endblock %}
 
+{% block content %}
+<div class="orders-container">
+    <!-- Header -->
+    <div class="orders-header">
+        <h2><i class="fas fa-history"></i> Historial de Pedidos</h2>
+        <p>Consulta el estado y detalles de todos tus pedidos</p>
+    </div>
+
+    <!-- Messages -->
     {% if messages %}
-    <div class="messages">
+    <div class="messages mb-4">
         {% for message in messages %}
         <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
             {{ message }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         {% endfor %}
     </div>
     {% endif %}
 
+    <!-- Orders List -->
     {% if orders %}
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Número de Orden</th>
-                    <th>Fecha</th>
-                    <th>Estado</th>
-                    <th>Total</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for order in orders %}
-                <tr>
-                    <td>{{ order.id|truncatechars:8 }}</td>
-                    <td>{{ order.created_at|date:"d/m/Y H:i" }}</td>
-                    <td>
-                        <span class="badge {% if order.status == 'completed' %}badge-success
-                                         {% elif order.status == 'cancelled' %}badge-danger
-                                         {% elif order.status == 'processing' %}badge-info
-                                         {% elif order.status == 'shipped' %}badge-primary
-                                         {% else %}badge-warning{% endif %}">
-                            {{ order.get_status_display }}
-                        </span>
-                    </td>
-                    <td>${{ order.total }}</td>
-                    <td>
-                        <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-info btn-sm">
-                            Ver Detalles
-                        </a>
-                        {% if order.can_cancel %}
-                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" 
-                                data-target="#cancelOrderModal{{ order.id }}">
-                            Cancelar
-                        </button>
-                        
-                        <!-- Modal de Cancelación -->
-                        <div class="modal fade" id="cancelOrderModal{{ order.id }}" tabindex="-1" role="dialog">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Confirmar Cancelación</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        ¿Estás seguro de que deseas cancelar la orden #{{ order.id|truncatechars:8 }}?
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No, mantener orden</button>
-                                        <form method="post" action="{% url 'orders:cancel_order' order.id %}">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-danger">Sí, cancelar orden</button>
-                                        </form>
-                                    </div>
-                                </div>
+    <div class="orders-grid">
+        {% for order in orders %}
+        <div class="order-card">
+            <!-- Order Header -->
+            <div class="order-card-header">
+                <div class="order-info-item">
+                    <span class="order-info-label">Número de Orden</span>
+                    <span class="order-info-value order-number">#{{ order.id|truncatechars:12 }}</span>
+                </div>
+                
+                <div class="order-info-item">
+                    <span class="order-info-label">Fecha</span>
+                    <span class="order-info-value">
+                        <i class="far fa-calendar-alt"></i>
+                        {{ order.created_at|date:"d/m/Y" }}
+                    </span>
+                </div>
+                
+                <div class="order-info-item">
+                    <span class="order-info-label">Estado</span>
+                    <span class="order-status status-{{ order.status }}">
+                        {% if order.status == 'completed' or order.status == 'delivered' %}
+                            <i class="fas fa-check-circle"></i>
+                        {% elif order.status == 'cancelled' %}
+                            <i class="fas fa-times-circle"></i>
+                        {% elif order.status == 'processing' %}
+                            <i class="fas fa-cog fa-spin"></i>
+                        {% elif order.status == 'shipped' %}
+                            <i class="fas fa-shipping-fast"></i>
+                        {% else %}
+                            <i class="far fa-clock"></i>
+                        {% endif %}
+                        {{ order.get_status_display }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Order Body -->
+            <div class="order-card-body">
+                <div class="order-items-preview">
+                    {% for item in order.items.all|slice:":3" %}
+                    <div class="order-item-preview">
+                        <i class="fas fa-box"></i>
+                        <div class="order-item-info">
+                            <div class="order-item-name">
+                                {% if item.product %}
+                                    {{ item.product.name }}
+                                {% else %}
+                                    Producto no disponible
+                                {% endif %}
+                            </div>
+                            <div class="order-item-quantity">Cantidad: {{ item.quantity }}</div>
+                        </div>
+                        <div class="order-item-price">${{ item.subtotal }}</div>
+                    </div>
+                    {% endfor %}
+                    
+                    {% if order.items.count > 3 %}
+                    <div class="order-item-preview">
+                        <i class="fas fa-ellipsis-h"></i>
+                        <div class="order-item-info">
+                            <div class="order-item-name">
+                                +{{ order.items.count|add:"-3" }} producto{{ order.items.count|add:"-3"|pluralize }} más
                             </div>
                         </div>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Order Footer -->
+            <div class="order-card-footer">
+                <div class="order-total">
+                    <span class="order-total-label">Total</span>
+                    <span class="order-total-value">${{ order.total }}</span>
+                </div>
+                
+                <div class="order-actions">
+                    <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-primary">
+                        <i class="fas fa-eye"></i> Ver Detalles
+                    </a>
+                    {% if order.can_cancel %}
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" 
+                            data-bs-target="#cancelOrderModal{{ order.id }}">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Cancelación -->
+        {% if order.can_cancel %}
+        <div class="modal fade" id="cancelOrderModal{{ order.id }}" tabindex="-1" aria-labelledby="cancelOrderModalLabel{{ order.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="cancelOrderModalLabel{{ order.id }}">
+                            <i class="fas fa-exclamation-triangle"></i> Confirmar Cancelación
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>¿Estás seguro de que deseas cancelar la orden <strong>#{{ order.id|truncatechars:12 }}</strong>?</p>
+                        <p class="text-muted mb-0">Esta acción devolverá el stock de los productos a la tienda.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-arrow-left"></i> No, mantener orden
+                        </button>
+                        <form method="post" action="{% url 'orders:cancel_order' order.id %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-times-circle"></i> Sí, cancelar orden
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
     </div>
 
+    <!-- Pagination -->
     {% if orders.has_other_pages %}
-    <nav aria-label="Page navigation" class="mt-4">
+    <nav aria-label="Paginación de pedidos" class="mt-4">
         <ul class="pagination justify-content-center">
             {% if orders.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ orders.previous_page_number }}">Anterior</a>
+                <a class="page-link" href="?page={{ orders.previous_page_number }}">
+                    <i class="fas fa-chevron-left"></i> Anterior
+                </a>
             </li>
             {% endif %}
 
@@ -105,7 +173,9 @@
 
             {% if orders.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ orders.next_page_number }}">Siguiente</a>
+                <a class="page-link" href="?page={{ orders.next_page_number }}">
+                    Siguiente <i class="fas fa-chevron-right"></i>
+                </a>
             </li>
             {% endif %}
         </ul>
@@ -113,9 +183,14 @@
     {% endif %}
 
     {% else %}
-    <div class="alert alert-info">
-        No tienes pedidos en tu historial.
-        <a href="{% url 'products:product_list' %}" class="alert-link">¡Comienza a comprar!</a>
+    <!-- Empty State -->
+    <div class="orders-empty">
+        <i class="fas fa-shopping-bag"></i>
+        <h3>No tienes pedidos aún</h3>
+        <p>Cuando realices una compra, tus pedidos aparecerán aquí.</p>
+        <a href="{% url 'products:product_list' %}" class="btn btn-primary btn-lg">
+            <i class="fas fa-shopping-cart"></i> ¡Comienza a comprar!
+        </a>
     </div>
     {% endif %}
 </div>
