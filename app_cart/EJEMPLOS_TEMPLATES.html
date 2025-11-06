@@ -1,0 +1,366 @@
+<!-- 
+    EJEMPLO DE USO DEL CRUD DEL CARRITO EN PLANTILLAS
+    Este archivo muestra ejemplos de cómo usar las funciones del carrito
+-->
+
+<!-- ========================================
+     1. MOSTRAR CONTADOR EN NAVBAR (READ)
+     ======================================== -->
+<nav>
+    <a href="{% url 'cart:cart_view' %}">
+        <i class="fas fa-shopping-cart"></i>
+        Carrito
+        {% if cart_count > 0 %}
+            <span class="badge badge-danger">{{ cart_count }}</span>
+        {% endif %}
+    </a>
+</nav>
+
+
+<!-- ========================================
+     2. AGREGAR AL CARRITO - Producto Individual (CREATE)
+     ======================================== -->
+<div class="product-card">
+    <h3>{{ product.name }}</h3>
+    <p>Precio: ${{ product.price }}</p>
+    <p>Stock: {{ product.stock }}</p>
+    
+    {% if product.available and product.stock > 0 %}
+        <form method="POST" action="{% url 'cart:add_to_cart' product.id %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Cantidad:</label>
+                <input type="number" 
+                       name="quantity" 
+                       value="1" 
+                       min="1" 
+                       max="{{ product.stock }}"
+                       class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-cart-plus"></i> Agregar al Carrito
+            </button>
+        </form>
+    {% else %}
+        <button class="btn btn-secondary" disabled>No Disponible</button>
+    {% endif %}
+</div>
+
+
+<!-- ========================================
+     3. VER CARRITO COMPLETO (READ)
+     ======================================== -->
+<div class="cart-page">
+    <h1>Mi Carrito de Compras</h1>
+    
+    {% if cart_items %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Subtotal</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                <tr>
+                    <td>
+                        {% if item.product.get_main_image %}
+                            <img src="{{ item.product.get_main_image.image.url }}" 
+                                 alt="{{ item.product.name }}"
+                                 width="50">
+                        {% endif %}
+                        {{ item.product.name }}
+                    </td>
+                    <td>${{ item.product.price }}</td>
+                    <td>
+                        <!-- ACTUALIZAR CANTIDAD (UPDATE) -->
+                        <form method="POST" 
+                              action="{% url 'cart:update_cart' item.product.id %}"
+                              class="update-cart-form">
+                            {% csrf_token %}
+                            <input type="number" 
+                                   name="quantity" 
+                                   value="{{ item.quantity }}"
+                                   min="1"
+                                   max="{{ item.product.stock }}"
+                                   class="form-control form-control-sm"
+                                   style="width: 80px;">
+                            <button type="submit" class="btn btn-sm btn-success mt-1">
+                                Actualizar
+                            </button>
+                        </form>
+                    </td>
+                    <td>${{ item.get_subtotal }}</td>
+                    <td>
+                        <!-- ELIMINAR ITEM (DELETE) -->
+                        <form method="POST" 
+                              action="{% url 'cart:remove_from_cart' item.product.id %}"
+                              onsubmit="return confirm('¿Eliminar este producto?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                <i class="fas fa-trash"></i> Eliminar
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="3">Total:</th>
+                    <th colspan="2">${{ cart_total }}</th>
+                </tr>
+            </tfoot>
+        </table>
+        
+        <!-- ACCIONES DEL CARRITO -->
+        <div class="cart-actions">
+            <a href="{% url 'products:product_list' %}" class="btn btn-secondary">
+                Seguir Comprando
+            </a>
+            
+            <!-- LIMPIAR TODO EL CARRITO (DELETE) -->
+            <form method="POST" 
+                  action="{% url 'cart:clear_cart' %}" 
+                  style="display: inline;"
+                  onsubmit="return confirm('¿Vaciar todo el carrito?');">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-warning">
+                    <i class="fas fa-trash-alt"></i> Vaciar Carrito
+                </button>
+            </form>
+            
+            <a href="{% url 'cart:checkout' %}" class="btn btn-success">
+                <i class="fas fa-credit-card"></i> Proceder al Pago
+            </a>
+        </div>
+        
+    {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-shopping-cart"></i>
+            Tu carrito está vacío.
+            <a href="{% url 'products:product_list' %}">Ver productos</a>
+        </div>
+    {% endif %}
+</div>
+
+
+<!-- ========================================
+     4. MINI CARRITO EN DROPDOWN (READ)
+     ======================================== -->
+<div class="dropdown">
+    <button class="btn btn-link dropdown-toggle" 
+            type="button" 
+            id="cartDropdown" 
+            data-toggle="dropdown">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="badge badge-pill badge-danger">{{ cart_count }}</span>
+    </button>
+    
+    <div class="dropdown-menu dropdown-menu-right" style="min-width: 300px;">
+        {% if cart_items %}
+            <h6 class="dropdown-header">Productos en el carrito</h6>
+            {% for item in cart_items %}
+                <div class="dropdown-item">
+                    <div class="d-flex justify-content-between">
+                        <span>{{ item.quantity }}x {{ item.product.name }}</span>
+                        <span>${{ item.get_subtotal }}</span>
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-item">
+                <strong>Total: ${{ cart_total }}</strong>
+            </div>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item btn btn-primary text-center" 
+               href="{% url 'cart:cart_view' %}">
+                Ver Carrito Completo
+            </a>
+        {% else %}
+            <div class="dropdown-item text-muted">
+                Carrito vacío
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+
+<!-- ========================================
+     5. AGREGAR CON AJAX (CREATE - Avanzado)
+     ======================================== -->
+<form id="add-to-cart-ajax" data-product-id="{{ product.id }}">
+    {% csrf_token %}
+    <input type="number" 
+           name="quantity" 
+           value="1" 
+           min="1" 
+           max="{{ product.stock }}"
+           id="quantity-input">
+    <button type="submit" class="btn btn-primary">
+        Agregar al Carrito
+    </button>
+</form>
+
+<script>
+document.getElementById('add-to-cart-ajax').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const form = this;
+    const productId = form.dataset.productId;
+    const quantity = form.querySelector('#quantity-input').value;
+    const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+    
+    fetch(`/cart/add/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': csrfToken
+        },
+        body: `quantity=${quantity}`
+    })
+    .then(response => {
+        if (response.redirected) {
+            // Actualizar contador sin recargar
+            return fetch('/cart/api/count/');
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Actualizar badge del carrito
+        document.querySelector('.cart-badge').textContent = data.count;
+        alert('Producto agregado al carrito!');
+    })
+    .catch(error => console.error('Error:', error));
+});
+</script>
+
+
+<!-- ========================================
+     6. ACTUALIZACIÓN AUTOMÁTICA (UPDATE - Avanzado)
+     ======================================== -->
+<script>
+// Actualizar carrito automáticamente cuando cambie la cantidad
+document.querySelectorAll('.quantity-input').forEach(input => {
+    input.addEventListener('change', function() {
+        const productId = this.dataset.productId;
+        const quantity = this.value;
+        
+        // Auto-submit del formulario padre
+        this.closest('form').submit();
+    });
+});
+</script>
+
+
+<!-- ========================================
+     7. VALIDACIÓN DE STOCK EN TIEMPO REAL
+     ======================================== -->
+<input type="number" 
+       name="quantity" 
+       value="1" 
+       min="1" 
+       max="{{ product.stock }}"
+       data-max-stock="{{ product.stock }}"
+       oninput="
+           if(parseInt(this.value) > parseInt(this.dataset.maxStock)) {
+               this.value = this.dataset.maxStock;
+               alert('Stock máximo disponible: ' + this.dataset.maxStock);
+           }
+           if(parseInt(this.value) < 1) {
+               this.value = 1;
+           }
+       ">
+
+
+<!-- ========================================
+     8. BOTONES RÁPIDOS (+/-)
+     ======================================== -->
+<div class="quantity-control">
+    <button type="button" class="btn btn-sm btn-secondary" onclick="decrementQuantity(this)">
+        <i class="fas fa-minus"></i>
+    </button>
+    
+    <input type="number" 
+           name="quantity" 
+           value="{{ item.quantity }}" 
+           min="1" 
+           max="{{ item.product.stock }}"
+           readonly
+           style="width: 60px; text-align: center;">
+    
+    <button type="button" class="btn btn-sm btn-secondary" onclick="incrementQuantity(this)">
+        <i class="fas fa-plus"></i>
+    </button>
+</div>
+
+<script>
+function incrementQuantity(btn) {
+    const input = btn.previousElementSibling;
+    const max = parseInt(input.max);
+    const current = parseInt(input.value);
+    if (current < max) {
+        input.value = current + 1;
+    }
+}
+
+function decrementQuantity(btn) {
+    const input = btn.nextElementSibling;
+    const min = parseInt(input.min);
+    const current = parseInt(input.value);
+    if (current > min) {
+        input.value = current - 1;
+    }
+}
+</script>
+
+
+<!-- ========================================
+     9. MENSAJES DE CONFIRMACIÓN
+     ======================================== -->
+{% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert">
+                    <span>&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+
+<!-- ========================================
+     10. RESUMEN DEL CARRITO (Sidebar)
+     ======================================== -->
+<div class="cart-summary card">
+    <div class="card-header">
+        <h5>Resumen del Pedido</h5>
+    </div>
+    <div class="card-body">
+        <div class="d-flex justify-content-between">
+            <span>Subtotal ({{ total_items }} items):</span>
+            <span>${{ cart_total }}</span>
+        </div>
+        <div class="d-flex justify-content-between">
+            <span>Envío:</span>
+            <span>A calcular</span>
+        </div>
+        <hr>
+        <div class="d-flex justify-content-between">
+            <strong>Total:</strong>
+            <strong>${{ cart_total }}</strong>
+        </div>
+    </div>
+    <div class="card-footer">
+        <a href="{% url 'cart:checkout' %}" class="btn btn-success btn-block">
+            Proceder al Pago
+        </a>
+    </div>
+</div>

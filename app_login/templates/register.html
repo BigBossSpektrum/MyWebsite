@@ -1,12 +1,18 @@
-{% extends 'base.html' %}
 {% load static %}
-
-{% block title %}Crear Cuenta - Zultech{% endblock %}
-
-{% block content %}
-
-<div class="login-container">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Cuenta - Zultech</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+<body>
+    <div class="login-container">
     <div class="login-card">
+        <a href="{% url 'Dashboard' %}" class="btn btn-link position-absolute top-0 start-0 m-3" title="Volver al inicio">
+            <img src="{% static 'img/home.png' %}" alt="Inicio" style="width: 30px; height: 30px;">
+        </a>
         <div class="login-header">
             <h3>Crear Cuenta en Zultech</h3>
             <p class="text-muted">Regístrate para comenzar a comprar</p>
@@ -28,91 +34,139 @@
                 <div class="row">
                     <!-- Usuario -->
                     <div class="col-md-6 mb-3">
-                        <label for="{{ form.username.id_for_label }}" class="form-label">Usuario *</label>
-                        {{ form.username.errors }}
-                        <input type="text" name="{{ form.username.name }}"
-                                class="form-control {% if form.username.errors %}is-invalid{% endif %}"
-                                id="{{ form.username.id_for_label }}" required>
-                        <div class="invalid-feedback">
-                            Por favor elige un nombre de usuario.
+                        <div class="form-floating">
+                            {{ form.username.errors }}
+                            <input type="text" name="{{ form.username.name }}"
+                                    class="form-control {% if form.username.errors %}is-invalid{% endif %}"
+                                    id="{{ form.username.id_for_label }}" 
+                                    placeholder="Usuario" required>
+                            <label for="{{ form.username.id_for_label }}">Usuario *</label>
+                            <div class="invalid-feedback">
+                                Por favor elige un nombre de usuario.
+                            </div>
                         </div>
                     </div>
 
                     <!-- Correo -->
                     <div class="col-md-6 mb-3">
-                        <label for="{{ form.email.id_for_label }}" class="form-label">Correo Electrónico *</label>
-                        {{ form.email.errors }}
-                        <input type="email" name="{{ form.email.name }}"
-                                class="form-control {% if form.email.errors %}is-invalid{% endif %}"
-                                id="{{ form.email.id_for_label }}" required>
-                        <div class="invalid-feedback">
-                            Ingresa un correo electrónico válido.
+                        <div class="form-floating">
+                            {{ form.email.errors }}
+                            <input type="email" name="{{ form.email.name }}"
+                                    class="form-control {% if form.email.errors %}is-invalid{% endif %}"
+                                    id="{{ form.email.id_for_label }}" 
+                                    placeholder="Correo" required>
+                            <label for="{{ form.email.id_for_label }}">Correo Electrónico *</label>
+                            <div class="invalid-feedback">
+                                Ingresa un correo electrónico válido.
+                            </div>
                         </div>
                     </div>
 
                     <!-- Nombre y apellido -->
                     <div class="col-md-6 mb-3">
-                        <label for="{{ form.first_name.id_for_label }}" class="form-label">Nombre *</label>
-                        {{ form.first_name.errors }}
-                        <input type="text" name="{{ form.first_name.name }}"
-                                class="form-control {% if form.first_name.errors %}is-invalid{% endif %}"
-                                id="{{ form.first_name.id_for_label }}" required>
+                        <div class="form-floating">
+                            {{ form.first_name.errors }}
+                            <input type="text" name="{{ form.first_name.name }}"
+                                    class="form-control {% if form.first_name.errors %}is-invalid{% endif %}"
+                                    id="{{ form.first_name.id_for_label }}" 
+                                    placeholder="Nombre" required>
+                            <label for="{{ form.first_name.id_for_label }}">Nombre *</label>
+                        </div>
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <label for="{{ form.last_name.id_for_label }}" class="form-label">Apellido *</label>
-                        {{ form.last_name.errors }}
-                        <input type="text" name="{{ form.last_name.name }}"
-                                class="form-control {% if form.last_name.errors %}is-invalid{% endif %}"
-                                id="{{ form.last_name.id_for_label }}" required>
+                        <div class="form-floating">
+                            {{ form.last_name.errors }}
+                            <input type="text" name="{{ form.last_name.name }}"
+                                    class="form-control {% if form.last_name.errors %}is-invalid{% endif %}"
+                                    id="{{ form.last_name.id_for_label }}" 
+                                    placeholder="Apellido" required>
+                            <label for="{{ form.last_name.id_for_label }}">Apellido *</label>
+                        </div>
                     </div>
 
                     <!-- Contraseñas -->
                     <div class="col-md-6 mb-3">
-                        <label for="{{ form.password1.id_for_label }}" class="form-label">Contraseña *</label>
-                        {{ form.password1.errors }}
-                        <input type="password" name="{{ form.password1.name }}"
-                                class="form-control {% if form.password1.errors %}is-invalid{% endif %}"
-                                id="{{ form.password1.id_for_label }}" required>
+                        <div class="form-floating">
+                            {{ form.password1.errors }}
+                            <input type="password" name="{{ form.password1.name }}"
+                                    class="form-control {% if form.password1.errors %}is-invalid{% endif %}"
+                                    id="{{ form.password1.id_for_label }}" 
+                                    placeholder="Contraseña" required>
+                            <label for="{{ form.password1.id_for_label }}">Contraseña *</label>
+                        </div>
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <label for="{{ form.password2.id_for_label }}" class="form-label">Confirmar Contraseña *</label>
-                        {{ form.password2.errors }}
-                        <input type="password" name="{{ form.password2.name }}"
-                                class="form-control {% if form.password2.errors %}is-invalid{% endif %}"
-                                id="{{ form.password2.id_for_label }}" required>
+                        <div class="form-floating">
+                            {{ form.password2.errors }}
+                            <input type="password" name="{{ form.password2.name }}"
+                                    class="form-control {% if form.password2.errors %}is-invalid{% endif %}"
+                                    id="{{ form.password2.id_for_label }}" 
+                                    placeholder="Confirmar Contraseña" required>
+                            <label for="{{ form.password2.id_for_label }}">Confirmar Contraseña *</label>
+                        </div>
                     </div>
 
                     <!-- Información adicional -->
                     <div class="col-md-6 mb-3">
-                        <label for="{{ form.phone_number.id_for_label }}" class="form-label">Teléfono</label>
-                        {{ form.phone_number }}
+                        <div class="form-floating">
+                            <input type="tel" name="{{ form.phone_number.name }}"
+                                    class="form-control"
+                                    id="{{ form.phone_number.id_for_label }}" 
+                                    placeholder="Teléfono">
+                            <label for="{{ form.phone_number.id_for_label }}">Teléfono</label>
+                        </div>
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <label for="{{ form.date_of_birth.id_for_label }}" class="form-label">Fecha de Nacimiento</label>
-                        {{ form.date_of_birth }}
+                        <div class="form-floating">
+                            <input type="date" name="{{ form.date_of_birth.name }}"
+                                    class="form-control"
+                                    id="{{ form.date_of_birth.id_for_label }}" 
+                                    placeholder="Fecha de Nacimiento">
+                            <label for="{{ form.date_of_birth.id_for_label }}">Fecha de Nacimiento</label>
+                        </div>
                     </div>
 
                     <div class="col-12 mb-3">
-                        <label for="{{ form.address.id_for_label }}" class="form-label">Dirección</label>
-                        {{ form.address }}
+                        <div class="form-floating">
+                            <input type="text" name="{{ form.address.name }}"
+                                    class="form-control"
+                                    id="{{ form.address.id_for_label }}" 
+                                    placeholder="Dirección">
+                            <label for="{{ form.address.id_for_label }}">Dirección</label>
+                        </div>
                     </div>
 
                     <div class="col-md-4 mb-3">
-                        <label for="{{ form.city.id_for_label }}" class="form-label">Ciudad</label>
-                        {{ form.city }}
+                        <div class="form-floating">
+                            <input type="text" name="{{ form.city.name }}"
+                                    class="form-control"
+                                    id="{{ form.city.id_for_label }}" 
+                                    placeholder="Ciudad">
+                            <label for="{{ form.city.id_for_label }}">Ciudad</label>
+                        </div>
                     </div>
 
                     <div class="col-md-4 mb-3">
-                        <label for="{{ form.state.id_for_label }}" class="form-label">Estado/Provincia</label>
-                        {{ form.state }}
+                        <div class="form-floating">
+                            <input type="text" name="{{ form.state.name }}"
+                                    class="form-control"
+                                    id="{{ form.state.id_for_label }}" 
+                                    placeholder="Estado">
+                            <label for="{{ form.state.id_for_label }}">Estado/Provincia</label>
+                        </div>
                     </div>
 
                     <div class="col-md-4 mb-3">
-                        <label for="{{ form.postal_code.id_for_label }}" class="form-label">Código Postal</label>
-                        {{ form.postal_code }}
+                        <div class="form-floating">
+                            <input type="text" name="{{ form.postal_code.name }}"
+                                    class="form-control"
+                                    id="{{ form.postal_code.id_for_label }}" 
+                                    placeholder="Código Postal">
+                            <label for="{{ form.postal_code.id_for_label }}">Código Postal</label>
+                        </div>
                     </div>
 
                     <div class="col-12 mb-4">
@@ -151,28 +205,5 @@
         })
 })()
 </script>
-{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/login.css' %}">
-{% endblock %}
-
-{% block extra_js %}
-<script>
-// Validación de formulario Bootstrap
-(function () {
-    'use strict'
-    var forms = document.querySelectorAll('.needs-validation')
-    Array.prototype.slice.call(forms)
-        .forEach(function (form) {
-            form.addEventListener('submit', function (event) {
-                if (!form.checkValidity()) {
-                    event.preventDefault()
-                    event.stopPropagation()
-                }
-                form.classList.add('was-validated')
-            }, false)
-        })
-})()
-</script>
-{% endblock %}
+</body>
+</html>

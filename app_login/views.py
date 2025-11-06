@@ -3,6 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import PermissionDenied
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from functools import wraps
 from .forms import CustomUserCreationForm
 from .models import CustomUser
@@ -17,7 +19,9 @@ def admin_required(function):
 
 def login_view(request):
     if request.user.is_authenticated:
-        return redirect('dashboard')
+        if request.user.is_admin():
+            return HttpResponseRedirect(reverse('admin_dashboard'))
+        return HttpResponseRedirect(reverse('customer_dashboard'))
     
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -42,11 +46,14 @@ def login_view(request):
             
             next_url = request.GET.get('next')
             if next_url:
-                return redirect(next_url)
+                return HttpResponseRedirect(next_url)
+            
             messages.success(request, f'¡Bienvenido de nuevo, {user.get_full_name() or user.username}!')
+            
+            # Redirección directa según el rol
             if user.is_admin():
-                return redirect('admin_dashboard')
-            return redirect('customer_dashboard')
+                return HttpResponseRedirect(reverse('admin_dashboard'))
+            return HttpResponseRedirect(reverse('customer_dashboard'))
         else:
             messages.error(request, 'Usuario o contraseña incorrectos')
     
@@ -54,7 +61,7 @@ def login_view(request):
 
 def register_view(request):
     if request.user.is_authenticated:
-        return redirect('home')
+        return HttpResponseRedirect(reverse('home'))
         
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST, request.FILES)
@@ -62,9 +69,11 @@ def register_view(request):
             user = form.save()
             login(request, user)
             messages.success(request, '¡Registro exitoso! Bienvenido a Zultech.')
+            
+            # Redirección directa según el rol
             if user.is_admin():
-                return redirect('admin_dashboard')
-            return redirect('customer_dashboard')
+                return HttpResponseRedirect(reverse('admin_dashboard'))
+            return HttpResponseRedirect(reverse('customer_dashboard'))
     else:
         form = CustomUserCreationForm()
     
@@ -73,7 +82,7 @@ def register_view(request):
 def logout_view(request):
     logout(request)
     messages.info(request, 'Has cerrado sesión exitosamente.')
-    return redirect('login')
+    return HttpResponseRedirect(reverse('login'))
 
 @login_required
 def profile_view(request):
@@ -82,7 +91,7 @@ def profile_view(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Perfil actualizado exitosamente.')
-            return redirect('profile')
+            return HttpResponseRedirect(reverse('profile'))
     else:
         form = CustomUserCreationForm(instance=request.user)
     
@@ -103,7 +112,7 @@ def admin_dashboard_view(request):
 @login_required
 def customer_dashboard_view(request):
     if request.user.is_admin():
-        return redirect('admin_dashboard')
+        return HttpResponseRedirect(reverse('admin_dashboard'))
     # Datos para el dashboard de cliente
     context = {
         'total_orders': 0,  # TODO: Obtener pedidos del cliente
@@ -120,5 +129,5 @@ def admin_users_view(request):
 @login_required
 def redirect_to_dashboard(request):
     if request.user.is_admin():
-        return redirect('admin_dashboard')
-    return redirect('customer_dashboard')
+        return HttpResponseRedirect(reverse('admin_dashboard'))
+    return HttpResponseRedirect(reverse('customer_dashboard'))
