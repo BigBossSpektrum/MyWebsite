@@ -3,143 +3,202 @@
 
 {% block title %}Detalles del Pedido{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/orders/orders.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2>Detalles del Pedido #{{ order.id|truncatechars:8 }}</h2>
-                <a href="{% url 'orders:order_history' %}" class="btn btn-secondary">
-                    Volver al Historial
-                </a>
-            </div>
+<div class="order-detail-container">
+    <!-- Header -->
+    <div class="order-detail-header">
+        <h2>
+            <i class="fas fa-file-invoice"></i> 
+            Pedido #{{ order.id|truncatechars:12 }}
+        </h2>
+        <a href="{% url 'orders:order_history' %}" class="btn btn-secondary btn-back">
+            <i class="fas fa-arrow-left"></i> Volver al Historial
+        </a>
+    </div>
 
-            {% if messages %}
-            <div class="messages mb-4">
-                {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                {% endfor %}
-            </div>
-            {% endif %}
+    <!-- Messages -->
+    {% if messages %}
+    <div class="messages mb-4">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h4>Información del Pedido</h4>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <p><strong>Estado:</strong> 
-                                <span class="badge {% if order.status == 'completed' %}badge-success
-                                                 {% elif order.status == 'cancelled' %}badge-danger
-                                                 {% elif order.status == 'processing' %}badge-info
-                                                 {% elif order.status == 'shipped' %}badge-primary
-                                                 {% else %}badge-warning{% endif %}">
+    <!-- Order Detail Grid -->
+    <div class="order-detail-grid">
+        <!-- Order Information Card -->
+        <div class="order-info-card">
+            <div class="order-info-card-header">
+                <h4><i class="fas fa-info-circle"></i> Información del Pedido</h4>
+            </div>
+            <div class="order-info-card-body">
+                <div class="order-info-grid">
+                    <div class="order-info-section">
+                        <div class="order-info-row">
+                            <strong><i class="fas fa-tag"></i> Estado</strong>
+                            <span>
+                                <span class="order-status status-{{ order.status }}">
+                                    {% if order.status == 'completed' or order.status == 'delivered' %}
+                                        <i class="fas fa-check-circle"></i>
+                                    {% elif order.status == 'cancelled' %}
+                                        <i class="fas fa-times-circle"></i>
+                                    {% elif order.status == 'processing' %}
+                                        <i class="fas fa-cog fa-spin"></i>
+                                    {% elif order.status == 'shipped' %}
+                                        <i class="fas fa-shipping-fast"></i>
+                                    {% else %}
+                                        <i class="far fa-clock"></i>
+                                    {% endif %}
                                     {{ order.get_status_display }}
                                 </span>
-                            </p>
-                            <p><strong>Fecha de Orden:</strong> {{ order.created_at|date:"d/m/Y H:i" }}</p>
-                            {% if order.completed_at %}
-                            <p><strong>Fecha de Completado:</strong> {{ order.completed_at|date:"d/m/Y H:i" }}</p>
-                            {% endif %}
-                            {% if order.cancelled_at %}
-                            <p><strong>Fecha de Cancelación:</strong> {{ order.cancelled_at|date:"d/m/Y H:i" }}</p>
-                            {% endif %}
+                            </span>
                         </div>
-                        <div class="col-md-6">
-                            <p><strong>Cliente:</strong> {{ order.user.get_full_name|default:order.user.email }}</p>
-                            <p><strong>Email:</strong> {{ order.user.email }}</p>
+                        
+                        <div class="order-info-row">
+                            <strong><i class="far fa-calendar-alt"></i> Fecha de Orden</strong>
+                            <span>{{ order.created_at|date:"d/m/Y H:i" }}</span>
+                        </div>
+                        
+                        {% if order.completed_at %}
+                        <div class="order-info-row">
+                            <strong><i class="fas fa-check"></i> Fecha de Completado</strong>
+                            <span>{{ order.completed_at|date:"d/m/Y H:i" }}</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if order.cancelled_at %}
+                        <div class="order-info-row">
+                            <strong><i class="fas fa-times"></i> Fecha de Cancelación</strong>
+                            <span>{{ order.cancelled_at|date:"d/m/Y H:i" }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="order-info-section">
+                        <div class="order-info-row">
+                            <strong><i class="fas fa-user"></i> Cliente</strong>
+                            <span>{{ order.user.get_full_name|default:order.user.username }}</span>
+                        </div>
+                        
+                        <div class="order-info-row">
+                            <strong><i class="fas fa-envelope"></i> Email</strong>
+                            <span>{{ order.user.email }}</span>
+                        </div>
+                        
+                        <div class="order-info-row">
+                            <strong><i class="fas fa-hashtag"></i> ID de Orden</strong>
+                            <span class="order-number">{{ order.id }}</span>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h4>Productos</h4>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Producto</th>
-                                    <th>Precio Unitario</th>
-                                    <th>Cantidad</th>
-                                    <th>Subtotal</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for item in order.items.all %}
-                                <tr>
-                                    <td>
-                                        {% if item.product %}
-                                            {{ item.product.name }}
-                                        {% else %}
-                                            Producto no disponible
-                                        {% endif %}
-                                    </td>
-                                    <td>${{ item.price }}</td>
-                                    <td>{{ item.quantity }}</td>
-                                    <td>${{ item.subtotal }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="3" class="text-right"><strong>Total:</strong></td>
-                                    <td><strong>${{ order.total }}</strong></td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            {% if order.can_cancel %}
-            <div class="card mb-4">
-                <div class="card-header bg-danger text-white">
-                    <h4 class="mb-0">Cancelar Orden</h4>
-                </div>
-                <div class="card-body">
-                    <p>Si deseas cancelar esta orden, puedes hacerlo ahora. Una vez que la orden esté en proceso, no podrá ser cancelada.</p>
-                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#cancelOrderModal">
-                        Cancelar Orden
-                    </button>
-                </div>
-            </div>
-
-            <!-- Modal de Cancelación -->
-            <div class="modal fade" id="cancelOrderModal" tabindex="-1" role="dialog">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Confirmar Cancelación</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <p>¿Estás seguro de que deseas cancelar esta orden?</p>
-                            <p><strong>Esta acción no se puede deshacer.</strong></p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No, mantener orden</button>
-                            <form method="post" action="{% url 'orders:cancel_order' order.id %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger">Sí, cancelar orden</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
         </div>
+
+        <!-- Order Items Card -->
+        <div class="order-items-card">
+            <div class="order-items-card-header">
+                <h4><i class="fas fa-shopping-bag"></i> Productos del Pedido</h4>
+            </div>
+            <div class="order-items-card-body">
+                <div class="order-items-list">
+                    {% for item in order.items.all %}
+                    <div class="order-item-row">
+                        <div class="order-item-product">
+                            <i class="fas fa-box"></i>
+                            <div class="order-item-product-info">
+                                <div class="order-item-product-name">
+                                    {% if item.product %}
+                                        {{ item.product.name }}
+                                    {% else %}
+                                        Producto no disponible
+                                    {% endif %}
+                                </div>
+                                {% if not item.product %}
+                                <div class="order-item-product-note">
+                                    Este producto ya no está disponible
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="order-item-price">${{ item.price }}</div>
+                        <div class="order-item-quantity">× {{ item.quantity }}</div>
+                        <div class="order-item-subtotal">${{ item.subtotal }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="order-total-section">
+                    <div class="order-total-row">
+                        <strong>Total del Pedido:</strong>
+                        <span class="total-amount">${{ order.total }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cancel Order Card -->
+        {% if order.can_cancel %}
+        <div class="cancel-order-card">
+            <div class="cancel-order-card-header">
+                <h4><i class="fas fa-exclamation-triangle"></i> Cancelar Orden</h4>
+            </div>
+            <div class="cancel-order-card-body">
+                <p>Si deseas cancelar esta orden, puedes hacerlo ahora. Una vez que la orden esté en proceso, no podrá ser cancelada.</p>
+                <p class="text-muted">
+                    <i class="fas fa-info-circle"></i> 
+                    Al cancelar, el stock de los productos se devolverá automáticamente a la tienda.
+                </p>
+                <button type="button" class="btn btn-danger btn-lg" data-bs-toggle="modal" data-bs-target="#cancelOrderModal">
+                    <i class="fas fa-times-circle"></i> Cancelar Orden
+                </button>
+            </div>
+        </div>
+
+        <!-- Modal de Cancelación -->
+        <div class="modal fade" id="cancelOrderModal" tabindex="-1" aria-labelledby="cancelOrderModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="cancelOrderModalLabel">
+                            <i class="fas fa-exclamation-triangle text-danger"></i> Confirmar Cancelación
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>¿Estás seguro de que deseas cancelar esta orden?</p>
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <strong>Esta acción no se puede deshacer.</strong>
+                        </div>
+                        <ul class="mb-0">
+                            <li>Los productos volverán al inventario</li>
+                            <li>No se procesará el pago</li>
+                            <li>Recibirás una confirmación por email</li>
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-arrow-left"></i> No, mantener orden
+                        </button>
+                        <form method="post" action="{% url 'orders:cancel_order' order.id %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-times-circle"></i> Sí, cancelar orden
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

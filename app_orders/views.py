@@ -36,14 +36,14 @@ def create_order(request):
     
     if not cart:
         messages.error(request, 'Tu carrito está vacío.')
-        return redirect('products:cart')
+        return redirect('cart:cart_view')
     
     # Verificar stock antes de crear la orden
     for product_id, quantity in cart.items():
         product = get_object_or_404(Product, id=product_id)
         if product.stock < quantity:
             messages.error(request, f'No hay suficiente stock de {product.name}.')
-            return redirect('products:cart')
+            return redirect('cart:cart_view')
     
     # Crear la orden
     order = Order.objects.create(user=request.user, status='pending')

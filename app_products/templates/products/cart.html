@@ -3,73 +3,177 @@
 
 {% block title %}Carrito de Compras{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/cart/cart.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="container mt-4">
-    <h2>Tu Carrito de Compras</h2>
+<div class="container mt-4 mb-5">
+    <div class="cart-header mb-4">
+        <h2><i class="fas fa-shopping-cart"></i> Mi Carrito de Compras</h2>
+        {% if cart_items %}
+        <p class="text-muted">Tienes {{ cart_items|length }} producto{{ cart_items|length|pluralize }} en tu carrito</p>
+        {% endif %}
+    </div>
     
     {% if cart_items %}
-    <div class="table-responsive">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Producto</th>
-                    <th>Imagen</th>
-                    <th>Precio</th>
-                    <th>Cantidad</th>
-                    <th>Subtotal</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
+    <div class="row">
+        <!-- Lista de Productos -->
+        <div class="col-lg-8">
+            <div class="cart-items-container">
                 {% for item in cart_items %}
-                <tr>
-                    <td>{{ item.product.name }}</td>
-                    <td>
-                        {% if item.product.images.exists %}
-                        <img src="{{ item.product.images.first.image.url }}" alt="{{ item.product.name }}" style="max-height: 50px;">
-                        {% else %}
-                        <img src="{% static 'img/no-image.png' %}" alt="No image" style="max-height: 50px;">
-                        {% endif %}
-                    </td>
-                    <td>${{ item.product.price }}</td>
-                    <td>
-                        <form method="post" action="{% url 'cart:update_cart' item.product.id %}" class="d-flex align-items-center">
-                            {% csrf_token %}
-                            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="{{ item.product.stock }}" 
-                                   class="form-control form-control-sm" style="width: 70px;">
-                            <button type="submit" class="btn btn-sm btn-outline-primary ml-2">Actualizar</button>
-                        </form>
-                    </td>
-                    <td>${{ item.subtotal }}</td>
-                    <td>
-                        <form method="post" action="{% url 'cart:remove_from_cart' item.product.id %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
-                        </form>
-                    </td>
-                </tr>
+                <div class="cart-item-card">
+                    <div class="cart-item-grid">
+                        <!-- Imagen del Producto -->
+                        <div class="cart-item-image">
+                            <a href="{% url 'products:product_detail' item.product.slug %}">
+                                {% with main_image=item.product.get_main_image %}
+                                    {% if main_image %}
+                                        <img src="{{ main_image.image.url }}" alt="{{ item.product.name }}" onerror="this.onerror=null; this.src='{% static 'img/products/no-image.svg' %}';">
+                                    {% else %}
+                                        <img src="{% static 'img/products/no-image.svg' %}" alt="{{ item.product.name }}">
+                                    {% endif %}
+                                {% endwith %}
+                            </a>
+                        </div>
+                        
+                        <!-- Información del Producto -->
+                        <div class="cart-item-info">
+                            <h5 class="cart-item-title">
+                                <a href="{% url 'products:product_detail' item.product.slug %}">
+                                    {{ item.product.name }}
+                                </a>
+                            </h5>
+                            <p class="cart-item-category">
+                                <i class="fas fa-tag"></i> {{ item.product.category.name }}
+                            </p>
+                            <p class="cart-item-stock text-muted">
+                                Stock disponible: {{ item.product.stock }} unidades
+                            </p>
+                        </div>
+                        
+                        <!-- Precio Unitario -->
+                        <div class="cart-item-price">
+                            <span class="price-label">Precio</span>
+                            <span class="price-value">${{ item.product.price }}</span>
+                        </div>
+                        
+                        <!-- Cantidad -->
+                        <div class="cart-item-quantity">
+                            <span class="quantity-label">Cantidad</span>
+                            <form method="post" action="{% url 'cart:update_cart' item.product.id %}" class="quantity-form">
+                                {% csrf_token %}
+                                <div class="quantity-controls">
+                                    <button type="button" class="quantity-btn" onclick="decrementQuantity(this)">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <input type="number" 
+                                           name="quantity" 
+                                           value="{{ item.quantity }}" 
+                                           min="1" 
+                                           max="{{ item.product.stock }}" 
+                                           class="quantity-input"
+                                           onchange="this.form.submit()">
+                                    <button type="button" class="quantity-btn" onclick="incrementQuantity(this, {{ item.product.stock }})">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <!-- Subtotal -->
+                        <div class="cart-item-subtotal">
+                            <span class="subtotal-label">Subtotal</span>
+                            <span class="subtotal-value">${{ item.subtotal }}</span>
+                        </div>
+                        
+                        <!-- Botón Eliminar -->
+                        <div class="cart-item-remove">
+                            <form method="post" action="{% url 'cart:remove_from_cart' item.product.id %}" onsubmit="return confirm('¿Eliminar este producto del carrito?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-remove" title="Eliminar del carrito">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
                 {% endfor %}
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="4" class="text-right"><strong>Total:</strong></td>
-                    <td><strong>${{ cart_total }}</strong></td>
-                    <td></td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
-
-    <div class="row mt-4">
-        <div class="col text-right">
-            <a href="{% url 'products:product_list' %}" class="btn btn-secondary">Seguir Comprando</a>
-            <a href="{% url 'cart:checkout' %}" class="btn btn-success">Proceder al Pago</a>
+            </div>
+        </div>
+        
+        <!-- Resumen del Pedido -->
+        <div class="col-lg-4">
+            <div class="cart-summary-card sticky-top">
+                <h4 class="summary-title">Resumen del Pedido</h4>
+                
+                <div class="summary-details">
+                    <div class="summary-row">
+                        <span>Productos ({{ cart_items|length }})</span>
+                        <span>${{ cart_total }}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Envío</span>
+                        <span class="text-success">Gratis</span>
+                    </div>
+                    <hr>
+                    <div class="summary-row summary-total">
+                        <strong>Total</strong>
+                        <strong class="total-amount">${{ cart_total }}</strong>
+                    </div>
+                </div>
+                
+                <div class="summary-actions">
+                    <a href="{% url 'cart:checkout' %}" class="btn btn-success btn-lg w-100 mb-3">
+                        <i class="fas fa-lock"></i> Proceder al Pago
+                    </a>
+                    <a href="{% url 'products:product_list' %}" class="btn btn-outline-secondary w-100">
+                        <i class="fas fa-arrow-left"></i> Seguir Comprando
+                    </a>
+                </div>
+                
+                <div class="summary-info mt-3">
+                    <p class="text-muted text-center mb-2">
+                        <i class="fas fa-shield-alt"></i> Compra 100% Segura
+                    </p>
+                    <p class="text-muted text-center">
+                        <i class="fas fa-truck"></i> Envío gratis en pedidos superiores a $50
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
     {% else %}
-    <div class="alert alert-info">
-        Tu carrito está vacío. <a href="{% url 'products:product_list' %}">Ir a comprar</a>
+    <div class="empty-cart">
+        <div class="empty-cart-icon">
+            <i class="fas fa-shopping-cart"></i>
+        </div>
+        <h3>Tu carrito está vacío</h3>
+        <p class="text-muted">Agrega productos a tu carrito para continuar</p>
+        <a href="{% url 'products:product_list' %}" class="btn btn-primary btn-lg mt-3">
+            <i class="fas fa-store"></i> Ir a la Tienda
+        </a>
     </div>
     {% endif %}
 </div>
+
+<script>
+function incrementQuantity(button, maxStock) {
+    const input = button.parentElement.querySelector('.quantity-input');
+    const currentValue = parseInt(input.value);
+    if (currentValue < maxStock) {
+        input.value = currentValue + 1;
+        input.form.submit();
+    }
+}
+
+function decrementQuantity(button) {
+    const input = button.parentElement.querySelector('.quantity-input');
+    const currentValue = parseInt(input.value);
+    if (currentValue > 1) {
+        input.value = currentValue - 1;
+        input.form.submit();
+    }
+}
+</script>
 {% endblock %}
