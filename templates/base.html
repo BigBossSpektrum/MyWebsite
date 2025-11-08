@@ -26,6 +26,7 @@
             <div class="navbar-links">
                 <a href="{% url 'Dashboard' %}">Dashboard</a>
                 <a href="{% url 'products:product_list' %}">Productos</a>
+                <a href="{% url 'contact' %}">Contáctanos</a>
                 <a href="{% url 'cart:cart_view' %}" class="cart-link">
                     Carrito
                     {% if cart_count %}
