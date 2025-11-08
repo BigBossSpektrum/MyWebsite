@@ -5,13 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear Cuenta - Zultech</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
 </head>
 <body>
     <div class="login-container">
     <div class="login-card">
-        <a href="{% url 'Dashboard' %}" class="btn btn-link position-absolute top-0 start-0 m-3" title="Volver al inicio">
-            <img src="{% static 'img/home.png' %}" alt="Inicio" style="width: 30px; height: 30px;">
+        <a href="{% url 'login:user_home' %}" class="btn btn-link" title="Volver al inicio">
+            <i class="fas fa-home" style="font-size: 20px;"></i>
         </a>
         <div class="login-header">
             <h3>Crear Cuenta en Zultech</h3>
@@ -179,7 +183,7 @@
                     <button type="submit" class="btn btn-primary btn-lg">
                         <i class="fas fa-user-plus me-2"></i>Crear Cuenta
                     </button>
-                    <a href="{% url 'login' %}" class="btn btn-outline-secondary">
+                    <a href="{% url 'login:login' %}" class="btn btn-outline-secondary">
                         <i class="fas fa-sign-in-alt me-2"></i>Ya tengo una cuenta
                     </a>
                 </div>

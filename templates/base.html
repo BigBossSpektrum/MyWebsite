@@ -18,13 +18,13 @@
     <nav class="navbar">
         <div class="navbar-container">
             <div class="navbar-logo">
-                <a href="{% url 'user_home' %}">
+                <a href="{% url 'Dashboard' %}">
                     <img src="{% static 'img/logos/zultech_logo.png' %}" alt="Zultech Logo" class="logo">
                 </a>
             </div>
-            
+
             <div class="navbar-links">
-                <a href="{% url 'user_home' %}">Dashboard</a>
+                <a href="{% url 'Dashboard' %}">Dashboard</a>
                 <a href="{% url 'products:product_list' %}">Productos</a>
                 <a href="{% url 'cart:cart_view' %}" class="cart-link">
                     Carrito
@@ -34,7 +34,7 @@
                 </a>
                 {% if user.is_authenticated %}
                     <a href="{% url 'orders:order_history' %}">Mis Pedidos</a>
-                    <a href="{% url 'profile' %}">Perfil</a>
+                    <a href="{% url 'login:profile' %}">Perfil</a>
                 {% endif %}
 
                 {% if user.is_staff or user.is_superuser %}
@@ -45,10 +45,10 @@
 
             <div class="navbar-auth">
                 {% if user.is_authenticated %}
-                    <a href="{% url 'logout' %}" class="btn-logout">Cerrar Sesión</a>
+                    <a href="{% url 'login:logout' %}" class="btn-logout">Cerrar Sesión</a>
                 {% else %}
-                    <a href="{% url 'login' %}" class="btn-login">Iniciar Sesión</a>
-                    <a href="{% url 'register' %}" class="btn-register">Registrarse</a>
+                    <a href="{% url 'login:login' %}" class="btn-login">Iniciar Sesión</a>
+                    <a href="{% url 'login:register' %}" class="btn-register">Registrarse</a>
                 {% endif %}
             </div>
         </div>
