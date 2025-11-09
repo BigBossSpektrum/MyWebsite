@@ -4,9 +4,9 @@ html, body {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #121212;
-    color: #ffffff;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    color: #333333;
+    font-family: 'Orbitron', 'Segoe UI', sans-serif;
 }
 
 .login-container {
@@ -15,89 +15,81 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: url('../img/login-bg.png') center center / cover no-repeat;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-}
-
-.login-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
-    z-index: 1;
+    padding: 20px;
 }
 
 .login-card {
     position: relative;
     z-index: 2;
-    background: rgba(26, 26, 26, 0.6);
-    backdrop-filter: blur(15px);
+    background: #ffffff;
     border-radius: 20px;
-    padding: 2rem 4rem;
+    padding: 2.5rem 3rem;
     width: 90%;
     max-width: 650px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
     max-height: 85vh;
     overflow: auto;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
 }
 
 .login-header {
     text-align: center;
-    margin-bottom: 1.2rem;
+    margin-bottom: 1.5rem;
     padding-top: 0.5rem;
 }
 
 .login-header h3 {
-    color: #ffd700;
-    margin-bottom: 0.3rem;
-    font-size: 1.75rem;
-    font-weight: 500;
+    color: #333333;
+    margin-bottom: 0.5rem;
+    font-size: 2rem;
+    font-weight: 700;
     letter-spacing: 0.5px;
 }
 
 .login-header p {
-    margin-bottom: 0;
+    color: #666666;
+    font-size: 0.95rem;
 }
 
 .role-toggle {
     display: flex;
     gap: 1rem;
     justify-content: center;
-    margin-bottom: 1.2rem;
+    margin-bottom: 1.5rem;
 }
 
 .role-toggle .btn {
     flex: 1;
-    padding: 10px 20px;
-    border-radius: 12px;
+    padding: 12px 24px;
+    border-radius: 10px;
     border-width: 2px;
     transition: all 0.3s ease;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 0.95rem;
 }
 
 .role-toggle .btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
 }
 
 .btn-check:checked + .btn-outline-primary {
-    background-color: #0d6efd;
+    background-color: #333333;
+    border-color: #333333;
     color: white;
-    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.4);
+    box-shadow: 0 4px 15px rgba(51, 51, 51, 0.3);
 }
 
 .btn-check:checked + .btn-outline-warning {
     background-color: #ffd700;
-    color: black;
+    border-color: #ffd700;
+    color: #333333;
     box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
 }
 
@@ -106,92 +98,128 @@ html, body {
 }
 
 .form-floating input {
-    background-color: rgba(45, 45, 45, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: white;
-    height: 2.5rem;
-    border-radius: 12px;
+    background-color: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    color: #333333;
+    height: 1   rem;
+    border-radius: 10px;
     transition: all 0.3s ease;
-    width: 60%;
+    padding: 1rem 1rem;
 }
 
 /* Inputs específicos de username y password más anchos */
 #username,
 #password {
-    min-width: 50%;
-    padding: 0.75rem 1.5rem;
+    width: 100%;
+    padding: 1rem 1.25rem;
 }
 
 .form-floating label {
-    color: #bbb;
-    padding: 1rem 0.75rem;
+    color: #666666;
+    padding: 1rem 1rem;
+    font-weight: 500;
 }
 
 .form-floating input:focus {
-    background-color: rgba(45, 45, 45, 0.8);
-    color: white;
+    background-color: #ffffff;
+    color: #333333;
     border-color: #ffd700;
     box-shadow: 0 0 0 0.25rem rgba(255, 215, 0, 0.15);
     transform: translateY(-1px);
 }
 
+.form-floating input::placeholder {
+    color: #999999;
+}
+
 .forgot-password {
-    color: #ffd700;
+    color: #666666;
     text-decoration: none;
     transition: all 0.3s ease;
     font-size: 0.9rem;
+    font-weight: 500;
 }
 
 .forgot-password:hover {
-    color: #fff;
+    color: #ffd700;
     text-decoration: underline;
 }
 
 .btn {
-    border-radius: 12px;
+    border-radius: 10px;
     transition: all 0.3s ease;
-    font-weight: 500;
-    padding: 10px 20px;
+    font-weight: 600;
+    padding: 12px 24px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
 }
 
 .btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .btn-primary {
-    background-color: #0d6efd;
+    background-color: #333333;
     border: none;
+    color: #ffffff;
 }
 
 .btn-primary:hover {
-    background-color: #0b5ed7;
+    background-color: #555555;
 }
 
 .btn-warning {
     background-color: #ffd700;
-    color: black;
+    color: #333333;
     border: none;
 }
 
 .btn-warning:hover {
-    background-color: #e6c200;
+    background-color: #ffed4e;
 }
 
 .btn-outline-secondary {
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    color: white;
+    border: 2px solid #e0e0e0;
+    color: #333333;
+    background-color: transparent;
 }
 
 .btn-outline-secondary:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.5);
-    color: white;
+    background-color: #f8f9fa;
+    border-color: #333333;
+    color: #333333;
+}
+
+.btn-outline-primary {
+    border: 2px solid #333333;
+    color: #333333;
+    background-color: transparent;
+}
+
+.btn-outline-primary:hover {
+    background-color: #333333;
+    border-color: #333333;
+    color: #ffffff;
+}
+
+.btn-outline-warning {
+    border: 2px solid #ffd700;
+    color: #333333;
+    background-color: transparent;
+}
+
+.btn-outline-warning:hover {
+    background-color: #ffd700;
+    border-color: #ffd700;
+    color: #333333;
 }
 
 .form-check-input {
     border-radius: 6px;
     transition: all 0.3s ease;
+    border: 2px solid #e0e0e0;
 }
 
 .form-check-input:checked {
@@ -199,15 +227,46 @@ html, body {
     border-color: #ffd700;
 }
 
+.form-check-label {
+    color: #666666;
+    font-weight: 500;
+}
+
 .alert {
     border-radius: 12px;
     border: none;
-    backdrop-filter: blur(10px);
+    margin-bottom: 1.5rem;
 }
 
 .text-muted {
-    color: #bbb !important;
+    color: #666666 !important;
     font-size: 0.95rem;
+}
+
+/* Botón de volver al inicio */
+.btn-link {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    padding: 8px;
+    border-radius: 50%;
+    background-color: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+.btn-link:hover {
+    background-color: #ffd700;
+    border-color: #ffd700;
+    transform: scale(1.1);
+}
+
+.btn-link img {
+    filter: brightness(0.3);
+}
+
+.btn-link:hover img {
+    filter: brightness(0);
 }
 
 /* Responsive Design */

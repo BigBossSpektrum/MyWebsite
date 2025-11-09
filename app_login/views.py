@@ -20,8 +20,8 @@ def admin_required(function):
 def login_view(request):
     if request.user.is_authenticated:
         if request.user.is_admin():
-            return HttpResponseRedirect(reverse('admin_dashboard'))
-        return HttpResponseRedirect(reverse('customer_dashboard'))
+            return HttpResponseRedirect(reverse('login:admin_dashboard'))
+        return HttpResponseRedirect(reverse('login:customer_dashboard'))
     
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -52,8 +52,8 @@ def login_view(request):
             
             # Redirección directa según el rol
             if user.is_admin():
-                return HttpResponseRedirect(reverse('admin_dashboard'))
-            return HttpResponseRedirect(reverse('customer_dashboard'))
+                return HttpResponseRedirect(reverse('login:admin_dashboard'))
+            return HttpResponseRedirect(reverse('login:customer_dashboard'))
         else:
             messages.error(request, 'Usuario o contraseña incorrectos')
     
@@ -61,7 +61,7 @@ def login_view(request):
 
 def register_view(request):
     if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('home'))
+        return HttpResponseRedirect(reverse('Dashboard'))
         
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST, request.FILES)
@@ -72,8 +72,8 @@ def register_view(request):
             
             # Redirección directa según el rol
             if user.is_admin():
-                return HttpResponseRedirect(reverse('admin_dashboard'))
-            return HttpResponseRedirect(reverse('customer_dashboard'))
+                return HttpResponseRedirect(reverse('login:admin_dashboard'))
+            return HttpResponseRedirect(reverse('login:customer_dashboard'))
     else:
         form = CustomUserCreationForm()
     
@@ -82,7 +82,7 @@ def register_view(request):
 def logout_view(request):
     logout(request)
     messages.info(request, 'Has cerrado sesión exitosamente.')
-    return HttpResponseRedirect(reverse('login'))
+    return HttpResponseRedirect(reverse('login:login'))
 
 @login_required
 def profile_view(request):
@@ -91,7 +91,7 @@ def profile_view(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Perfil actualizado exitosamente.')
-            return HttpResponseRedirect(reverse('profile'))
+            return HttpResponseRedirect(reverse('login:profile'))
     else:
         form = CustomUserCreationForm(instance=request.user)
     
@@ -129,5 +129,5 @@ def admin_users_view(request):
 @login_required
 def redirect_to_dashboard(request):
     if request.user.is_admin():
-        return HttpResponseRedirect(reverse('admin_dashboard'))
-    return HttpResponseRedirect(reverse('customer_dashboard'))
+        return HttpResponseRedirect(reverse('login:admin_dashboard'))
+    return HttpResponseRedirect(reverse('login:customer_dashboard'))

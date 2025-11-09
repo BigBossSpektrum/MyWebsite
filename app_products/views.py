@@ -87,7 +87,22 @@ def admin_product_create(request):
         form = ProductForm(request.POST)
         if form.is_valid():
             product = form.save()
-            messages.success(request, f'Producto "{product.name}" creado exitosamente.')
+            
+            # Procesar imágenes si se subieron
+            images = request.FILES.getlist('product_images')
+            if images:
+                for idx, image in enumerate(images):
+                    # La primera imagen será la principal
+                    is_main = (idx == 0)
+                    ProductImage.objects.create(
+                        product=product,
+                        image=image,
+                        is_main=is_main
+                    )
+                messages.success(request, f'Producto "{product.name}" creado exitosamente con {len(images)} imagen(es).')
+            else:
+                messages.success(request, f'Producto "{product.name}" creado exitosamente.')
+            
             return redirect('products:admin_product_list')
     else:
         form = ProductForm()
@@ -100,11 +115,29 @@ def admin_product_edit(request, product_id):
         form = ProductForm(request.POST, instance=product)
         if form.is_valid():
             product = form.save()
-            messages.success(request, f'Producto "{product.name}" actualizado exitosamente.')
+            
+            # Procesar imágenes nuevas si se subieron
+            images = request.FILES.getlist('product_images')
+            if images:
+                for image in images:
+                    # Si no hay imágenes principales, hacer la primera como principal
+                    is_main = not product.images.filter(is_main=True).exists()
+                    ProductImage.objects.create(
+                        product=product,
+                        image=image,
+                        is_main=is_main
+                    )
+                messages.success(request, f'Producto "{product.name}" actualizado exitosamente con {len(images)} nueva(s) imagen(es).')
+            else:
+                messages.success(request, f'Producto "{product.name}" actualizado exitosamente.')
+            
             return redirect('products:admin_product_list')
     else:
         form = ProductForm(instance=product)
-    return render(request, 'products/admin/product_form.html', {'form': form, 'product': product})
+    return render(request, 'products/admin/product_form.html', {
+        'form': form, 
+        'product': product
+    })
 
 @staff_member_required
 def admin_product_delete(request, product_id):

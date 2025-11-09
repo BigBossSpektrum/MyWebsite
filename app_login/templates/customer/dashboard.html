@@ -65,7 +65,7 @@
                     <p><strong>Email:</strong> {{ user.email }}</p>
                     <p><strong>Teléfono:</strong> {{ user.Telefono|default:"No especificado" }}</p>
                     <p><strong>Dirección:</strong> {{ user.Direccion|default:"No especificada" }}</p>
-                    <a href="{% url 'profile' %}" class="btn btn-warning mt-3">Editar Perfil</a>
+                    <a href="{% url 'login:profile' %}" class="btn btn-warning mt-3">Editar Perfil</a>
                 </div>
             </div>
         </div>

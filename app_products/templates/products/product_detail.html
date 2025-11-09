@@ -258,21 +258,27 @@
 
                 <!-- Formulario de Agregar al Carrito -->
                 {% if product.stock > 0 and product.available %}
-                <form method="post" action="{% url 'cart:add_to_cart' product.id %}">
-                    {% csrf_token %}
-                    <div class="quantity-selector">
-                        <label for="quantity">Cantidad:</label>
-                        <input type="number" 
-                               name="quantity" 
-                               id="quantity" 
-                               value="1" 
-                               min="1" 
-                               max="{{ product.stock }}">
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-lg add-to-cart-btn">
-                        <i class="fas fa-shopping-cart"></i> Agregar al Carrito
-                    </button>
-                </form>
+                    {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'cart:add_to_cart' product.id %}">
+                        {% csrf_token %}
+                        <div class="quantity-selector">
+                            <label for="quantity">Cantidad:</label>
+                            <input type="number" 
+                                   name="quantity" 
+                                   id="quantity" 
+                                   value="1" 
+                                   min="1" 
+                                   max="{{ product.stock }}">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg add-to-cart-btn">
+                            <i class="fas fa-shopping-cart"></i> Agregar al Carrito
+                        </button>
+                    </form>
+                    {% else %}
+                    <a href="{% url 'login:login' %}?next={{ request.path }}" class="btn btn-warning btn-lg add-to-cart-btn">
+                        <i class="fas fa-sign-in-alt"></i> Inicia sesión para comprar
+                    </a>
+                    {% endif %}
                 {% else %}
                 <button class="btn btn-secondary btn-lg add-to-cart-btn" disabled>
                     <i class="fas fa-ban"></i> No Disponible
