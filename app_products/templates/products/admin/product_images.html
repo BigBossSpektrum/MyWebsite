@@ -3,103 +3,427 @@
 
 {% block title %}Gestionar Imágenes - {{ product.name }}{% endblock %}
 
+{% block extra_css %}
+<style>
+    .drop-zone {
+        border: 3px dashed #007bff;
+        border-radius: 12px;
+        padding: 40px 20px;
+        text-align: center;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    .drop-zone:hover, .drop-zone.dragover {
+        background: linear-gradient(135deg, #e7f1ff 0%, #cfe2ff 100%);
+        border-color: #0056b3;
+        transform: scale(1.02);
+    }
+    .drop-zone i {
+        font-size: 64px;
+        color: #007bff;
+        margin-bottom: 15px;
+        display: block;
+    }
+    .drop-zone.dragover {
+        background: #cfe2ff;
+        border-color: #0056b3;
+    }
+    
+    .image-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        height: 100%;
+        border: 2px solid #e0e0e0;
+    }
+    .image-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        border-color: #007bff;
+    }
+    .image-card img {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    .image-card .card-body {
+        padding: 15px;
+    }
+    .main-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 10;
+        font-size: 0.85rem;
+        padding: 5px 12px;
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        border: 2px solid white;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    .image-wrapper {
+        position: relative;
+        overflow: hidden;
+    }
+    .btn-group-vertical {
+        width: 100%;
+    }
+    .btn-group-vertical .btn {
+        margin-bottom: 5px;
+    }
+    #previewContainer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 20px;
+    }
+    .preview-item {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .preview-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .preview-item .remove-preview {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background: rgba(220, 53, 69, 0.9);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    .preview-item .remove-preview:hover {
+        background: rgba(220, 53, 69, 1);
+    }
+    .upload-progress {
+        display: none;
+        margin-top: 15px;
+    }
+    .spinner-border-sm {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container mt-4">
     <div class="row">
         <div class="col-12">
-            <h2>Gestionar Imágenes - {{ product.name }}</h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'products:admin_product_list' %}">Productos</a></li>
+                    <li class="breadcrumb-item active">Gestionar Imágenes - {{ product.name }}</li>
+                </ol>
+            </nav>
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-images"></i> Gestionar Imágenes</h2>
+                <a href="{% url 'products:admin_product_list' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </a>
+            </div>
+
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            <!-- Información del producto -->
+            <div class="card mb-4 bg-light">
+                <div class="card-body">
+                    <h5 class="mb-2">{{ product.name }}</h5>
+                    <p class="mb-1 text-muted"><strong>Categoría:</strong> {{ product.category.name }}</p>
+                    <p class="mb-0 text-muted"><strong>Total de imágenes:</strong> {{ product.images.count }}</p>
+                </div>
+            </div>
             
             <!-- Formulario para agregar nuevas imágenes -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h4>Agregar Nuevas Imágenes</h4>
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-plus-circle"></i> Agregar Nuevas Imágenes</h4>
                 </div>
                 <div class="card-body">
-                    <form method="post" enctype="multipart/form-data" action="{% url 'products:admin_product_images_upload' product.id %}">
+                    <form method="post" enctype="multipart/form-data" action="{% url 'products:admin_product_images_upload' product.id %}" id="uploadForm">
                         {% csrf_token %}
-                        <div class="form-group">
-                            <label for="images">Seleccionar Imágenes</label>
-                            <input type="file" class="form-control-file" id="images" name="images" multiple accept="image/*" required>
+                        <div class="drop-zone" id="dropZone">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <h5 class="mb-2">Arrastra y suelta imágenes aquí</h5>
+                            <p class="text-muted mb-3">o haz clic para seleccionar archivos</p>
+                            <button type="button" class="btn btn-primary" onclick="document.getElementById('imageInput').click()">
+                                <i class="fas fa-folder-open"></i> Seleccionar Imágenes
+                            </button>
+                            <input type="file" class="d-none" id="imageInput" name="images" multiple accept="image/*">
                         </div>
-                        <button type="submit" class="btn btn-primary">Subir Imágenes</button>
+                        
+                        <div id="previewContainer"></div>
+                        
+                        <div class="upload-progress" id="uploadProgress">
+                            <div class="d-flex align-items-center">
+                                <div class="spinner-border spinner-border-sm text-primary mr-2" role="status">
+                                    <span class="sr-only">Cargando...</span>
+                                </div>
+                                <span>Subiendo imágenes...</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-3" id="uploadButtonContainer" style="display: none;">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-upload"></i> Subir Imágenes Seleccionadas
+                            </button>
+                            <button type="button" class="btn btn-secondary btn-lg" onclick="clearSelection()">
+                                <i class="fas fa-times"></i> Cancelar
+                            </button>
+                        </div>
                     </form>
+                    <small class="form-text text-muted mt-2">
+                        <i class="fas fa-info-circle"></i> Formatos soportados: JPG, PNG, GIF, WebP. Tamaño máximo por imagen: 5MB
+                    </small>
                 </div>
             </div>
 
             <!-- Lista de imágenes existentes -->
-            <div class="card">
-                <div class="card-header">
-                    <h4>Imágenes Actuales</h4>
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0"><i class="fas fa-th"></i> Imágenes Actuales ({{ product.images.count }})</h4>
                 </div>
                 <div class="card-body">
+                    {% if product.images.all %}
                     <div class="row">
                         {% for image in product.images.all %}
-                        <div class="col-md-4 mb-4">
-                            <div class="card">
-                                <img src="{{ image.image.url }}" class="card-img-top" alt="{{ image.alt_text }}">
+                        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                            <div class="card image-card">
+                                <div class="image-wrapper">
+                                    {% if image.is_main %}
+                                    <span class="badge badge-success main-badge">
+                                        <i class="fas fa-star"></i> Principal
+                                    </span>
+                                    {% endif %}
+                                    <img src="{{ image.image.url }}" class="card-img-top" alt="{{ image.alt_text }}">
+                                </div>
                                 <div class="card-body">
-                                    <form method="post" action="{% url 'products:admin_product_image_update' product.id image.id %}">
+                                    <form method="post" action="{% url 'products:admin_product_image_update' product.id image.id %}" class="mb-2">
                                         {% csrf_token %}
-                                        <div class="form-group">
-                                            <label for="alt_text_{{ image.id }}">Texto Alternativo</label>
-                                            <input type="text" class="form-control" id="alt_text_{{ image.id }}" 
-                                                   name="alt_text" value="{{ image.alt_text }}">
+                                        <div class="form-group mb-2">
+                                            <label class="small font-weight-bold">Texto Alternativo:</label>
+                                            <input type="text" class="form-control form-control-sm" 
+                                                   name="alt_text" value="{{ image.alt_text }}"
+                                                   placeholder="Descripción de la imagen">
                                         </div>
                                         <div class="form-check mb-3">
-                                            <input type="checkbox" class="form-check-input" id="is_main_{{ image.id }}" 
-                                                   name="is_main" {% if image.is_main %}checked{% endif %}>
-                                            <label class="form-check-label" for="is_main_{{ image.id }}">
+                                            <input type="checkbox" class="form-check-input" 
+                                                   id="is_main_{{ image.id }}" name="is_main" 
+                                                   {% if image.is_main %}checked{% endif %}>
+                                            <label class="form-check-label small" for="is_main_{{ image.id }}">
                                                 Imagen Principal
                                             </label>
                                         </div>
-                                        <div class="btn-group w-100">
-                                            <button type="submit" class="btn btn-info">Actualizar</button>
-                                            <button type="button" class="btn btn-danger" data-toggle="modal" 
+                                        <div class="btn-group-vertical">
+                                            <button type="submit" class="btn btn-sm btn-info">
+                                                <i class="fas fa-save"></i> Guardar Cambios
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-danger" 
+                                                    data-toggle="modal" 
                                                     data-target="#deleteImageModal{{ image.id }}">
-                                                Eliminar
+                                                <i class="fas fa-trash"></i> Eliminar
                                             </button>
                                         </div>
                                     </form>
+                                    <small class="text-muted d-block mt-2">
+                                        <i class="far fa-calendar"></i> {{ image.created_at|date:"d/m/Y H:i" }}
+                                    </small>
                                 </div>
                             </div>
 
                             <!-- Modal de Eliminación -->
                             <div class="modal fade" id="deleteImageModal{{ image.id }}" tabindex="-1" role="dialog">
-                                <div class="modal-dialog" role="document">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Confirmar Eliminación</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
+                                        <div class="modal-header bg-danger text-white">
+                                            <h5 class="modal-title">
+                                                <i class="fas fa-exclamation-triangle"></i> Confirmar Eliminación
+                                            </h5>
+                                            <button type="button" class="close text-white" data-dismiss="modal">
+                                                <span>&times;</span>
                                             </button>
                                         </div>
-                                        <div class="modal-body">
-                                            ¿Estás seguro de que deseas eliminar esta imagen?
+                                        <div class="modal-body text-center">
+                                            <img src="{{ image.image.url }}" alt="Preview" 
+                                                 style="max-width: 100%; max-height: 200px; margin-bottom: 15px;">
+                                            <p>¿Estás seguro de que deseas eliminar esta imagen?</p>
+                                            <p class="text-danger"><strong>Esta acción no se puede deshacer.</strong></p>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                            <form method="post" action="{% url 'products:admin_product_image_delete' product.id image.id %}">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                <i class="fas fa-times"></i> Cancelar
+                                            </button>
+                                            <form method="post" action="{% url 'products:admin_product_image_delete' product.id image.id %}" style="display: inline;">
                                                 {% csrf_token %}
-                                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                                                <button type="submit" class="btn btn-danger">
+                                                    <i class="fas fa-trash"></i> Eliminar
+                                                </button>
                                             </form>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        {% empty %}
-                        <div class="col-12">
-                            <p class="text-center">No hay imágenes para este producto.</p>
-                        </div>
                         {% endfor %}
                     </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-images fa-4x text-muted mb-3"></i>
+                        <p class="text-muted">No hay imágenes para este producto.</p>
+                        <p class="text-muted">Utiliza el formulario de arriba para agregar imágenes.</p>
+                    </div>
+                    {% endif %}
                 </div>
-            </div>
-
-            <div class="mt-4">
-                <a href="{% url 'products:admin_product_list' %}" class="btn btn-secondary">Volver a la lista de productos</a>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const dropZone = document.getElementById('dropZone');
+    const imageInput = document.getElementById('imageInput');
+    const previewContainer = document.getElementById('previewContainer');
+    const uploadForm = document.getElementById('uploadForm');
+    const uploadProgress = document.getElementById('uploadProgress');
+    const uploadButtonContainer = document.getElementById('uploadButtonContainer');
+    let selectedFiles = [];
+
+    // Prevenir comportamiento por defecto
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+        document.body.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    // Highlight en drag over
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, () => {
+            dropZone.classList.add('dragover');
+        }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, () => {
+            dropZone.classList.remove('dragover');
+        }, false);
+    });
+
+    // Manejar drop
+    dropZone.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        handleFiles(files);
+    });
+
+    // Manejar selección de archivos
+    imageInput.addEventListener('change', (e) => {
+        handleFiles(e.target.files);
+    });
+
+    function handleFiles(files) {
+        const filesArray = Array.from(files);
+        
+        filesArray.forEach(file => {
+            if (file.type.startsWith('image/')) {
+                if (file.size > 5 * 1024 * 1024) {
+                    alert(`El archivo ${file.name} excede el tamaño máximo de 5MB`);
+                    return;
+                }
+                selectedFiles.push(file);
+                displayPreview(file);
+            } else {
+                alert(`El archivo ${file.name} no es una imagen válida`);
+            }
+        });
+
+        updateFileInput();
+        
+        if (selectedFiles.length > 0) {
+            uploadButtonContainer.style.display = 'block';
+        }
+    }
+
+    function displayPreview(file) {
+        const reader = new FileReader();
+        
+        reader.onload = (e) => {
+            const previewItem = document.createElement('div');
+            previewItem.className = 'preview-item';
+            previewItem.innerHTML = `
+                <img src="${e.target.result}" alt="Preview">
+                <button type="button" class="remove-preview" onclick="removePreview('${file.name}')">×</button>
+            `;
+            previewContainer.appendChild(previewItem);
+        };
+        
+        reader.readAsDataURL(file);
+    }
+
+    window.removePreview = function(fileName) {
+        selectedFiles = selectedFiles.filter(file => file.name !== fileName);
+        updateFileInput();
+        updatePreviewDisplay();
+        
+        if (selectedFiles.length === 0) {
+            uploadButtonContainer.style.display = 'none';
+        }
+    }
+
+    function updateFileInput() {
+        const dataTransfer = new DataTransfer();
+        selectedFiles.forEach(file => {
+            dataTransfer.items.add(file);
+        });
+        imageInput.files = dataTransfer.files;
+    }
+
+    function updatePreviewDisplay() {
+        previewContainer.innerHTML = '';
+        selectedFiles.forEach(file => {
+            displayPreview(file);
+        });
+    }
+
+    window.clearSelection = function() {
+        selectedFiles = [];
+        previewContainer.innerHTML = '';
+        imageInput.value = '';
+        uploadButtonContainer.style.display = 'none';
+    }
+
+    // Mostrar progreso al enviar
+    uploadForm.addEventListener('submit', (e) => {
+        if (selectedFiles.length > 0) {
+            uploadProgress.style.display = 'block';
+            uploadButtonContainer.style.display = 'none';
+        }
+    });
+</script>
 {% endblock %}
