@@ -424,3 +424,182 @@
         font-size: 1.5rem;
     }
 }
+
+/* === MODO OSCURO === */
+[data-theme="dark"] .cart-header h2 {
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .cart-header p {
+    color: #b0b0b0 !important;
+}
+
+[data-theme="dark"] .text-muted {
+    color: #b0b0b0 !important;
+}
+
+[data-theme="dark"] .text-success {
+    color: #4ade80 !important;
+}
+
+[data-theme="dark"] .cart-item-card {
+    background: #1a1a1a;
+    border-color: #3a3a3a;
+}
+
+[data-theme="dark"] .cart-item-card:hover {
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.15);
+}
+
+[data-theme="dark"] .cart-item-image {
+    background: #0f0f0f;
+}
+
+[data-theme="dark"] .cart-item-title a {
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .cart-item-title a:hover {
+    color: #ffd700;
+}
+
+[data-theme="dark"] .cart-item-category {
+    color: #b0b0b0;
+}
+
+[data-theme="dark"] .cart-item-stock {
+    color: #a0a0a0;
+}
+
+[data-theme="dark"] .price-label,
+[data-theme="dark"] .quantity-label,
+[data-theme="dark"] .subtotal-label {
+    color: #b0b0b0;
+}
+
+[data-theme="dark"] .price-value {
+    color: #ffd700;
+}
+
+[data-theme="dark"] .quantity-controls {
+    border-color: #3a3a3a;
+}
+
+[data-theme="dark"] .quantity-btn {
+    background: #2a2a2a;
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .quantity-btn:hover {
+    background: #3a3a3a;
+}
+
+[data-theme="dark"] .quantity-btn:active {
+    background: #4a4a4a;
+}
+
+[data-theme="dark"] .quantity-input {
+    background: #1a1a1a;
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .subtotal-value {
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .btn-remove {
+    color: #f87171;
+}
+
+[data-theme="dark"] .btn-remove:hover {
+    background: #dc3545;
+    color: #fff;
+}
+
+[data-theme="dark"] .cart-summary-card {
+    background: #1a1a1a;
+    border-color: #3a3a3a;
+}
+
+[data-theme="dark"] .summary-title {
+    color: #e0e0e0;
+    border-bottom-color: #3a3a3a;
+}
+
+[data-theme="dark"] .summary-row {
+    color: #b0b0b0;
+}
+
+[data-theme="dark"] .summary-total {
+    border-top-color: #3a3a3a;
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .total-amount {
+    color: #ffd700;
+}
+
+[data-theme="dark"] .summary-info {
+    border-top-color: #3a3a3a;
+}
+
+[data-theme="dark"] .summary-info p {
+    color: #a0a0a0;
+}
+
+[data-theme="dark"] .empty-cart {
+    background: #1a1a1a;
+}
+
+[data-theme="dark"] .empty-cart-icon {
+    color: #3a3a3a;
+}
+
+[data-theme="dark"] .empty-cart h3 {
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .empty-cart p {
+    color: #b0b0b0;
+}
+
+/* Botones de Bootstrap en modo oscuro */
+[data-theme="dark"] .btn-success {
+    background-color: #ffd700;
+    border-color: #ffd700;
+    color: #000000;
+}
+
+[data-theme="dark"] .btn-success:hover {
+    background-color: #ffed4e;
+    border-color: #ffed4e;
+    color: #000000;
+}
+
+[data-theme="dark"] .btn-outline-secondary {
+    color: #e0e0e0;
+    border-color: #3a3a3a;
+}
+
+[data-theme="dark"] .btn-outline-secondary:hover {
+    background-color: #3a3a3a;
+    border-color: #ffd700;
+    color: #ffd700;
+}
+
+[data-theme="dark"] .btn-primary {
+    background-color: #ffd700;
+    border-color: #ffd700;
+    color: #000000;
+}
+
+[data-theme="dark"] .btn-primary:hover {
+    background-color: #ffed4e;
+    border-color: #ffed4e;
+    color: #000000;
+}
+
+/* Sticky elements */
+[data-theme="dark"] .sticky-top {
+    background-color: transparent;
+}

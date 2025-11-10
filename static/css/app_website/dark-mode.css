@@ -8,11 +8,17 @@
 
 /* Tarjetas y contenedores */
 [data-theme="dark"] .card,
-[data-theme="dark"] .product-card,
-[data-theme="dark"] .container {
+[data-theme="dark"] .product-card {
     background-color: var(--bg-secondary);
     color: var(--text-primary);
     border-color: var(--border-color);
+}
+
+/* Container de Bootstrap NO debe tener fondo en modo oscuro */
+[data-theme="dark"] .container,
+[data-theme="dark"] .container-fluid {
+    background-color: transparent;
+    color: var(--text-primary);
 }
 
 /* Inputs y formularios */

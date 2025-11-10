@@ -1,4 +1,5 @@
 from django.urls import path
+from django.contrib.auth import views as auth_views
 from . import views
 
 app_name = 'login'
@@ -12,4 +13,36 @@ urlpatterns = [
     path('admin/users/', views.admin_users_view, name='admin_users'),
     path('customer/dashboard/', views.customer_dashboard_view, name='customer_dashboard'),
     path('', views.redirect_to_dashboard, name='user_home'),
+    
+    # Cambio de contraseña
+    path('password-change/', views.password_change_view, name='password_change'),
+    
+    # Recuperación de contraseña por email
+    path('password-reset/', 
+         auth_views.PasswordResetView.as_view(
+             template_name='password_reset.html',
+             email_template_name='password_reset_email.html',
+             subject_template_name='password_reset_subject.txt',
+             success_url='/accounts/password-reset/done/'
+         ), 
+         name='password_reset'),
+    
+    path('password-reset/done/', 
+         auth_views.PasswordResetDoneView.as_view(
+             template_name='password_reset_done.html'
+         ), 
+         name='password_reset_done'),
+    
+    path('password-reset-confirm/<uidb64>/<token>/', 
+         auth_views.PasswordResetConfirmView.as_view(
+             template_name='password_reset_confirm.html',
+             success_url='/accounts/password-reset-complete/'
+         ), 
+         name='password_reset_confirm'),
+    
+    path('password-reset-complete/', 
+         auth_views.PasswordResetCompleteView.as_view(
+             template_name='password_reset_complete.html'
+         ), 
+         name='password_reset_complete'),
 ]

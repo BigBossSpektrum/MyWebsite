@@ -300,3 +300,117 @@
 .alert-warning {
     border-left-color: #ffc107;
 }
+
+/* === MODO OSCURO === */
+[data-theme="dark"] .drop-zone {
+    border-color: #ffd700;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+}
+
+[data-theme="dark"] .drop-zone:hover,
+[data-theme="dark"] .drop-zone.dragover {
+    background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
+    border-color: #ffed4e;
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2);
+}
+
+[data-theme="dark"] .drop-zone i {
+    color: #ffd700;
+}
+
+[data-theme="dark"] .drop-zone h5 {
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .drop-zone p {
+    color: #b0b0b0;
+}
+
+[data-theme="dark"] .image-preview,
+[data-theme="dark"] .preview-item {
+    background: #2a2a2a;
+    border-color: #3a3a3a;
+}
+
+[data-theme="dark"] .image-preview:hover,
+[data-theme="dark"] .preview-item:hover {
+    border-color: #ffd700;
+    box-shadow: 0 4px 8px rgba(255, 215, 0, 0.2);
+}
+
+[data-theme="dark"] .remove-preview,
+[data-theme="dark"] .delete-image {
+    background: #dc3545;
+}
+
+[data-theme="dark"] .remove-preview:hover,
+[data-theme="dark"] .delete-image:hover {
+    background: #c82333;
+}
+
+[data-theme="dark"] .image-card {
+    background: #1a1a1a;
+    border-color: #3a3a3a;
+}
+
+[data-theme="dark"] .image-card:hover {
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.15);
+}
+
+[data-theme="dark"] .image-card .card-body {
+    background: #1a1a1a;
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .form-label {
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select {
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+    border-color: #3a3a3a;
+}
+
+[data-theme="dark"] .form-control:focus,
+[data-theme="dark"] .form-select:focus {
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+    border-color: #ffd700;
+    box-shadow: 0 0 0 0.25rem rgba(255, 215, 0, 0.25);
+}
+
+[data-theme="dark"] .file-selected {
+    background-color: #1a4d2e;
+    border-color: #4ade80 !important;
+}
+
+[data-theme="dark"] .help-tooltip {
+    border-bottom-color: #b0b0b0;
+}
+
+[data-theme="dark"] .alert {
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .alert-success {
+    background-color: #1a4d2e;
+    color: #4ade80;
+}
+
+[data-theme="dark"] .alert-danger {
+    background-color: #4d1a1a;
+    color: #f87171;
+}
+
+[data-theme="dark"] .alert-info {
+    background-color: #1a3a4d;
+    color: #7dd3fc;
+}
+
+[data-theme="dark"] .alert-warning {
+    background-color: #4d3a1a;
+    color: #fbbf24;
+}
