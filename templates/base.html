@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/app_website/navbar.css' %}">
     <link rel="stylesheet" href="{% static 'css/app_website/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app_website/dark-mode.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -45,6 +46,11 @@
             </div>
 
             <div class="navbar-auth">
+                <!-- Botón modo oscuro -->
+                <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                
                 {% if user.is_authenticated %}
                     <a href="{% url 'login:logout' %}" class="btn-logout">Cerrar Sesión</a>
                 {% else %}
@@ -58,6 +64,38 @@
         {% block content %}
         {% endblock %}
     </div>
+
+    <script>
+        // Dark Mode Toggle Script
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const htmlElement = document.documentElement;
+        
+        // Verificar preferencia guardada o preferencia del sistema
+        const currentTheme = localStorage.getItem('theme') || 
+            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        
+        // Aplicar tema al cargar la página
+        if (currentTheme === 'dark') {
+            htmlElement.setAttribute('data-theme', 'dark');
+            darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+        
+        // Toggle al hacer clic
+        darkModeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Cambiar icono
+            if (newTheme === 'dark') {
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            }
+        });
+    </script>
 
     {% block extra_js %}{% endblock %}
 <footer>

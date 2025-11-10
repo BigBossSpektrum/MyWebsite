@@ -1,0 +1,87 @@
+/* === ESTILOS GLOBALES MODO OSCURO === */
+
+/* Main content ajustes */
+[data-theme="dark"] .main-content {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+/* Tarjetas y contenedores */
+[data-theme="dark"] .card,
+[data-theme="dark"] .product-card,
+[data-theme="dark"] .container {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+/* Inputs y formularios */
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+    color: var(--text-secondary);
+}
+
+/* Botones */
+[data-theme="dark"] button:not(.dark-mode-toggle) {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+/* Tablas */
+[data-theme="dark"] table {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] table thead {
+    background-color: var(--bg-primary);
+}
+
+[data-theme="dark"] table tbody tr:hover {
+    background-color: rgba(255, 215, 0, 0.1);
+}
+
+/* Enlaces generales */
+[data-theme="dark"] a:not(.navbar-links a):not(.navbar-auth a) {
+    color: var(--accent-color);
+}
+
+[data-theme="dark"] a:not(.navbar-links a):not(.navbar-auth a):hover {
+    color: var(--accent-hover);
+}
+
+/* Sombras y bordes */
+[data-theme="dark"] .shadow,
+[data-theme="dark"] .box-shadow {
+    box-shadow: 0 2px 10px var(--shadow-color);
+}
+
+/* Modales y overlays */
+[data-theme="dark"] .modal,
+[data-theme="dark"] .overlay {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+[data-theme="dark"] .modal-content {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+/* Imágenes - ajuste sutil para modo oscuro */
+[data-theme="dark"] img:not(.logo):not(.footer-brands-track img) {
+    opacity: 0.9;
+    transition: opacity 0.3s ease;
+}
+
+[data-theme="dark"] img:not(.logo):not(.footer-brands-track img):hover {
+    opacity: 1;
+}
