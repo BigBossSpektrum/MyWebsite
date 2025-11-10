@@ -1,58 +1,110 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Inicio - Zultech{% endblock %}
+{% block title %}Nuestros Servicios - Zultech{% endblock %}
 
 {% block content %}
-<div class="dashboard-content">
-    <h1>Bienvenido a Zultech</h1>
-    <div class="dashboard-stats">
-        <div class="stat-card">
-            <h3>Productos Disponibles</h3>
-            <p>{{ total_products|default:"0" }}</p>
-        </div>
-        <div class="stat-card">
-            <h3>Pedidos Pendientes</h3>
-            <p>{{ pending_orders|default:"0" }}</p>
-        </div>
-        <div class="stat-card">
-            <h3>Productos en Carrito</h3>
-            <p>{{ cart_items|default:"0" }}</p>
-        </div>
+<div class="services-page">
+    <div class="hero-section">
+        <h1>Nuestros Servicios de Seguridad</h1>
+        <p>Soluciones integrales para proteger lo que más valoras</p>
     </div>
+
+    <!-- Servicio 1: Cámara de Seguridad - Imagen Izquierda -->
+    <section class="service-section">
+        <div class="service-container">
+            <div class="service-image">
+                <img src="{% static 'img/products/Camaras-seguridad.jpg' %}" alt="Cámara de Seguridad">
+            </div>
+            <div class="service-content">
+                <h2>Cámaras de Seguridad</h2>
+                <p>Monitoreo 24/7 con tecnología de punta. Nuestras cámaras de seguridad ofrecen vigilancia continua con grabación en alta definición, visión nocturna y acceso remoto desde tu smartphone.</p>
+                <ul>
+                    <li>Resolución HD y 4K disponible</li>
+                    <li>Visión nocturna infrarroja</li>
+                    <li>Detección de movimiento inteligente</li>
+                    <li>Almacenamiento en la nube</li>
+                    <li>Acceso remoto desde cualquier dispositivo</li>
+                </ul>
+                <a href="{% url 'products:product_list' %}" class="btn-service">Ver Productos</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Servicio 2: Sistema de Alarma - Imagen Derecha -->
+    <section class="service-section reverse">
+        <div class="service-container">
+            <div class="service-content">
+                <h2>Sistema de Alarma</h2>
+                <p>Protección integral para tu hogar o negocio. Sistemas de alarma inteligentes que detectan intrusiones, incendios y emergencias, notificándote al instante.</p>
+                <ul>
+                    <li>Sensores de movimiento y apertura</li>
+                    <li>Detección de humo y monóxido de carbono</li>
+                    <li>Sirena de alta potencia</li>
+                    <li>Notificaciones instantáneas a tu móvil</li>
+                    <li>Integración con servicios de emergencia</li>
+                </ul>
+                <a href="{% url 'products:product_list' %}" class="btn-service">Ver Productos</a>
+            </div>
+            <div class="service-image">
+                <img src="{% static 'img/products/Sistemas-alarmas.jpg' %}" alt="Sistema de Alarma">
+            </div>
+        </div>
+    </section>
+
+    <!-- Servicio 3: Cerco Eléctrico - Imagen Izquierda -->
+    <section class="service-section">
+        <div class="service-container">
+            <div class="service-image">
+                <img src="{% static 'img/products/Cerco-electrico.jpg' %}" alt="Cerco Eléctrico">
+            </div>
+            <div class="service-content">
+                <h2>Cerco Eléctrico</h2>
+                <p>Barrera de seguridad perimetral efectiva. Instalación profesional de cercos eléctricos que disuaden y previenen intrusiones en tu propiedad.</p>
+                <ul>
+                    <li>Pulsos de alto voltaje no letales</li>
+                    <li>Instalación en muros y perímetros</li>
+                    <li>Sistema anti-sabotaje</li>
+                    <li>Alarma integrada ante cortes</li>
+                    <li>Certificado de seguridad eléctrica</li>
+                </ul>
+                <a href="{% url 'products:product_list' %}" class="btn-service">Ver Productos</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Servicio 4: Control de Acceso - Imagen Derecha -->
+    <section class="service-section reverse">
+        <div class="service-container">
+            <div class="service-content">
+                <h2>Control de Acceso</h2>
+                <p>Gestiona quién entra y cuándo. Sistemas de control de acceso biométricos y con tarjetas inteligentes para edificios, oficinas y residencias.</p>
+                <ul>
+                    <li>Lectores biométricos de huella digital</li>
+                    <li>Tarjetas de proximidad y códigos PIN</li>
+                    <li>Registro de entradas y salidas</li>
+                    <li>Control de acceso multinivel</li>
+                    <li>Integración con sistemas de seguridad</li>
+                </ul>
+                <a href="{% url 'products:product_list' %}" class="btn-service">Ver Productos</a>
+            </div>
+            <div class="service-image">
+                <img src="{% static 'img/products/Control-acceso.webp' %}" alt="Control de Acceso">
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>¿Listo para proteger tu espacio?</h2>
+            <p>Contáctanos para una consultoría gratuita y cotización personalizada</p>
+            <a href="{% url 'website:contact' %}" class="btn-cta">Solicitar Cotización</a>
+        </div>
+    </section>
 </div>
 {% endblock %}
 
 {% block extra_css %}
-<style>
-    .dashboard-content {
-        padding: 20px;
-    }
-    
-    .dashboard-stats {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
-        margin-top: 30px;
-    }
-    
-    .stat-card {
-        background: #1a1a1a;
-        padding: 20px;
-        border-radius: 12px;
-        color: white;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    
-    .stat-card h3 {
-        margin: 0 0 10px 0;
-        font-size: 1.2em;
-        color: #ffd700;
-    }
-    
-    .stat-card p {
-        margin: 0;
-        font-size: 2em;
-        font-weight: 800;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'css/app_website/home.css' %}">
 {% endblock %}
