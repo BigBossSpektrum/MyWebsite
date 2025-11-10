@@ -181,11 +181,6 @@ def customer_dashboard_view(request):
     }
     return render(request, 'customer/dashboard.html', context)
 
-@admin_required
-def admin_users_view(request):
-    users = CustomUser.objects.all().order_by('-date_joined')
-    return render(request, 'admin/users.html', {'users': users})
-
 @login_required
 def redirect_to_dashboard(request):
     if request.user.is_admin():

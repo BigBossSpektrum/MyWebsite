@@ -4,170 +4,69 @@
 {% block title %}Gestionar Imágenes - {{ product.name }}{% endblock %}
 
 {% block extra_css %}
-<style>
-    .drop-zone {
-        border: 3px dashed #007bff;
-        border-radius: 12px;
-        padding: 40px 20px;
-        text-align: center;
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-        cursor: pointer;
-        transition: all 0.3s ease;
-        position: relative;
-    }
-    .drop-zone:hover, .drop-zone.dragover {
-        background: linear-gradient(135deg, #e7f1ff 0%, #cfe2ff 100%);
-        border-color: #0056b3;
-        transform: scale(1.02);
-    }
-    .drop-zone i {
-        font-size: 64px;
-        color: #007bff;
-        margin-bottom: 15px;
-        display: block;
-    }
-    .drop-zone.dragover {
-        background: #cfe2ff;
-        border-color: #0056b3;
-    }
-    
-    .image-card {
-        transition: transform 0.2s, box-shadow 0.2s;
-        height: 100%;
-        border: 2px solid #e0e0e0;
-    }
-    .image-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-        border-color: #007bff;
-    }
-    .image-card img {
-        width: 100%;
-        height: 250px;
-        object-fit: cover;
-        border-bottom: 1px solid #e0e0e0;
-    }
-    .image-card .card-body {
-        padding: 15px;
-    }
-    .main-badge {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        z-index: 10;
-        font-size: 0.85rem;
-        padding: 5px 12px;
-        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-        border: 2px solid white;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-    .image-wrapper {
-        position: relative;
-        overflow: hidden;
-    }
-    .btn-group-vertical {
-        width: 100%;
-    }
-    .btn-group-vertical .btn {
-        margin-bottom: 5px;
-    }
-    #previewContainer {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-        margin-top: 20px;
-    }
-    .preview-item {
-        position: relative;
-        width: 120px;
-        height: 120px;
-        border: 2px solid #ddd;
-        border-radius: 8px;
-        overflow: hidden;
-    }
-    .preview-item img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    .preview-item .remove-preview {
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        background: rgba(220, 53, 69, 0.9);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 25px;
-        height: 25px;
-        cursor: pointer;
-        font-size: 16px;
-    }
-    .preview-item .remove-preview:hover {
-        background: rgba(220, 53, 69, 1);
-    }
-    .upload-progress {
-        display: none;
-        margin-top: 15px;
-    }
-    .spinner-border-sm {
-        width: 1.5rem;
-        height: 1.5rem;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'css/products/admin_products.css' %}">
+<link rel="stylesheet" href="{% static 'css/products/admin_product_images.css' %}">
 {% endblock %}
 
-{% block content %}
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-12">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{% url 'products:admin_product_list' %}">Productos</a></li>
-                    <li class="breadcrumb-item active">Gestionar Imágenes - {{ product.name }}</li>
-                </ol>
-            </nav>
 
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2><i class="fas fa-images"></i> Gestionar Imágenes</h2>
-                <a href="{% url 'products:admin_product_list' %}" class="btn btn-secondary">
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb bg-transparent p-0">
+            <li class="breadcrumb-item"><a href="{% url 'products:admin_product_list' %}"><i class="fas fa-boxes"></i> Productos</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'products:admin_product_edit' product.id %}">{{ product.name }}</a></li>
+            <li class="breadcrumb-item active">Gestionar Imágenes</li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="admin-header mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="admin-title">
+                    <i class="fas fa-images"></i> Gestionar Imágenes
+                </h1>
+                <p class="text-muted mb-0">Administra las imágenes de tu producto</p>
+            </div>
+            <div class="col-md-4 text-md-right">
+                <a href="{% url 'products:admin_product_list' %}" class="btn btn-secondary mr-2">
                     <i class="fas fa-arrow-left"></i> Volver
                 </a>
+                <a href="{% url 'products:admin_product_edit' product.id %}" class="btn btn-info">
+                    <i class="fas fa-edit"></i> Editar Producto
+                </a>
             </div>
+        </div>
+    </div>
 
-            {% if messages %}
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            {% endfor %}
-            {% endif %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm" role="alert">
+        <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-circle{% else %}info-circle{% endif %} mr-2"></i>
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
+    {% endif %}
 
-            <!-- Información del producto -->
-            <div class="card mb-4 bg-light">
-                <div class="card-body">
-                    <h5 class="mb-2">{{ product.name }}</h5>
-                    <p class="mb-1 text-muted"><strong>Categoría:</strong> {{ product.category.name }}</p>
-                    <p class="mb-0 text-muted"><strong>Total de imágenes:</strong> {{ product.images.count }}</p>
-                </div>
-            </div>
-            
+    <div class="row">
+        <div class="col-lg-8">
             <!-- Formulario para agregar nuevas imágenes -->
-            <div class="card mb-4 shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0"><i class="fas fa-plus-circle"></i> Agregar Nuevas Imágenes</h4>
+            <div class="card shadow-sm mb-4">
+                <div class="section-header">
+                    <i class="fas fa-cloud-upload-alt"></i> Agregar Nuevas Imágenes
                 </div>
-                <div class="card-body">
+                <div class="card-body p-4">
                     <form method="post" enctype="multipart/form-data" action="{% url 'products:admin_product_images_upload' product.id %}" id="uploadForm">
                         {% csrf_token %}
                         <div class="drop-zone" id="dropZone">
                             <i class="fas fa-cloud-upload-alt"></i>
-                            <h5 class="mb-2">Arrastra y suelta imágenes aquí</h5>
-                            <p class="text-muted mb-3">o haz clic para seleccionar archivos</p>
-                            <button type="button" class="btn btn-primary" onclick="document.getElementById('imageInput').click()">
+                            <h4 class="mb-3">Arrastra y suelta imágenes aquí</h4>
+                            <p class="text-muted mb-4">o selecciona archivos desde tu computadora</p>
+                            <button type="button" class="btn btn-primary btn-lg" onclick="document.getElementById('imageInput').click()">
                                 <i class="fas fa-folder-open"></i> Seleccionar Imágenes
                             </button>
                             <input type="file" class="d-none" id="imageInput" name="images" multiple accept="image/*">
@@ -176,39 +75,41 @@
                         <div id="previewContainer"></div>
                         
                         <div class="upload-progress" id="uploadProgress">
-                            <div class="d-flex align-items-center">
-                                <div class="spinner-border spinner-border-sm text-primary mr-2" role="status">
-                                    <span class="sr-only">Cargando...</span>
+                            <div class="progress" style="height: 25px;">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                     role="progressbar" style="width: 100%">
+                                    <i class="fas fa-spinner fa-spin"></i> Subiendo imágenes...
                                 </div>
-                                <span>Subiendo imágenes...</span>
                             </div>
                         </div>
                         
-                        <div class="mt-3" id="uploadButtonContainer" style="display: none;">
-                            <button type="submit" class="btn btn-success btn-lg">
-                                <i class="fas fa-upload"></i> Subir Imágenes Seleccionadas
+                        <div class="mt-4 text-center" id="uploadButtonContainer" style="display: none;">
+                            <button type="submit" class="btn btn-success btn-lg px-5" onclick="return confirmUpload(event)">
+                                <i class="fas fa-upload"></i> Subir <span id="imageCount">0</span> Imagen(es)
                             </button>
-                            <button type="button" class="btn btn-secondary btn-lg" onclick="clearSelection()">
+                            <button type="button" class="btn btn-secondary btn-lg ml-2" onclick="confirmCancelUpload()">
                                 <i class="fas fa-times"></i> Cancelar
                             </button>
                         </div>
                     </form>
-                    <small class="form-text text-muted mt-2">
-                        <i class="fas fa-info-circle"></i> Formatos soportados: JPG, PNG, GIF, WebP. Tamaño máximo por imagen: 5MB
-                    </small>
+                    <div class="alert alert-info mt-3 mb-0">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Información:</strong> Formatos soportados: JPG, PNG, GIF, WebP | Tamaño máximo: 5MB por imagen
+                    </div>
                 </div>
             </div>
 
             <!-- Lista de imágenes existentes -->
             <div class="card shadow-sm">
-                <div class="card-header bg-info text-white">
-                    <h4 class="mb-0"><i class="fas fa-th"></i> Imágenes Actuales ({{ product.images.count }})</h4>
+                <div class="section-header">
+                    <i class="fas fa-th-large"></i> Imágenes Actuales 
+                    <span class="badge badge-light ml-2">{{ product.images.count }}</span>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-4">
                     {% if product.images.all %}
                     <div class="row">
                         {% for image in product.images.all %}
-                        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                        <div class="col-xl-4 col-md-6 mb-4">
                             <div class="card image-card">
                                 <div class="image-wrapper">
                                     {% if image.is_main %}
@@ -216,37 +117,39 @@
                                         <i class="fas fa-star"></i> Principal
                                     </span>
                                     {% endif %}
-                                    <img src="{{ image.image.url }}" class="card-img-top" alt="{{ image.alt_text }}">
+                                    <img src="{{ image.image.url }}" class="card-img-top" alt="{{ image.alt_text }}" loading="lazy">
                                 </div>
                                 <div class="card-body">
-                                    <form method="post" action="{% url 'products:admin_product_image_update' product.id image.id %}" class="mb-2">
+                                    <form method="post" action="{% url 'products:admin_product_image_update' product.id image.id %}">
                                         {% csrf_token %}
-                                        <div class="form-group mb-2">
-                                            <label class="small font-weight-bold">Texto Alternativo:</label>
+                                        <div class="form-group mb-3">
+                                            <label class="small font-weight-bold text-muted">
+                                                <i class="fas fa-tag"></i> Texto Alternativo:
+                                            </label>
                                             <input type="text" class="form-control form-control-sm" 
                                                    name="alt_text" value="{{ image.alt_text }}"
                                                    placeholder="Descripción de la imagen">
                                         </div>
-                                        <div class="form-check mb-3">
-                                            <input type="checkbox" class="form-check-input" 
+                                        <div class="custom-control custom-switch mb-3">
+                                            <input type="checkbox" class="custom-control-input" 
                                                    id="is_main_{{ image.id }}" name="is_main" 
                                                    {% if image.is_main %}checked{% endif %}>
-                                            <label class="form-check-label small" for="is_main_{{ image.id }}">
-                                                Imagen Principal
+                                            <label class="custom-control-label font-weight-bold" for="is_main_{{ image.id }}">
+                                                <i class="fas fa-star"></i> Imagen Principal
                                             </label>
                                         </div>
                                         <div class="btn-group-vertical">
-                                            <button type="submit" class="btn btn-sm btn-info">
+                                            <button type="submit" class="btn btn-sm btn-info" onclick="return confirmUpdate(event, this)">
                                                 <i class="fas fa-save"></i> Guardar Cambios
                                             </button>
                                             <button type="button" class="btn btn-sm btn-danger" 
                                                     data-toggle="modal" 
                                                     data-target="#deleteImageModal{{ image.id }}">
-                                                <i class="fas fa-trash"></i> Eliminar
+                                                <i class="fas fa-trash-alt"></i> Eliminar Imagen
                                             </button>
                                         </div>
                                     </form>
-                                    <small class="text-muted d-block mt-2">
+                                    <small class="text-muted d-block mt-3 text-center">
                                         <i class="far fa-calendar"></i> {{ image.created_at|date:"d/m/Y H:i" }}
                                     </small>
                                 </div>
@@ -264,11 +167,17 @@
                                                 <span>&times;</span>
                                             </button>
                                         </div>
-                                        <div class="modal-body text-center">
+                                        <div class="modal-body text-center py-4">
                                             <img src="{{ image.image.url }}" alt="Preview" 
-                                                 style="max-width: 100%; max-height: 200px; margin-bottom: 15px;">
-                                            <p>¿Estás seguro de que deseas eliminar esta imagen?</p>
-                                            <p class="text-danger"><strong>Esta acción no se puede deshacer.</strong></p>
+                                                 style="max-width: 100%; max-height: 250px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                                            <h5>¿Eliminar esta imagen?</h5>
+                                            <p class="text-muted">Esta acción no se puede deshacer.</p>
+                                            {% if image.is_main %}
+                                            <div class="alert alert-warning">
+                                                <i class="fas fa-exclamation-triangle"></i>
+                                                Esta es la imagen principal del producto
+                                            </div>
+                                            {% endif %}
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -277,7 +186,7 @@
                                             <form method="post" action="{% url 'products:admin_product_image_delete' product.id image.id %}" style="display: inline;">
                                                 {% csrf_token %}
                                                 <button type="submit" class="btn btn-danger">
-                                                    <i class="fas fa-trash"></i> Eliminar
+                                                    <i class="fas fa-trash"></i> Eliminar Imagen
                                                 </button>
                                             </form>
                                         </div>
@@ -288,18 +197,87 @@
                         {% endfor %}
                     </div>
                     {% else %}
-                    <div class="text-center py-5">
-                        <i class="fas fa-images fa-4x text-muted mb-3"></i>
-                        <p class="text-muted">No hay imágenes para este producto.</p>
-                        <p class="text-muted">Utiliza el formulario de arriba para agregar imágenes.</p>
+                    <div class="empty-state">
+                        <i class="fas fa-images"></i>
+                        <h4 class="text-muted mb-3">No hay imágenes</h4>
+                        <p class="text-muted mb-4">Este producto aún no tiene imágenes.</p>
+                        <p class="text-muted">Usa el formulario de arriba para agregar imágenes.</p>
                     </div>
                     {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Información del producto -->
+            <div class="product-info-card mb-4">
+                <h5><i class="fas fa-box"></i> {{ product.name }}</h5>
+                <hr class="bg-white">
+                <p><strong><i class="fas fa-tag"></i> Categoría:</strong> {{ product.category.name }}</p>
+                <p><strong><i class="fas fa-dollar-sign"></i> Precio:</strong> ${{ product.price }}</p>
+                <p><strong><i class="fas fa-boxes"></i> Stock:</strong> {{ product.stock }} unidades</p>
+                <p class="mb-0">
+                    <strong><i class="fas fa-images"></i> Total de imágenes:</strong> 
+                    <span class="badge badge-light badge-pill">{{ product.images.count }}</span>
+                </p>
+            </div>
+
+            <!-- Guía Rápida -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-question-circle"></i> Guía Rápida</h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="font-weight-bold mb-3">Cómo gestionar imágenes:</h6>
+                    <ol class="pl-3">
+                        <li class="mb-2">Arrastra archivos o haz clic en "Seleccionar Imágenes"</li>
+                        <li class="mb-2">Previsualiza las imágenes antes de subir</li>
+                        <li class="mb-2">Define una imagen como principal marcando el checkbox</li>
+                        <li class="mb-2">Agrega texto alternativo para mejor SEO</li>
+                        <li>Elimina imágenes que ya no necesites</li>
+                    </ol>
+                    
+                    <hr>
+                    
+                    <h6 class="font-weight-bold mb-2">
+                        <i class="fas fa-lightbulb text-warning"></i> Consejos:
+                    </h6>
+                    <ul class="pl-3 mb-0">
+                        <li class="mb-2">La imagen principal aparece en listados</li>
+                        <li class="mb-2">Usa imágenes de alta calidad</li>
+                        <li class="mb-2">Recomendado: mínimo 3 imágenes por producto</li>
+                        <li>Optimiza el tamaño antes de subir</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Estadísticas -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Estadísticas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span><i class="fas fa-images"></i> Total:</span>
+                        <strong>{{ product.images.count }}</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span><i class="fas fa-star"></i> Principal:</span>
+                        <strong>{% if product.images.filter.is_main %}1{% else %}0{% endif %}</strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span><i class="fas fa-check-circle"></i> Estado:</span>
+                        <strong class="{% if product.images.count > 0 %}text-success{% else %}text-warning{% endif %}">
+                            {% if product.images.count > 0 %}Completo{% else %}Incompleto{% endif %}
+                        </strong>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 {% endblock %}
+
 
 {% block extra_js %}
 <script>
@@ -309,6 +287,7 @@
     const uploadForm = document.getElementById('uploadForm');
     const uploadProgress = document.getElementById('uploadProgress');
     const uploadButtonContainer = document.getElementById('uploadButtonContainer');
+    const imageCount = document.getElementById('imageCount');
     let selectedFiles = [];
 
     // Prevenir comportamiento por defecto
@@ -353,13 +332,13 @@
         filesArray.forEach(file => {
             if (file.type.startsWith('image/')) {
                 if (file.size > 5 * 1024 * 1024) {
-                    alert(`El archivo ${file.name} excede el tamaño máximo de 5MB`);
+                    showNotification(`El archivo ${file.name} excede el tamaño máximo de 5MB`, 'warning');
                     return;
                 }
                 selectedFiles.push(file);
                 displayPreview(file);
             } else {
-                alert(`El archivo ${file.name} no es una imagen válida`);
+                showNotification(`El archivo ${file.name} no es una imagen válida`, 'error');
             }
         });
 
@@ -367,6 +346,7 @@
         
         if (selectedFiles.length > 0) {
             uploadButtonContainer.style.display = 'block';
+            imageCount.textContent = selectedFiles.length;
         }
     }
 
@@ -377,8 +357,13 @@
             const previewItem = document.createElement('div');
             previewItem.className = 'preview-item';
             previewItem.innerHTML = `
-                <img src="${e.target.result}" alt="Preview">
-                <button type="button" class="remove-preview" onclick="removePreview('${file.name}')">×</button>
+                <img src="${e.target.result}" alt="Preview" loading="lazy">
+                <button type="button" class="remove-preview" onclick="removePreview('${file.name.replace(/'/g, "\\'")}')">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div style="position: absolute; bottom: 5px; left: 5px; right: 5px; background: rgba(0,0,0,0.7); color: white; padding: 3px 5px; font-size: 0.7rem; border-radius: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                    ${file.name}
+                </div>
             `;
             previewContainer.appendChild(previewItem);
         };
@@ -393,6 +378,8 @@
         
         if (selectedFiles.length === 0) {
             uploadButtonContainer.style.display = 'none';
+        } else {
+            imageCount.textContent = selectedFiles.length;
         }
     }
 
@@ -423,6 +410,147 @@
         if (selectedFiles.length > 0) {
             uploadProgress.style.display = 'block';
             uploadButtonContainer.style.display = 'none';
+            previewContainer.style.opacity = '0.5';
+        }
+    });
+
+    // Función para mostrar notificaciones
+    function showNotification(message, type) {
+        const alertClass = type === 'error' ? 'alert-danger' : 'alert-warning';
+        const icon = type === 'error' ? 'exclamation-circle' : 'exclamation-triangle';
+        
+        const alert = document.createElement('div');
+        alert.className = `alert ${alertClass} alert-dismissible fade show`;
+        alert.innerHTML = `
+            <i class="fas fa-${icon} mr-2"></i>
+            ${message}
+            <button type="button" class="close" data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+        `;
+        
+        document.querySelector('.container-fluid').insertBefore(alert, document.querySelector('.container-fluid').firstChild);
+        
+        // Auto-dismiss después de 5 segundos
+        setTimeout(() => {
+            $(alert).alert('close');
+        }, 5000);
+    }
+
+    // Lazy loading para imágenes
+    if ('IntersectionObserver' in window) {
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src || img.src;
+                    img.classList.remove('lazy');
+                    imageObserver.unobserve(img);
+                }
+            });
+        });
+
+        document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+            imageObserver.observe(img);
+        });
+    }
+
+    // Confirm before leaving if files are selected
+    window.addEventListener('beforeunload', (e) => {
+        if (selectedFiles.length > 0) {
+            e.preventDefault();
+            e.returnValue = '';
+        }
+    });
+
+    // Función para confirmar actualización de imagen
+    function confirmUpdate(event, button) {
+        const form = button.closest('form');
+        const altText = form.querySelector('input[name="alt_text"]').value;
+        const isMain = form.querySelector('input[name="is_main"]').checked;
+        
+        let message = '¿Deseas guardar los cambios en esta imagen?';
+        
+        if (isMain) {
+            message += '\n\nNOTA: Esta imagen se establecerá como principal y las demás perderán ese estado.';
+        }
+        
+        if (!altText || altText.trim() === '') {
+            message += '\n\nADVERTENCIA: No has ingresado texto alternativo. Se recomienda agregar uno para mejorar el SEO.';
+        }
+        
+        const confirmed = confirm(message);
+        
+        if (confirmed) {
+            // Agregar estado de carga al botón
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+            button.disabled = true;
+        }
+        
+        return confirmed;
+    }
+
+    // Función para confirmar subida de imágenes
+    function confirmUpload(event) {
+        if (selectedFiles.length === 0) {
+            alert('Por favor selecciona al menos una imagen para subir.');
+            event.preventDefault();
+            return false;
+        }
+        
+        const fileNames = selectedFiles.map(f => f.name).join('\n- ');
+        const message = `¿Deseas subir ${selectedFiles.length} imagen(es)?\n\nArchivos:\n- ${fileNames}`;
+        
+        const confirmed = confirm(message);
+        
+        if (!confirmed) {
+            event.preventDefault();
+        }
+        
+        return confirmed;
+    }
+
+    // Función para confirmar cancelación de subida
+    function confirmCancelUpload() {
+        if (selectedFiles.length > 0) {
+            const confirmed = confirm(`Tienes ${selectedFiles.length} imagen(es) seleccionada(s).\n\n¿Estás seguro de que deseas cancelar?`);
+            
+            if (confirmed) {
+                clearSelection();
+            }
+        } else {
+            clearSelection();
+        }
+    }
+
+    // Validar antes de subir el formulario
+    uploadForm.addEventListener('submit', (e) => {
+        if (selectedFiles.length === 0) {
+            e.preventDefault();
+            showNotification('Por favor selecciona al menos una imagen antes de subir.', 'error');
+            return false;
+        }
+        
+        // Validar tamaño de archivos
+        const oversizedFiles = selectedFiles.filter(file => file.size > 5 * 1024 * 1024);
+        if (oversizedFiles.length > 0) {
+            e.preventDefault();
+            showNotification(`Los siguientes archivos exceden el tamaño máximo de 5MB: ${oversizedFiles.map(f => f.name).join(', ')}`, 'error');
+            return false;
+        }
+        
+        // Validar tipo de archivo
+        const invalidFiles = selectedFiles.filter(file => !file.type.startsWith('image/'));
+        if (invalidFiles.length > 0) {
+            e.preventDefault();
+            showNotification(`Los siguientes archivos no son imágenes válidas: ${invalidFiles.map(f => f.name).join(', ')}`, 'error');
+            return false;
+        }
+        
+        if (selectedFiles.length > 0) {
+            uploadProgress.style.display = 'block';
+            uploadButtonContainer.style.display = 'none';
+            previewContainer.style.opacity = '0.5';
         }
     });
 </script>
