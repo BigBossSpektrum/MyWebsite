@@ -1,3 +1,8 @@
+/* === AJUSTE BODY PARA FOOTER === */
+body {
+    padding-bottom: 60px; /* Espacio para el footer fijo */
+}
+
 /* === FOOTER GLOBAL === */
 footer {
     position: fixed;
