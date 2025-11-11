@@ -13,6 +13,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import dj_database_url
 import os
+from dotenv import load_dotenv
+
+# Cargar variables de entorno desde .env
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -164,18 +168,23 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # Email Configuration
-# Para desarrollo: emails se imprimirán en la consola
-if DEBUG:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-else:
-    # Para producción: configurar con tu servicio de email (Gmail, SendGrid, etc.)
+EMAIL_BACKEND_ENV = os.environ.get('EMAIL_BACKEND', 'console')
+
+if EMAIL_BACKEND_ENV == 'smtp':
+    # Para producción: configurar con servicio de email real
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
+    EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp-mail.outlook.com')
     EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '587'))
-    EMAIL_USE_TLS = True
+    EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
     EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
     EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
-    DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@zultech.com')
+else:
+    # Para desarrollo: emails se imprimirán en la consola
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Configuración adicional de email
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@zultech.com')
+SERVER_EMAIL = DEFAULT_FROM_EMAIL  # Para emails de error del servidor
 
 # CSRF Settings
 CSRF_COOKIE_HTTPONLY = False
