@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error de Seguridad - Zultech</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <i class="fas fa-shield-alt" style="font-size: 48px; color: #ff6b6b;"></i>
+                <h3>Error de Verificación de Seguridad</h3>
+                <p class="text-muted">Token CSRF inválido o expirado</p>
+            </div>
+
+            <div class="login-body">
+                <div class="alert alert-warning" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>¡Atención!</strong> Tu sesión ha expirado o el token de seguridad no es válido.
+                </div>
+
+                <p class="text-center mb-4">
+                    Esto puede ocurrir si:
+                </p>
+                <ul class="text-start mb-4">
+                    <li>Cerraste sesión en otra pestaña</li>
+                    <li>La página estuvo abierta por mucho tiempo</li>
+                    <li>Las cookies están bloqueadas</li>
+                </ul>
+
+                <div class="d-grid gap-2">
+                    <button onclick="location.reload()" class="btn btn-primary btn-lg">
+                        <i class="fas fa-sync-alt me-2"></i>Recargar Página
+                    </button>
+                    <a href="{% url 'login:register' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-user-plus me-2"></i>Volver al Registro
+                    </a>
+                    <a href="{% url 'website:user_home' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-home me-2"></i>Ir al Inicio
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .alert-warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+        }
+        ul {
+            list-style-position: inside;
+            color: #666;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+    </style>
+</body>
+</html>
