@@ -39,7 +39,7 @@ def cart_view(request):
         'total_items': cart.get_total_items(),
     }
 
-    return render(request, 'products/cart.html', context)
+    return render(request, 'cart.html', context)
 
 
 @login_required
