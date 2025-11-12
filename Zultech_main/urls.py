@@ -27,6 +27,7 @@ urlpatterns = [
     path('products/', include('app_products.urls')),
     path('orders/', include('app_orders.urls')),
     path('cart/', include('app_cart.urls')),
+    path('chat/', include('app_room_chats.urls')),
 ]
 
 # Servir archivos media en desarrollo

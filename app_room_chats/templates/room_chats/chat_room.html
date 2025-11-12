@@ -1,0 +1,244 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Chat - Orden {{ order.id }}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="mb-0">Chat - Orden #{{ order.id|truncatechars:8 }}</h4>
+                        <small>Estado: {{ order.get_status_display }}</small>
+                    </div>
+                    <div>
+                        <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-sm btn-light">
+                            Ver Orden
+                        </a>
+                        {% if user.role == 'admin' %}
+                        <button id="closeChatBtn" class="btn btn-sm btn-danger">
+                            Cerrar Chat
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Área de mensajes -->
+                    <div id="chatMessages" class="chat-messages mb-3" style="height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 15px; border-radius: 5px; background-color: #f8f9fa;">
+                        <!-- Los mensajes se cargarán aquí dinámicamente -->
+                    </div>
+
+                    <!-- Formulario de envío -->
+                    <form id="chatForm" class="d-flex gap-2">
+                        <input 
+                            type="text" 
+                            id="messageInput" 
+                            class="form-control" 
+                            placeholder="Escribe tu mensaje..." 
+                            autocomplete="off"
+                            required
+                        >
+                        <button type="submit" class="btn btn-primary">
+                            Enviar
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Información de la orden -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="mb-0">Información de la Orden</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Cliente:</strong> {{ order.user.email }}</p>
+                            <p><strong>Total:</strong> ${{ order.total }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Fecha creación:</strong> {{ order.created_at|date:"d/m/Y H:i" }}</p>
+                            <p><strong>Última actualización:</strong> {{ order.updated_at|date:"d/m/Y H:i" }}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <h6>Productos:</h6>
+                    <ul class="list-group">
+                        {% for item in order.items.all %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ item.product.name }} (x{{ item.quantity }})
+                            <span class="badge bg-primary rounded-pill">${{ item.subtotal }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .chat-messages {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .message {
+        max-width: 70%;
+        margin-bottom: 10px;
+        padding: 10px 15px;
+        border-radius: 15px;
+        word-wrap: break-word;
+    }
+    
+    .message-sent {
+        align-self: flex-end;
+        background-color: #007bff;
+        color: white;
+        border-bottom-right-radius: 5px;
+    }
+    
+    .message-received {
+        align-self: flex-start;
+        background-color: #e9ecef;
+        color: #333;
+        border-bottom-left-radius: 5px;
+    }
+    
+    .message-time {
+        font-size: 0.75rem;
+        opacity: 0.7;
+        display: block;
+        margin-top: 5px;
+    }
+    
+    .message-sender {
+        font-weight: bold;
+        font-size: 0.85rem;
+        display: block;
+        margin-bottom: 3px;
+    }
+</style>
+
+<script>
+    const roomId = '{{ chat_room.id }}';
+    const currentUserEmail = '{{ user.email }}';
+    const currentUserRole = '{{ user.role }}';
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const chatSocket = new WebSocket(
+        protocol + '//' + window.location.host + '/ws/chat/' + roomId + '/'
+    );
+
+    const chatMessages = document.getElementById('chatMessages');
+    const messageInput = document.getElementById('messageInput');
+    const chatForm = document.getElementById('chatForm');
+
+    // Función para formatear fecha
+    function formatTime(timestamp) {
+        const date = new Date(timestamp);
+        return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    // Función para agregar mensaje al DOM
+    function addMessage(message, sender, senderRole, timestamp, isSent) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isSent ? 'message-sent' : 'message-received'}`;
+        
+        const senderSpan = document.createElement('span');
+        senderSpan.className = 'message-sender';
+        senderSpan.textContent = isSent ? 'Tú' : (senderRole === 'admin' ? 'Administrador' : 'Cliente');
+        
+        const contentDiv = document.createElement('div');
+        contentDiv.textContent = message;
+        
+        const timeSpan = document.createElement('span');
+        timeSpan.className = 'message-time';
+        timeSpan.textContent = formatTime(timestamp);
+        
+        if (!isSent) {
+            messageDiv.appendChild(senderSpan);
+        }
+        messageDiv.appendChild(contentDiv);
+        messageDiv.appendChild(timeSpan);
+        
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Recibir mensajes del WebSocket
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        
+        if (data.type === 'message_history') {
+            // Cargar historial de mensajes
+            data.messages.forEach(msg => {
+                const isSent = msg.sender === currentUserEmail;
+                addMessage(msg.content, msg.sender, msg.sender_role, msg.timestamp, isSent);
+            });
+        } else if (data.type === 'chat_message') {
+            // Nuevo mensaje en tiempo real
+            const isSent = data.sender === currentUserEmail;
+            addMessage(data.message, data.sender, data.sender_role, data.timestamp, isSent);
+        }
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    chatSocket.onerror = function(e) {
+        console.error('WebSocket error:', e);
+    };
+
+    // Enviar mensaje
+    chatForm.onsubmit = function(e) {
+        e.preventDefault();
+        const message = messageInput.value.trim();
+        
+        if (message) {
+            chatSocket.send(JSON.stringify({
+                'type': 'chat_message',
+                'message': message
+            }));
+            messageInput.value = '';
+        }
+    };
+
+    // Marcar mensajes como leídos al abrir el chat
+    window.addEventListener('load', function() {
+        if (chatSocket.readyState === WebSocket.OPEN) {
+            chatSocket.send(JSON.stringify({
+                'type': 'mark_as_read'
+            }));
+        }
+    });
+
+    // Cerrar chat (solo admin)
+    {% if user.role == 'admin' %}
+    document.getElementById('closeChatBtn').addEventListener('click', function() {
+        if (confirm('¿Estás seguro de cerrar este chat?')) {
+            fetch('{% url "room_chats:close_chat" chat_room.id %}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Chat cerrado exitosamente');
+                    window.location.href = '{% url "room_chats:chat_list" %}';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al cerrar el chat');
+            });
+        }
+    });
+    {% endif %}
+</script>
+{% endblock %}

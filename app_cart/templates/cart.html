@@ -131,9 +131,15 @@
                 </div>
                 
                 <div class="summary-actions">
+                    {% if user.is_authenticated %}
                     <a href="{% url 'cart:checkout' %}" class="btn btn-primary btn-lg w-100 mb-3">
                         <i class="fas fa-paper-plane"></i> Solicitar Cotización
                     </a>
+                    {% else %}
+                    <a href="{% url 'login:login' %}?next={% url 'cart:checkout' %}" class="btn btn-primary btn-lg w-100 mb-3">
+                        <i class="fas fa-sign-in-alt"></i> Iniciar Sesión para Cotizar
+                    </a>
+                    {% endif %}
                     <a href="{% url 'products:product_list' %}" class="btn btn-outline-secondary w-100">
                         <i class="fas fa-arrow-left"></i> Seguir Explorando
                     </a>
@@ -142,14 +148,23 @@
                 <div class="summary-info mt-3">
                     <div class="alert alert-info">
                         <i class="fas fa-info-circle"></i>
-                        <small>Al confirmar, serás dirigido a un chat con nuestro administrador para recibir tu cotización personalizada.</small>
+                        <small><strong>¿Cómo funciona?</strong><br>
+                        1. Solicita tu cotización<br>
+                        2. Serás dirigido a un chat en tiempo real<br>
+                        3. Un administrador te atenderá y proporcionará precios<br>
+                        4. Podrás consultar y negociar directamente</small>
                     </div>
-                    <p class="text-muted text-center mb-2">
-                        <i class="fas fa-comments"></i> Respuesta rápida
-                    </p>
-                    <p class="text-muted text-center">
-                        <i class="fas fa-handshake"></i> Atención personalizada
-                    </p>
+                    <div class="text-center mt-3">
+                        <p class="text-muted mb-2">
+                            <i class="fas fa-comments text-primary"></i> <strong>Chat en tiempo real</strong>
+                        </p>
+                        <p class="text-muted mb-2">
+                            <i class="fas fa-clock text-success"></i> <strong>Respuesta inmediata</strong>
+                        </p>
+                        <p class="text-muted mb-0">
+                            <i class="fas fa-handshake text-info"></i> <strong>Atención personalizada</strong>
+                        </p>
+                    </div>
                 </div>
                 </div>
             </div>

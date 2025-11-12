@@ -45,6 +45,15 @@
                     
                     {% if user.is_staff or user.is_superuser %}
                     <a href="{% url 'products:admin_product_list' %}">Gestionar Productos</a>
+                    <a href="{% url 'orders:admin_order_list' %}">Gestionar Órdenes</a>
+                    <a href="{% url 'room_chats:chat_list' %}" class="text-success position-relative">
+                        <i class="fas fa-comments"></i> Cotizaciones
+                        {% if admin_unread_chats > 0 %}
+                        <span class="badge badge-danger" style="position: absolute; top: -5px; right: -10px; font-size: 0.75rem;">
+                            {{ admin_unread_chats }}
+                        </span>
+                        {% endif %}
+                    </a>
                     <a href="{% url 'admin:index' %}">Panel Admin</a>
                     {% endif %}
                     <a href="{% url 'website:contact' %}">Contáctanos</a>

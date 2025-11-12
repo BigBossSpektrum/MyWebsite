@@ -168,15 +168,55 @@ def clear_cart(request):
 
 @login_required
 def checkout(request):
-    """Proceso de checkout - será implementado con app_orders"""
+    """Proceso de checkout - crea orden y redirige al chat"""
+    from app_orders.models import Order, OrderItem
+    from decimal import Decimal
+    
     cart = get_or_create_cart(request)
 
     if cart.get_total_items() == 0:
         messages.warning(request, 'Tu carrito está vacío.')
         return redirect('cart:cart_view')
 
-    messages.info(request, 'La función de checkout estará disponible próximamente.')
-    return redirect('cart:cart_view')
+    try:
+        # Crear la orden
+        order = Order.objects.create(
+            user=request.user,
+            status='pending',
+            total=Decimal('0.00')
+        )
+        
+        # Calcular total y crear items de la orden
+        total = Decimal('0.00')
+        for cart_item in cart.items.all():
+            # Usar el precio actual del producto
+            price = cart_item.product.price if hasattr(cart_item.product, 'price') else Decimal('0.00')
+            subtotal = price * cart_item.quantity
+            
+            OrderItem.objects.create(
+                order=order,
+                product=cart_item.product,
+                quantity=cart_item.quantity,
+                price=price,
+                subtotal=subtotal
+            )
+            total += subtotal
+        
+        # Actualizar el total de la orden
+        order.total = total
+        order.save()
+        
+        # Limpiar el carrito
+        cart.clear()
+        
+        messages.success(request, 'Tu orden ha sido creada exitosamente. Ahora puedes chatear con un administrador para tu cotización.')
+        
+        # Redirigir a crear/obtener el chat de esta orden
+        return redirect('room_chats:create_or_get_chat', order_id=order.id)
+        
+    except Exception as e:
+        messages.error(request, f'Hubo un error al procesar tu orden: {str(e)}')
+        return redirect('cart:cart_view')
 
 
 # API views para operaciones AJAX (opcional)

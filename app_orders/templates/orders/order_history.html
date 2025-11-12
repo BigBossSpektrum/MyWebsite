@@ -110,6 +110,11 @@
                     <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-primary">
                         <i class="fas fa-eye"></i> Ver Detalles
                     </a>
+                    {% if order.status == 'pending' or order.status == 'processing' %}
+                    <a href="{% url 'room_chats:create_or_get_chat' order.id %}" class="btn btn-success">
+                        <i class="fas fa-comments"></i> Chat
+                    </a>
+                    {% endif %}
                     {% if order.can_cancel %}
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" 
                             data-bs-target="#cancelOrderModal{{ order.id }}">
