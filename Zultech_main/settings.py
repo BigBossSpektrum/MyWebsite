@@ -40,12 +40,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Django-allauth apps
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    # Local apps
     'app_login',
     'app_products',
     'app_website',
     'app_orders',
     'app_cart',
 ]
+
+# Required for django-allauth
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -57,6 +67,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'allauth.account.middleware.AccountMiddleware',  # Requerido para django-allauth
 ]
 
 ROOT_URLCONF = 'Zultech_main.urls'
@@ -75,6 +86,14 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+# Authentication backends
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 WSGI_APPLICATION = 'Zultech_main.wsgi.application'
@@ -157,6 +176,31 @@ LOGIN_URL = 'login:login'
 LOGIN_REDIRECT_URL = 'website:Dashboard'
 LOGOUT_REDIRECT_URL = 'login:login'
 AUTH_USER_MODEL = 'app_login.CustomUser'
+
+# Django-allauth settings
+ACCOUNT_LOGIN_METHODS = {'username', 'email'}  # Permite login con username o email
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']  # Campos requeridos
+ACCOUNT_EMAIL_VERIFICATION = 'optional'  # Verificación de email opcional
+ACCOUNT_SESSION_REMEMBER = True
+SOCIALACCOUNT_AUTO_SIGNUP = True  # Crear cuenta automáticamente si no existe
+SOCIALACCOUNT_EMAIL_REQUIRED = True  # Email obligatorio para cuentas sociales
+
+# Configuración para que las cuentas sociales se conecten automáticamente
+SOCIALACCOUNT_ADAPTER = 'app_login.adapters.CustomSocialAccountAdapter'
+
+# Configurar proveedores de OAuth (las credenciales se configuran en el admin de Django)
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        'APP': {
+            'client_id': '123',
+            'secret': '456',
+            'key': ''
+        }
+    }
+}
 
 # Media files
 MEDIA_URL = '/media/'

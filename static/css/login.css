@@ -216,6 +216,45 @@ html, body {
     color: #333333;
 }
 
+/* Estilos para los botones sociales */
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.divider-text {
+    padding: 0 1rem;
+    color: #666666;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.btn-outline-danger {
+    border: 2px solid #db4437;
+    color: #db4437;
+    background-color: transparent;
+}
+
+.btn-outline-danger:hover {
+    background-color: #db4437;
+    border-color: #db4437;
+    color: #ffffff;
+}
+
+.btn-outline-danger i,
+.btn-outline-primary i {
+    font-size: 1.2rem;
+}
+
 .form-check-input {
     border-radius: 6px;
     transition: all 0.3s ease;

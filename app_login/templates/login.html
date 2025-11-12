@@ -88,6 +88,17 @@
                                 </a>
                             </div>
                         </form>
+
+                        <div class="divider my-4">
+                            <span class="divider-text">O continuar con</span>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            {% load socialaccount %}
+                            <a href="{% provider_login_url 'google' %}" class="btn btn-outline-danger btn-lg">
+                                <i class="fab fa-google me-2"></i>Continuar con Google
+                            </a>
+                        </div>
             </div>
         </div>
     </div>
