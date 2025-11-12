@@ -251,6 +251,9 @@
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
     transition: all 0.4s ease;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .product-card:hover {
@@ -305,6 +308,9 @@
 
 .product-card-content {
     padding: 30px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .product-icon {
@@ -342,6 +348,7 @@
     list-style: none;
     padding: 0;
     margin-bottom: 25px;
+    flex-grow: 1;
 }
 
 .product-features li {
@@ -358,7 +365,7 @@
 }
 
 .btn-product {
-    display: inline-block;
+    display: block;
     padding: 14px 35px;
     background: #000000;
     color: #ffd700;
@@ -368,6 +375,7 @@
     transition: all 0.3s ease;
     width: 100%;
     text-align: center;
+    margin-top: auto;
 }
 
 .btn-product:hover {
