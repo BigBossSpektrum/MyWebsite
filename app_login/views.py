@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_protect
 from functools import wraps
 from .forms import CustomUserCreationForm
 from .models import CustomUser
@@ -59,21 +60,36 @@ def login_view(request):
     
     return render(request, 'login.html')
 
+@csrf_protect
 def register_view(request):
     if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('Dashboard'))
+        if request.user.is_admin():
+            return HttpResponseRedirect(reverse('login:admin_dashboard'))
+        return HttpResponseRedirect(reverse('login:customer_dashboard'))
         
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST, request.FILES)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
-            messages.success(request, '¡Registro exitoso! Bienvenido a Zultech.')
-            
-            # Redirección directa según el rol
-            if user.is_admin():
-                return HttpResponseRedirect(reverse('login:admin_dashboard'))
-            return HttpResponseRedirect(reverse('login:customer_dashboard'))
+            try:
+                user = form.save()
+                login(request, user)
+                messages.success(request, '¡Registro exitoso! Bienvenido a Zultech.')
+                
+                # Redirección directa según el rol
+                if user.is_admin():
+                    return HttpResponseRedirect(reverse('login:admin_dashboard'))
+                return HttpResponseRedirect(reverse('login:customer_dashboard'))
+            except Exception as e:
+                messages.error(request, f'Error al crear el usuario: {str(e)}')
+        else:
+            # Mostrar errores específicos del formulario
+            for field, errors in form.errors.items():
+                for error in errors:
+                    if field == '__all__':
+                        messages.error(request, error)
+                    else:
+                        field_label = form.fields[field].label if field in form.fields else field
+                        messages.error(request, f'{field_label}: {error}')
     else:
         form = CustomUserCreationForm()
     

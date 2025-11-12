@@ -54,12 +54,12 @@
                     <!-- Correo -->
                     <div class="col-md-6 mb-3">
                         <div class="form-floating">
-                            {{ form.email.errors }}
-                            <input type="email" name="{{ form.email.name }}"
-                                    class="form-control {% if form.email.errors %}is-invalid{% endif %}"
-                                    id="{{ form.email.id_for_label }}" 
+                            {{ form.Correo_Electronico.errors }}
+                            <input type="email" name="{{ form.Correo_Electronico.name }}"
+                                    class="form-control {% if form.Correo_Electronico.errors %}is-invalid{% endif %}"
+                                    id="{{ form.Correo_Electronico.id_for_label }}" 
                                     placeholder="Correo" required>
-                            <label for="{{ form.email.id_for_label }}">Correo Electrónico *</label>
+                            <label for="{{ form.Correo_Electronico.id_for_label }}">Correo Electrónico *</label>
                             <div class="invalid-feedback">
                                 Ingresa un correo electrónico válido.
                             </div>
@@ -115,67 +115,74 @@
                     <!-- Información adicional -->
                     <div class="col-md-6 mb-3">
                         <div class="form-floating">
-                            <input type="tel" name="{{ form.phone_number.name }}"
-                                    class="form-control"
-                                    id="{{ form.phone_number.id_for_label }}" 
+                            {{ form.Telefono.errors }}
+                            <input type="tel" name="{{ form.Telefono.name }}"
+                                    class="form-control {% if form.Telefono.errors %}is-invalid{% endif %}"
+                                    id="{{ form.Telefono.id_for_label }}" 
                                     placeholder="Teléfono">
-                            <label for="{{ form.phone_number.id_for_label }}">Teléfono</label>
+                            <label for="{{ form.Telefono.id_for_label }}">Teléfono</label>
                         </div>
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <div class="form-floating">
-                            <input type="date" name="{{ form.date_of_birth.name }}"
-                                    class="form-control"
-                                    id="{{ form.date_of_birth.id_for_label }}" 
+                            {{ form.Fecha_de_Nacimiento.errors }}
+                            <input type="date" name="{{ form.Fecha_de_Nacimiento.name }}"
+                                    class="form-control {% if form.Fecha_de_Nacimiento.errors %}is-invalid{% endif %}"
+                                    id="{{ form.Fecha_de_Nacimiento.id_for_label }}" 
                                     placeholder="Fecha de Nacimiento">
-                            <label for="{{ form.date_of_birth.id_for_label }}">Fecha de Nacimiento</label>
+                            <label for="{{ form.Fecha_de_Nacimiento.id_for_label }}">Fecha de Nacimiento</label>
                         </div>
                     </div>
 
                     <div class="col-12 mb-3">
                         <div class="form-floating">
-                            <input type="text" name="{{ form.address.name }}"
-                                    class="form-control"
-                                    id="{{ form.address.id_for_label }}" 
+                            {{ form.Direccion.errors }}
+                            <input type="text" name="{{ form.Direccion.name }}"
+                                    class="form-control {% if form.Direccion.errors %}is-invalid{% endif %}"
+                                    id="{{ form.Direccion.id_for_label }}" 
                                     placeholder="Dirección">
-                            <label for="{{ form.address.id_for_label }}">Dirección</label>
+                            <label for="{{ form.Direccion.id_for_label }}">Dirección</label>
                         </div>
                     </div>
 
                     <div class="col-md-4 mb-3">
                         <div class="form-floating">
-                            <input type="text" name="{{ form.city.name }}"
-                                    class="form-control"
-                                    id="{{ form.city.id_for_label }}" 
+                            {{ form.Ciudad.errors }}
+                            <input type="text" name="{{ form.Ciudad.name }}"
+                                    class="form-control {% if form.Ciudad.errors %}is-invalid{% endif %}"
+                                    id="{{ form.Ciudad.id_for_label }}" 
                                     placeholder="Ciudad">
-                            <label for="{{ form.city.id_for_label }}">Ciudad</label>
+                            <label for="{{ form.Ciudad.id_for_label }}">Ciudad</label>
                         </div>
                     </div>
 
                     <div class="col-md-4 mb-3">
                         <div class="form-floating">
-                            <input type="text" name="{{ form.state.name }}"
-                                    class="form-control"
-                                    id="{{ form.state.id_for_label }}" 
+                            {{ form.Estado.errors }}
+                            <input type="text" name="{{ form.Estado.name }}"
+                                    class="form-control {% if form.Estado.errors %}is-invalid{% endif %}"
+                                    id="{{ form.Estado.id_for_label }}" 
                                     placeholder="Estado">
-                            <label for="{{ form.state.id_for_label }}">Estado/Provincia</label>
+                            <label for="{{ form.Estado.id_for_label }}">Estado/Provincia</label>
                         </div>
                     </div>
 
                     <div class="col-md-4 mb-3">
                         <div class="form-floating">
-                            <input type="text" name="{{ form.postal_code.name }}"
-                                    class="form-control"
-                                    id="{{ form.postal_code.id_for_label }}" 
+                            {{ form.Codigo_Postal.errors }}
+                            <input type="text" name="{{ form.Codigo_Postal.name }}"
+                                    class="form-control {% if form.Codigo_Postal.errors %}is-invalid{% endif %}"
+                                    id="{{ form.Codigo_Postal.id_for_label }}" 
                                     placeholder="Código Postal">
-                            <label for="{{ form.postal_code.id_for_label }}">Código Postal</label>
+                            <label for="{{ form.Codigo_Postal.id_for_label }}">Código Postal</label>
                         </div>
                     </div>
 
                     <div class="col-12 mb-4">
-                        <label for="{{ form.profile_picture.id_for_label }}" class="form-label">Foto de Perfil</label>
-                        {{ form.profile_picture }}
+                        <label for="{{ form.Foto_Perfil.id_for_label }}" class="form-label">Foto de Perfil</label>
+                        {{ form.Foto_Perfil.errors }}
+                        {{ form.Foto_Perfil }}
                     </div>
                 </div>
 
