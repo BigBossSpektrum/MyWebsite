@@ -10,7 +10,9 @@ class ProductForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nombre del producto'}),
             'slug': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'slug-del-producto'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Descripción del producto'}),
-            'category': forms.Select(attrs={'class': 'form-control'}),
+            'category': forms.Select(attrs={
+                'class': 'form-control custom-select',
+            }),
             'price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': '0.00'}),
             'stock': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': '0'}),
             'available': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
@@ -29,6 +31,18 @@ class ProductForm(forms.ModelForm):
             'price': 'Precio en la moneda local',
             'stock': 'Cantidad disponible en inventario',
         }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Agregar opción vacía al select de categoría
+        self.fields['category'].empty_label = "-- Selecciona una categoría --"
+        # Agregar clase is-invalid si hay errores
+        for field_name, field in self.fields.items():
+            if self.errors.get(field_name):
+                if 'class' in field.widget.attrs:
+                    field.widget.attrs['class'] += ' is-invalid'
+                else:
+                    field.widget.attrs['class'] = 'is-invalid'
 
 
 class ProductImageForm(forms.ModelForm):

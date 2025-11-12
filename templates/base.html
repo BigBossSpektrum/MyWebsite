@@ -6,51 +6,82 @@
     <title>{% block title %}Zultech{% endblock %}</title>
     {% load static %}
     {% static "static/img/logos/" %}
+    <link rel="icon" type="image/png" href="{% static 'img/logos/logo-zultech.png' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'css/app_website/navbar.css' %}">
     <link rel="stylesheet" href="{% static 'css/app_website/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app_website/dark-mode.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
 <body>
     <nav class="navbar">
         <div class="navbar-container">
             <div class="navbar-logo">
-                <a href="{% url 'Dashboard' %}">
-                    <img src="{% static 'img/logos/zultech_logo.png' %}" alt="Zultech Logo" class="logo">
+                <a href="{% url 'website:Dashboard' %}">
+                    <img src="{% static 'img/logos/logo-zultech.png' %}" alt="Zultech Logo" class="logo">
                 </a>
             </div>
 
-            <div class="navbar-links">
-                <a href="{% url 'Dashboard' %}">Dashboard</a>
-                <a href="{% url 'products:product_list' %}">Productos</a>
-                <a href="{% url 'contact' %}">Contáctanos</a>
-                {% if user.is_authenticated %}
-                <a href="{% url 'cart:cart_view' %}" class="cart-link">
-                    Carrito
-                    {% if cart_count %}
-                    <span class="cart-badge">{{ cart_count }}</span>
-                    {% endif %}
-                </a>
-                    <a href="{% url 'orders:order_history' %}">Mis Pedidos</a>
-                    <a href="{% url 'login:profile' %}">Perfil</a>
-                {% endif %}
+            <!-- Botón hamburguesa -->
+            <button class="navbar-toggle" id="navbarToggle" aria-label="Toggle navigation">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
 
-                {% if user.is_staff or user.is_superuser %}
+            <div class="navbar-menu" id="navbarMenu">
+                <div class="navbar-links">
+                    <a href="{% url 'website:Dashboard' %}">Servicios</a>
+                    <a href="{% url 'products:product_list' %}">Productos</a>
+                    {% if user.is_authenticated %}
+                    <!-- Dropdown del carrito -->
+                    <a href="{% url 'login:profile' %}">Perfil</a>
+                    {% endif %}
+                    
+                    {% if user.is_staff or user.is_superuser %}
                     <a href="{% url 'products:admin_product_list' %}">Gestionar Productos</a>
                     <a href="{% url 'admin:index' %}">Panel Admin</a>
-                {% endif %}
-            </div>
-
-            <div class="navbar-auth">
+                    {% endif %}
+                    <a href="{% url 'website:contact' %}">Contáctanos</a>
+                </div>
+                
                 {% if user.is_authenticated %}
-                    <a href="{% url 'login:logout' %}" class="btn-logout">Cerrar Sesión</a>
-                {% else %}
-                    <a href="{% url 'login:login' %}" class="btn-login">Iniciar Sesión</a>
-                    <a href="{% url 'login:register' %}" class="btn-register">Registrarse</a>
+                <div class="cart-dropdown">
+                    <button class="cart-dropdown-toggle" id="cartDropdownToggle">
+                        <i class="fas fa-shopping-cart"></i>
+                        {% if cart_count %}
+                        <span class="cart-badge">{{ cart_count }}</span>
+                        {% endif %}
+                    </button>
+                    <div class="cart-dropdown-menu" id="cartDropdownMenu">
+                        <a href="{% url 'cart:cart_view' %}" class="cart-dropdown-item">
+                            <i class="fas fa-shopping-cart"></i> Carrito
+                        </a>
+                        <a href="{% url 'orders:order_history' %}" class="cart-dropdown-item">
+                            <i class="fas fa-box"></i> Mis Pedidos
+                        </a>
+                    </div>
+                </div>
                 {% endif %}
+                
+                <div class="navbar-auth">
+                    <!-- Botón modo oscuro -->
+                    <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'login:logout' %}" class="btn-logout">Cerrar Sesión</a>
+                    {% else %}
+                        <a href="{% url 'login:login' %}" class="btn-login">Iniciar Sesión</a>
+                        <a href="{% url 'login:register' %}" class="btn-register">Registrarse</a>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </nav>
@@ -58,6 +89,101 @@
         {% block content %}
         {% endblock %}
     </div>
+
+    <script>
+        // Menú Hamburguesa Toggle Script
+        const navbarToggle = document.getElementById('navbarToggle');
+        const navbarMenu = document.getElementById('navbarMenu');
+        
+        navbarToggle.addEventListener('click', () => {
+            navbarToggle.classList.toggle('active');
+            navbarMenu.classList.toggle('active');
+        });
+
+        // Cerrar menú al hacer clic en un enlace (solo en móvil)
+        const navbarLinks = document.querySelectorAll('.navbar-links a, .navbar-auth a');
+        navbarLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    navbarToggle.classList.remove('active');
+                    navbarMenu.classList.remove('active');
+                }
+            });
+        });
+
+        // Cerrar menú al hacer clic fuera de él
+        document.addEventListener('click', (event) => {
+            const isClickInsideNav = navbarToggle.contains(event.target) || navbarMenu.contains(event.target);
+            if (!isClickInsideNav && navbarMenu.classList.contains('active')) {
+                navbarToggle.classList.remove('active');
+                navbarMenu.classList.remove('active');
+            }
+        });
+
+        // Cart Dropdown Toggle Script
+        const cartDropdownToggle = document.getElementById('cartDropdownToggle');
+        const cartDropdownMenu = document.getElementById('cartDropdownMenu');
+        
+        if (cartDropdownToggle && cartDropdownMenu) {
+            cartDropdownToggle.addEventListener('click', (event) => {
+                event.stopPropagation();
+                cartDropdownMenu.classList.toggle('active');
+            });
+
+            // Cerrar dropdown al hacer clic fuera
+            document.addEventListener('click', (event) => {
+                if (!cartDropdownToggle.contains(event.target) && !cartDropdownMenu.contains(event.target)) {
+                    cartDropdownMenu.classList.remove('active');
+                }
+            });
+
+            // Cerrar dropdown en móvil después de hacer clic en un enlace
+            const cartDropdownItems = cartDropdownMenu.querySelectorAll('.cart-dropdown-item');
+            cartDropdownItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    cartDropdownMenu.classList.remove('active');
+                    if (window.innerWidth <= 768) {
+                        navbarToggle.classList.remove('active');
+                        navbarMenu.classList.remove('active');
+                    }
+                });
+            });
+        }
+
+        // Dark Mode Toggle Script
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const htmlElement = document.documentElement;
+        
+        // Verificar preferencia guardada o preferencia del sistema
+        const currentTheme = localStorage.getItem('theme') || 
+            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        
+        // Aplicar tema al cargar la página
+        if (currentTheme === 'dark') {
+            htmlElement.setAttribute('data-theme', 'dark');
+            darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+        
+        // Toggle al hacer clic
+        darkModeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Cambiar icono
+            if (newTheme === 'dark') {
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            }
+        });
+    </script>
+
+    <!-- jQuery y Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 
     {% block extra_js %}{% endblock %}
 <footer>

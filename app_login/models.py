@@ -21,6 +21,7 @@ class CustomUser(AbstractUser):
     )
     
     # Campos personalizados
+    Correo_Electronico = models.EmailField(max_length=254, blank=True)
     Telefono = models.CharField(validators=[phone_regex], max_length=17, blank=True)
     Direccion = models.CharField(max_length=255, blank=True)
     Ciudad = models.CharField(max_length=100, blank=True)
@@ -41,3 +42,11 @@ class CustomUser(AbstractUser):
 
     def is_customer(self):
         return self.role == self.Roles.CUSTOMER
+    
+    def save(self, *args, **kwargs):
+        # Sincronizar email con Correo_Electronico
+        if self.Correo_Electronico and not self.email:
+            self.email = self.Correo_Electronico
+        elif self.email and not self.Correo_Electronico:
+            self.Correo_Electronico = self.email
+        super().save(*args, **kwargs)

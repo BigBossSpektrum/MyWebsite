@@ -1,3 +1,8 @@
+/* === AJUSTE BODY PARA FOOTER === */
+body {
+    padding-bottom: 60px; /* Espacio para el footer fijo */
+}
+
 /* === FOOTER GLOBAL === */
 footer {
     position: fixed;
@@ -12,6 +17,12 @@ footer {
     box-shadow: 0 -2px 10px rgba(0,0,0,0.4);
     z-index: 999;
     overflow: hidden;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+[data-theme="dark"] footer {
+    background: #0a0a0a;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.8);
 }
 
 /* === CONTENEDOR PRINCIPAL === */

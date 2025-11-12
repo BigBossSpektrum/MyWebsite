@@ -4,156 +4,278 @@
 {% block title %}{% if form.instance.pk %}Editar{% else %}Crear{% endif %} Producto{% endblock %}
 
 {% block extra_css %}
-<style>
-    .image-preview-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-        margin-top: 15px;
-    }
-    .image-preview {
-        position: relative;
-        width: 150px;
-        height: 150px;
-        border: 2px solid #ddd;
-        border-radius: 8px;
-        overflow: hidden;
-    }
-    .image-preview img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    .image-preview .remove-image {
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        background: rgba(220, 53, 69, 0.9);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 25px;
-        height: 25px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 16px;
-    }
-    .image-preview .remove-image:hover {
-        background: rgba(220, 53, 69, 1);
-    }
-    .drop-zone {
-        border: 2px dashed #007bff;
-        border-radius: 8px;
-        padding: 30px;
-        text-align: center;
-        background: #f8f9fa;
-        cursor: pointer;
-        transition: all 0.3s;
-    }
-    .drop-zone:hover, .drop-zone.dragover {
-        background: #e7f1ff;
-        border-color: #0056b3;
-    }
-    .drop-zone i {
-        font-size: 48px;
-        color: #007bff;
-        margin-bottom: 15px;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'css/products/admin_products.css' %}">
+<link rel="stylesheet" href="{% static 'css/products/admin_product_form.css' %}">
 {% endblock %}
 
+
 {% block content %}
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-md-10 offset-md-1">
-            <div class="card">
-                <div class="card-header">
-                    <h3>{% if form.instance.pk %}Editar{% else %}Crear{% endif %} Producto</h3>
+<div class="container-fluid px-4 py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb bg-transparent p-0">
+            <li class="breadcrumb-item"><a href="{% url 'products:admin_product_list' %}"><i class="fas fa-boxes"></i> Productos</a></li>
+            <li class="breadcrumb-item active">{% if form.instance.pk %}Editar{% else %}Crear{% endif %} Producto</li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="admin-header mb-4">
+        <h1 class="admin-title">
+            <i class="fas fa-{% if form.instance.pk %}edit{% else %}plus-circle{% endif %}"></i>
+            {% if form.instance.pk %}Editar Producto{% else %}Crear Nuevo Producto{% endif %}
+        </h1>
+        <p class="text-muted mb-0">
+            {% if form.instance.pk %}
+                Modifica la información del producto
+            {% else %}
+                Completa el formulario para agregar un nuevo producto al catálogo
+            {% endif %}
+        </p>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" id="productForm">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+            <i class="fas fa-exclamation-circle mr-2"></i>
+            {{ form.non_field_errors }}
+            <button type="button" class="close" data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+        </div>
+        {% endif %}
+
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Información Básica -->
+                <div class="form-section">
+                    <h3 class="form-section-title">
+                        <i class="fas fa-info-circle"></i> Información Básica
+                    </h3>
+                    
+                    <div class="form-group mb-4">
+                        <label for="{{ form.name.id_for_label }}" class="form-label font-weight-bold">
+                            {{ form.name.label }} <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" 
+                               name="{{ form.name.name }}" 
+                               id="{{ form.name.id_for_label }}"
+                               class="form-control {% if form.name.errors %}is-invalid{% endif %}" 
+                               value="{{ form.name.value|default:'' }}"
+                               placeholder="Ej: Laptop HP Pavilion 15"
+                               maxlength="200"
+                               onkeyup="updateCharCount(this, 200)">
+                        <small class="form-text text-muted">
+                            <span id="name-counter" class="character-counter">0/200</span>
+                            Nombre descriptivo del producto
+                        </small>
+                        {% for error in form.name.errors %}
+                        <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label for="{{ form.description.id_for_label }}" class="form-label font-weight-bold">
+                            {{ form.description.label }}
+                        </label>
+                        <textarea name="{{ form.description.name }}" 
+                                  id="{{ form.description.id_for_label }}"
+                                  class="form-control {% if form.description.errors %}is-invalid{% endif %}" 
+                                  rows="5"
+                                  placeholder="Describe las características principales del producto..."
+                                  maxlength="1000"
+                                  onkeyup="updateCharCount(this, 1000)">{{ form.description.value|default:'' }}</textarea>
+                        <small class="form-text text-muted">
+                            <span id="description-counter" class="character-counter">0/1000</span>
+                            Descripción detallada que verán los clientes
+                        </small>
+                        {% for error in form.description.errors %}
+                        <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label for="{{ form.category.id_for_label }}" class="form-label font-weight-bold">
+                            {{ form.category.label }} <span class="text-danger">*</span>
+                        </label>
+                        {{ form.category }}
+                        {% for error in form.category.errors %}
+                        <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
                 </div>
-                <div class="card-body">
-                    <form method="post" enctype="multipart/form-data" id="productForm">
-                        {% csrf_token %}
 
-                        {% if form.non_field_errors %}
-                        <div class="alert alert-danger">
-                            {{ form.non_field_errors }}
-                        </div>
-                        {% endif %}
+                <!-- Precio e Inventario -->
+                <div class="form-section">
+                    <h3 class="form-section-title">
+                        <i class="fas fa-dollar-sign"></i> Precio e Inventario
+                    </h3>
 
-                        {% for field in form %}
-                        <div class="form-group mb-3">
-                            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                            {% if field.field.widget.input_type == 'checkbox' %}
-                                <div class="form-check">
-                                    {{ field }}
-                                    <label class="form-check-label" for="{{ field.id_for_label }}">
-                                        {{ field.label }}
-                                    </label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-4">
+                                <label for="{{ form.price.id_for_label }}" class="form-label font-weight-bold">
+                                    {{ form.price.label }} <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                    </div>
+                                    <input type="number" 
+                                           name="{{ form.price.name }}" 
+                                           id="{{ form.price.id_for_label }}"
+                                           class="form-control {% if form.price.errors %}is-invalid{% endif %}" 
+                                           value="{{ form.price.value|default:'' }}"
+                                           step="0.01"
+                                           min="0"
+                                           placeholder="0.00">
                                 </div>
-                            {% else %}
-                                {{ field }}
-                            {% endif %}
-                            {% if field.help_text %}
-                            <small class="form-text text-muted">{{ field.help_text }}</small>
-                            {% endif %}
-                            {% for error in field.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ error }}
+                                {% for error in form.price.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-group mb-4">
+                                <label for="{{ form.stock.id_for_label }}" class="form-label font-weight-bold">
+                                    {{ form.stock.label }} <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-boxes"></i></span>
+                                    </div>
+                                    <input type="number" 
+                                           name="{{ form.stock.name }}" 
+                                           id="{{ form.stock.id_for_label }}"
+                                           class="form-control {% if form.stock.errors %}is-invalid{% endif %}" 
+                                           value="{{ form.stock.value|default:'' }}"
+                                           min="0"
+                                           placeholder="0">
+                                </div>
+                                {% for error in form.stock.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Imágenes del Producto -->
+                <div class="form-section">
+                    <h3 class="form-section-title">
+                        <i class="fas fa-images"></i> Imágenes del Producto
+                    </h3>
+                    
+                    <div class="drop-zone" id="dropZone">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <h5 class="mb-2">Arrastra imágenes aquí o haz clic para seleccionar</h5>
+                        <p class="text-muted mb-3">Puedes seleccionar múltiples imágenes a la vez</p>
+                        <button type="button" class="btn btn-primary" onclick="document.getElementById('imageInput').click()">
+                            <i class="fas fa-folder-open"></i> Seleccionar Archivos
+                        </button>
+                        <input type="file" name="product_images" id="imageInput" multiple accept="image/*" style="display: none;">
+                    </div>
+                    <small class="form-text text-muted mt-2">
+                        <i class="fas fa-info-circle"></i> Formatos: JPG, PNG, GIF, WebP | Tamaño máximo: 5MB por imagen
+                    </small>
+
+                    <!-- Vista previa de imágenes nuevas -->
+                    <div id="imagePreviewContainer" class="image-preview-container"></div>
+
+                    {% if product and product.images.exists %}
+                    <!-- Imágenes Existentes -->
+                    <div class="mt-4">
+                        <h5 class="mb-3">
+                            <i class="fas fa-check-circle text-success"></i> Imágenes Actuales ({{ product.images.count }})
+                        </h5>
+                        <div class="existing-images-grid">
+                            {% for image in product.images.all %}
+                            <div class="existing-image-card">
+                                <img src="{{ image.image.url }}" alt="{{ image.alt_text }}">
+                                {% if image.is_main %}
+                                <span class="main-badge">
+                                    <i class="fas fa-star"></i> Principal
+                                </span>
+                                {% endif %}
                             </div>
                             {% endfor %}
                         </div>
+                        <a href="{% url 'products:admin_product_images' product.id %}" class="btn btn-info mt-3">
+                            <i class="fas fa-cog"></i> Gestionar Imágenes Detalladamente
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <!-- Estado y Configuración -->
+                <div class="form-section">
+                    <h3 class="form-section-title">
+                        <i class="fas fa-cog"></i> Configuración
+                    </h3>
+                    
+                    <div class="form-group mb-4">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" 
+                                   name="{{ form.available.name }}"
+                                   class="custom-control-input" 
+                                   id="{{ form.available.id_for_label }}"
+                                   {% if form.available.value %}checked{% endif %}>
+                            <label class="custom-control-label font-weight-bold" for="{{ form.available.id_for_label }}">
+                                {{ form.available.label }}
+                            </label>
+                        </div>
+                        <small class="form-text text-muted">
+                            <i class="fas fa-info-circle"></i> El producto será visible para los clientes
+                        </small>
+                        {% for error in form.available.errors %}
+                        <div class="invalid-feedback d-block">{{ error }}</div>
                         {% endfor %}
+                    </div>
 
-                        <!-- Sección de Imágenes -->
-                        <div class="form-group mb-3">
-                            <label class="form-label">Imágenes del Producto</label>
-                            <div class="drop-zone" id="dropZone">
-                                <i class="fas fa-cloud-upload-alt"></i>
-                                <p class="mb-2"><strong>Arrastra imágenes aquí o haz clic para seleccionar</strong></p>
-                                <p class="text-muted small">Puedes seleccionar múltiples imágenes</p>
-                                <input type="file" name="product_images" id="imageInput" multiple accept="image/*" style="display: none;">
-                            </div>
-                            <small class="form-text text-muted">Formatos soportados: JPG, PNG, GIF. Tamaño máximo por imagen: 5MB</small>
-                        </div>
+                    {% if product %}
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-info-circle"></i> Información</h6>
+                        <p class="mb-1"><strong>ID:</strong> {{ product.id }}</p>
+                        <p class="mb-1"><strong>Slug:</strong> {{ product.slug }}</p>
+                        <p class="mb-0"><strong>Creado:</strong> {{ product.created_at|date:"d/m/Y H:i" }}</p>
+                    </div>
+                    {% endif %}
 
-                        <!-- Vista previa de imágenes -->
-                        <div id="imagePreviewContainer" class="image-preview-container"></div>
+                    <!-- Ayuda -->
+                    <div class="alert alert-light border">
+                        <h6><i class="fas fa-question-circle"></i> Ayuda</h6>
+                        <ul class="mb-0 pl-3">
+                            <li class="mb-2">Los campos con <span class="text-danger">*</span> son obligatorios</li>
+                            <li class="mb-2">El slug se genera automáticamente del nombre</li>
+                            <li class="mb-2">Agrega múltiples imágenes para mejor presentación</li>
+                            <li>Puedes gestionar las imágenes después de crear el producto</li>
+                        </ul>
+                    </div>
+                </div>
 
-                        {% if product %}
-                        <!-- Mostrar imágenes existentes si estamos editando -->
-                        <div class="mt-4">
-                            <h5>Imágenes Actuales</h5>
-                            <div class="image-preview-container">
-                                {% for image in product.images.all %}
-                                <div class="image-preview">
-                                    <img src="{{ image.image.url }}" alt="{{ image.alt_text }}">
-                                    {% if image.is_main %}
-                                    <span class="badge badge-success" style="position: absolute; top: 5px; left: 5px;">Principal</span>
-                                    {% endif %}
-                                </div>
-                                {% endfor %}
-                            </div>
-                            <a href="{% url 'products:admin_product_images' product.id %}" class="btn btn-info mt-2">
-                                <i class="fas fa-images"></i> Gestionar Imágenes
-                            </a>
-                        </div>
-                        {% endif %}
-
-                        <div class="form-group mt-4">
-                            <a href="{% url 'products:admin_product_list' %}" class="btn btn-secondary">Cancelar</a>
-                            <button type="submit" class="btn btn-primary">
-                                {% if form.instance.pk %}Actualizar{% else %}Crear{% endif %}
-                            </button>
-                        </div>
-                    </form>
+                <!-- Botones de Acción -->
+                <div class="form-section">
+                    <div class="btn-action-group flex-column">
+                        <button type="submit" class="btn btn-success btn-lg btn-block">
+                            <i class="fas fa-save"></i> 
+                            {% if form.instance.pk %}Actualizar Producto{% else %}Crear Producto{% endif %}
+                        </button>
+                        <a href="{% url 'products:admin_product_list' %}" class="btn btn-secondary btn-lg btn-block">
+                            <i class="fas fa-times"></i> Cancelar
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 {% endblock %}
+
 
 {% block extra_js %}
 <script>
@@ -164,13 +286,16 @@
     let selectedFiles = [];
 
     // Click en la zona de drop para abrir selector de archivos
-    dropZone.addEventListener('click', () => {
-        imageInput.click();
+    dropZone.addEventListener('click', (e) => {
+        if (e.target.tagName !== 'BUTTON') {
+            imageInput.click();
+        }
     });
 
     // Prevenir comportamiento por defecto del navegador
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
         dropZone.addEventListener(eventName, preventDefaults, false);
+        document.body.addEventListener(eventName, preventDefaults, false);
     });
 
     function preventDefaults(e) {
@@ -208,8 +333,14 @@
         
         fileArray.forEach(file => {
             if (file.type.startsWith('image/')) {
+                if (file.size > 5 * 1024 * 1024) {
+                    alert(`El archivo ${file.name} excede el tamaño máximo de 5MB`);
+                    return;
+                }
                 selectedFiles.push(file);
                 displayPreview(file);
+            } else {
+                alert(`El archivo ${file.name} no es una imagen válida`);
             }
         });
 
@@ -224,7 +355,9 @@
             previewDiv.className = 'image-preview';
             previewDiv.innerHTML = `
                 <img src="${e.target.result}" alt="Preview">
-                <button type="button" class="remove-image" onclick="removeImage('${file.name}')">×</button>
+                <button type="button" class="remove-image" onclick="removeImage('${file.name.replace(/'/g, "\\'")}')">
+                    <i class="fas fa-times"></i>
+                </button>
             `;
             previewContainer.appendChild(previewDiv);
         };
@@ -252,5 +385,109 @@
             displayPreview(file);
         });
     }
+
+    // Character counter
+    function updateCharCount(element, maxLength) {
+        const currentLength = element.value.length;
+        const counterId = element.id + '-counter';
+        const counter = document.getElementById(counterId);
+        
+        if (counter) {
+            counter.textContent = `${currentLength}/${maxLength}`;
+            counter.classList.remove('warning', 'danger');
+            
+            if (currentLength > maxLength * 0.9) {
+                counter.classList.add('danger');
+            } else if (currentLength > maxLength * 0.75) {
+                counter.classList.add('warning');
+            }
+        }
+    }
+
+    // Initialize character counters
+    document.addEventListener('DOMContentLoaded', function() {
+        const nameInput = document.getElementById('{{ form.name.id_for_label }}');
+        const descInput = document.getElementById('{{ form.description.id_for_label }}');
+        
+        if (nameInput) {
+            updateCharCount(nameInput, 200);
+        }
+        if (descInput) {
+            updateCharCount(descInput, 1000);
+        }
+    });
+
+    // Form validation
+    document.getElementById('productForm').addEventListener('submit', function(e) {
+        let isValid = true;
+        const requiredFields = ['{{ form.name.id_for_label }}', '{{ form.category.id_for_label }}', '{{ form.price.id_for_label }}', '{{ form.stock.id_for_label }}'];
+        
+        requiredFields.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field && !field.value) {
+                field.classList.add('is-invalid');
+                isValid = false;
+            } else if (field) {
+                field.classList.remove('is-invalid');
+            }
+        });
+
+        if (!isValid) {
+            e.preventDefault();
+            alert('Por favor completa todos los campos obligatorios');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return false;
+        }
+
+        // Confirmación antes de guardar
+        const productName = document.getElementById('{{ form.name.id_for_label }}').value;
+        const isNewProduct = {% if form.instance.pk %}false{% else %}true{% endif %};
+        
+        let confirmMessage = isNewProduct 
+            ? `¿Deseas crear el producto "${productName}"?`
+            : `¿Deseas guardar los cambios en "${productName}"?`;
+        
+        // Agregar advertencia si no hay imágenes
+        if (selectedFiles.length === 0 && isNewProduct) {
+            confirmMessage += '\n\nNOTA: No has agregado ninguna imagen. Puedes agregar imágenes después de crear el producto.';
+        }
+        
+        const confirmed = confirm(confirmMessage);
+        
+        if (!confirmed) {
+            e.preventDefault();
+            return false;
+        }
+        
+        // Add loading state to submit button
+        const submitBtn = this.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+        }
+    });
+
+    // Confirmación antes de salir si hay cambios sin guardar
+    let formModified = false;
+    const formInputs = document.querySelectorAll('#productForm input, #productForm textarea, #productForm select');
+    
+    formInputs.forEach(input => {
+        input.addEventListener('change', () => {
+            formModified = true;
+        });
+    });
+
+    window.addEventListener('beforeunload', (e) => {
+        if (formModified || selectedFiles.length > 0) {
+            e.preventDefault();
+            e.returnValue = '';
+        }
+    });
+
+    // Resetear flag cuando se envía el formulario
+    document.getElementById('productForm').addEventListener('submit', () => {
+        formModified = false;
+    });
 </script>
 {% endblock %}
