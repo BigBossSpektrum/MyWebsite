@@ -37,7 +37,7 @@ ALLOWED_HOSTS = ['mywebsite-tlxs.onrender.com', 'localhost', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
-    'daphne',  # Debe estar primero para ASGI
+    # 'daphne',  # Debe estar primero para ASGI
     'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -51,9 +51,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.facebook',
     # Django Channels
-    'channels',
+    # 'channels',
     # Local apps
     'app_login',
     'app_products',
@@ -101,24 +100,24 @@ TEMPLATES = [
 
 # Authentication backends
 AUTHENTICATION_BACKENDS = [
-    # Needed to login by username in Django admin, regardless of `allauth`
-    'django.contrib.auth.backends.ModelBackend',
+    # Backend personalizado que permite login con username o email
+    'app_login.backends.EmailOrUsernameModelBackend',
     # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 WSGI_APPLICATION = 'Zultech_main.wsgi.application'
-ASGI_APPLICATION = 'Zultech_main.asgi.application'
+# ASGI_APPLICATION = 'Zultech_main.asgi.application'
 
 # Channels Configuration
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [os.environ.get('REDIS_URL', 'redis://127.0.0.1:6379/0')],
-        },
-    },
-}
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
+#         'CONFIG': {
+#             "hosts": [os.environ.get('REDIS_URL', 'redis://127.0.0.1:6379/0')],
+#         },
+#     },
+# }
 
 
 # Database
@@ -228,6 +227,7 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
+SOCIALACCOUNT_LOGIN_ON_GET = True  # Permite login directo sin página intermedia
 
 # Media files
 MEDIA_URL = '/media/'
