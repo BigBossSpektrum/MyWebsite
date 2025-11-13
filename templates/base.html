@@ -59,7 +59,7 @@
                     <a href="{% url 'website:contact' %}">Contáctanos</a>
                 </div>
                 
-                {% if user.is_authenticated %}
+                {% if user.is_authenticated and not user.is_staff and not user.is_superuser %}
                 <div class="cart-dropdown">
                     <button class="cart-dropdown-toggle" id="cartDropdownToggle">
                         <i class="fas fa-shopping-cart"></i>

@@ -32,8 +32,18 @@
         background-color: #f0f8ff;
     }
     
+    .list-group-item.border-warning {
+        border-left-color: #ffc107 !important;
+        background-color: #fffbf0;
+    }
+    
     .gap-3 {
         gap: 1rem;
+    }
+    
+    .alert-warning {
+        border-radius: 0.375rem;
+        font-size: 0.9rem;
     }
     
     .badge {
@@ -166,26 +176,33 @@
 
                 <div class="list-group">
                     {% for chat in chat_rooms %}
-                    <a href="{% url 'room_chats:chat_room' chat.id %}" class="list-group-item list-group-item-action {% if user.role == 'admin' and chat.unread_count_for_admin > 0 %}border-danger{% elif user.role != 'admin' and chat.unread_count_for_customer > 0 %}border-primary{% endif %}">
+                    <a href="{% url 'room_chats:chat_room' chat.id %}" class="list-group-item list-group-item-action {% if not chat.admin %}border-warning{% elif user.role == 'admin' and chat.unread_count_for_admin > 0 %}border-danger{% elif user.role != 'admin' and chat.unread_count_for_customer > 0 %}border-primary{% endif %}">
                         <div class="d-flex w-100 justify-content-between align-items-start">
                             <div class="flex-grow-1">
-                                <div class="d-flex align-items-center mb-2">
+                                <div class="d-flex align-items-center mb-2 flex-wrap">
                                     <h5 class="mb-0 me-3">
                                         <i class="fas fa-file-invoice"></i> 
                                         Orden #{{ chat.order.id|truncatechars:10 }}
                                     </h5>
-                                    <span class="badge {% if chat.order.status == 'pending' %}bg-warning{% elif chat.order.status == 'processing' %}bg-info{% elif chat.order.status == 'completed' %}bg-success{% else %}bg-secondary{% endif %}">
+                                    <span class="badge {% if chat.order.status == 'pending' %}bg-warning{% elif chat.order.status == 'processing' %}bg-info{% elif chat.order.status == 'completed' %}bg-success{% else %}bg-secondary{% endif %} me-2">
                                         {{ chat.order.get_status_display }}
                                     </span>
+                                    
+                                    {% if not chat.admin %}
+                                        <span class="badge bg-warning text-dark me-2" title="Orden sin atender">
+                                            <i class="fas fa-user-clock"></i> Requiere Atención
+                                        </span>
+                                    {% endif %}
+                                    
                                     {% if user.role == 'admin' %}
                                         {% if chat.unread_count_for_admin > 0 %}
-                                            <span class="badge bg-danger ms-2">
+                                            <span class="badge bg-danger">
                                                 <i class="fas fa-envelope"></i> {{ chat.unread_count_for_admin }} nuevo{{ chat.unread_count_for_admin|pluralize }}
                                             </span>
                                         {% endif %}
                                     {% else %}
                                         {% if chat.unread_count_for_customer > 0 %}
-                                            <span class="badge bg-primary ms-2">
+                                            <span class="badge bg-primary">
                                                 <i class="fas fa-envelope"></i> {{ chat.unread_count_for_customer }} nuevo{{ chat.unread_count_for_customer|pluralize }}
                                             </span>
                                         {% endif %}
@@ -196,14 +213,31 @@
                                     <i class="fas fa-user"></i> 
                                     <strong>Cliente:</strong> {{ chat.customer.email }}
                                     {% if chat.admin %}
-                                        | <i class="fas fa-user-shield"></i> 
-                                        <strong>Atendido por:</strong> {{ chat.admin.email }}
+                                        <span class="ms-2">
+                                            | <i class="fas fa-user-shield text-success"></i> 
+                                            <strong>Atendido por:</strong> 
+                                            <span class="text-success">{{ chat.admin.email }}</span>
+                                        </span>
                                     {% else %}
-                                        {% if user.role == 'admin' %}
-                                            | <span class="text-warning"><i class="fas fa-exclamation-triangle"></i> Sin asignar</span>
-                                        {% endif %}
+                                        <span class="ms-2">
+                                            | <span class="badge bg-warning text-dark">
+                                                <i class="fas fa-exclamation-triangle"></i> Sin Atender
+                                            </span>
+                                        </span>
                                     {% endif %}
                                 </div>
+                                
+                                {% if not chat.admin %}
+                                    <div class="alert alert-warning py-2 px-3 mb-2" role="alert">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        <strong>Atención:</strong> Esta orden aún no ha sido asignada a ningún asesor.
+                                        {% if user.role == 'admin' %}
+                                            Haz clic para atenderla.
+                                        {% else %}
+                                            Un asesor se pondrá en contacto pronto.
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
                                 
                                 <div class="d-flex gap-3 text-muted">
                                     <small>
