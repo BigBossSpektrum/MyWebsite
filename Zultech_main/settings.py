@@ -37,7 +37,7 @@ ALLOWED_HOSTS = ['mywebsite-tlxs.onrender.com', 'localhost', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
-    # 'daphne',  # Debe estar primero para ASGI
+    'daphne',  # Debe estar primero para ASGI
     'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     # Django Channels
-    # 'channels',
+    'channels',
     # Local apps
     'app_login',
     'app_products',
@@ -107,17 +107,14 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 WSGI_APPLICATION = 'Zultech_main.wsgi.application'
-# ASGI_APPLICATION = 'Zultech_main.asgi.application'
+ASGI_APPLICATION = 'Zultech_main.asgi.application'
 
 # Channels Configuration
-# CHANNEL_LAYERS = {
-#     'default': {
-#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
-#         'CONFIG': {
-#             "hosts": [os.environ.get('REDIS_URL', 'redis://127.0.0.1:6379/0')],
-#         },
-#     },
-# }
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 
 
 # Database
