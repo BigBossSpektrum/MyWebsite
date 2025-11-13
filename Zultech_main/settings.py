@@ -209,19 +209,24 @@ SOCIALACCOUNT_EMAIL_REQUIRED = True  # Email obligatorio para cuentas sociales
 # Configuración para que las cuentas sociales se conecten automáticamente
 SOCIALACCOUNT_ADAPTER = 'app_login.adapters.CustomSocialAccountAdapter'
 
-# Configurar proveedores de OAuth (las credenciales se configuran en el admin de Django)
+# Configurar proveedores de OAuth
+# Las credenciales se configuran en el admin de Django (/admin/socialaccount/socialapp/)
+# NO las configures aquí para evitar conflictos
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
-        # For each OAuth based provider, either add a ``SocialApp``
-        # (``socialaccount`` app) containing the required client
-        # credentials, or list them here:
-        'APP': {
-            'client_id': '123',
-            'secret': '456',
-            'key': ''
-        }
-    }
+        'EMAIL_AUTOMATICALLY_VERIFIED': True,
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'FETCH_USERINFO': True,
+    },
 }
+
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
 
 # Media files
 MEDIA_URL = '/media/'

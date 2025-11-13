@@ -2,6 +2,8 @@ from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from allauth.account.utils import perform_login
 from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
+from django.core.files.base import ContentFile
+import requests
 
 User = get_user_model()
 
@@ -47,6 +49,11 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
         # Extraer datos adicionales del proveedor social
         extra_data = sociallogin.account.extra_data
         
+        # Configurar correo electrónico
+        if extra_data.get('email'):
+            user.email = extra_data.get('email')
+            user.Correo_Electronico = extra_data.get('email')
+        
         # Configurar campos adicionales según el proveedor
         if not user.first_name and extra_data.get('first_name'):
             user.first_name = extra_data.get('first_name', '')
@@ -60,6 +67,23 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
             user.first_name = name_parts[0]
             if len(name_parts) > 1:
                 user.last_name = name_parts[1]
+        
+        # Descargar y guardar la foto de perfil de Google
+        picture_url = extra_data.get('picture')
+        if picture_url and not user.Foto_Perfil:
+            try:
+                response = requests.get(picture_url, timeout=10)
+                if response.status_code == 200:
+                    # Extraer el nombre del archivo del usuario
+                    file_name = f"profile_{user.username}.jpg"
+                    user.Foto_Perfil.save(
+                        file_name,
+                        ContentFile(response.content),
+                        save=False
+                    )
+            except Exception as e:
+                # Si falla la descarga de la imagen, continuar sin ella
+                print(f"Error descargando imagen de perfil: {e}")
         
         # Asignar rol de CUSTOMER por defecto para cuentas sociales
         if not user.role:
@@ -88,13 +112,28 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
         user = super().populate_user(request, sociallogin, data)
         
         # Asegurarse de que el email esté configurado
-        if not user.email and data.get('email'):
-            user.email = data.get('email')
+        email = data.get('email') or ''
+        if email:
+            user.email = email
+            user.Correo_Electronico = email
+        
+        # Configurar nombre y apellido si vienen en los datos
+        if data.get('first_name'):
+            user.first_name = data.get('first_name')
+        if data.get('last_name'):
+            user.last_name = data.get('last_name')
+        
+        # Si el nombre completo viene en un solo campo
+        if not user.first_name and not user.last_name and data.get('name'):
+            name_parts = data.get('name', '').split(' ', 1)
+            user.first_name = name_parts[0]
+            if len(name_parts) > 1:
+                user.last_name = name_parts[1]
         
         # Configurar username si no existe
         if not user.username:
             # Usar el email como base para el username
-            email_username = data.get('email', '').split('@')[0]
+            email_username = email.split('@')[0] if email else ''
             base_username = email_username or sociallogin.account.uid
             
             # Asegurar que el username sea único
