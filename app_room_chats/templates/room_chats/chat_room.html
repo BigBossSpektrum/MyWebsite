@@ -14,13 +14,17 @@
                         <small>Estado: {{ order.get_status_display }}</small>
                     </div>
                     <div>
-                        <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-sm btn-light">
-                            Ver Orden
+                        {% if user.role == 'admin' or user.is_staff or user.is_superuser %}
+                        <a href="{% url 'orders:admin_order_detail' order.id %}" class="btn btn-sm btn-light">
+                            <i class="fas fa-file-invoice"></i> Ver Orden
                         </a>
-                        {% if user.role == 'admin' %}
                         <button id="closeChatBtn" class="btn btn-sm btn-danger">
-                            Cerrar Chat
+                            <i class="fas fa-times"></i> Cerrar Chat
                         </button>
+                        {% else %}
+                        <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-sm btn-light">
+                            <i class="fas fa-file-invoice"></i> Ver Orden
+                        </a>
                         {% endif %}
                     </div>
                 </div>
@@ -216,29 +220,32 @@
     });
 
     // Cerrar chat (solo admin)
-    {% if user.role == 'admin' %}
-    document.getElementById('closeChatBtn').addEventListener('click', function() {
-        if (confirm('¿Estás seguro de cerrar este chat?')) {
-            fetch('{% url "room_chats:close_chat" chat_room.id %}', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}',
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Chat cerrado exitosamente');
-                    window.location.href = '{% url "room_chats:chat_list" %}';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error al cerrar el chat');
-            });
-        }
-    });
+    {% if user.role == 'admin' or user.is_staff or user.is_superuser %}
+    const closeChatBtn = document.getElementById('closeChatBtn');
+    if (closeChatBtn) {
+        closeChatBtn.addEventListener('click', function() {
+            if (confirm('¿Estás seguro de cerrar este chat?')) {
+                fetch('{% url "room_chats:close_chat" chat_room.id %}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Chat cerrado exitosamente');
+                        window.location.href = '{% url "room_chats:chat_list" %}';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error al cerrar el chat');
+                });
+            }
+        });
+    }
     {% endif %}
 </script>
 {% endblock %}

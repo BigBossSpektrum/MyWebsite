@@ -164,3 +164,82 @@ def admin_order_update(request, order_id):
             messages.success(request, 'Estado de la orden actualizado.')
         
     return redirect('orders:admin_order_detail', order_id=order.id)
+
+
+@staff_member_required
+def admin_update_order_prices(request, order_id):
+    """
+    Actualizar los precios de los items de una orden (cotización)
+    Los cambios se guardan en los OrderItems sin afectar los precios originales de los productos
+    """
+    from decimal import Decimal, InvalidOperation
+    
+    order = get_object_or_404(Order, id=order_id)
+    
+    if request.method != 'POST':
+        messages.error(request, 'Método no permitido')
+        return redirect('orders:admin_order_detail', order_id=order.id)
+    
+    try:
+        # Obtener los datos del formulario
+        updated_items = []
+        errors = []
+        
+        for item in order.items.all():
+            # Obtener el nuevo precio del POST
+            new_price_key = f'price_{item.id}'
+            new_quantity_key = f'quantity_{item.id}'
+            
+            if new_price_key in request.POST:
+                try:
+                    new_price = Decimal(request.POST.get(new_price_key, item.price))
+                    new_quantity = int(request.POST.get(new_quantity_key, item.quantity))
+                    
+                    if new_price < 0:
+                        errors.append(f'El precio de {item.product.name if item.product else "item"} no puede ser negativo')
+                        continue
+                    
+                    if new_quantity < 1:
+                        errors.append(f'La cantidad de {item.product.name if item.product else "item"} debe ser al menos 1')
+                        continue
+                    
+                    # Actualizar el item
+                    old_price = item.price
+                    old_quantity = item.quantity
+                    
+                    item.price = new_price
+                    item.quantity = new_quantity
+                    item.subtotal = new_price * new_quantity
+                    item.save()
+                    
+                    updated_items.append({
+                        'id': str(item.id),
+                        'product': item.product.name if item.product else 'N/A',
+                        'old_price': float(old_price),
+                        'new_price': float(new_price),
+                        'old_quantity': old_quantity,
+                        'new_quantity': new_quantity,
+                        'subtotal': float(item.subtotal)
+                    })
+                    
+                except (ValueError, InvalidOperation) as e:
+                    errors.append(f'Error en {item.product.name if item.product else "item"}: valor inválido')
+        
+        # Recalcular el total de la orden
+        new_total = sum(item.subtotal for item in order.items.all())
+        order.total = new_total
+        order.save()
+        
+        if errors:
+            messages.warning(request, f'Algunos items no se pudieron actualizar: {", ".join(errors)}')
+        
+        if updated_items:
+            messages.success(request, f'Cotización actualizada exitosamente. Nuevo total: ${order.total}')
+        else:
+            messages.info(request, 'No se realizaron cambios en los precios.')
+        
+        return redirect('orders:admin_order_detail', order_id=order.id)
+        
+    except Exception as e:
+        messages.error(request, f'Error al actualizar la cotización: {str(e)}')
+        return redirect('orders:admin_order_detail', order_id=order.id)
