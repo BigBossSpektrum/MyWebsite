@@ -44,16 +44,28 @@
                     {% endif %}
                     
                     {% if user.is_staff or user.is_superuser %}
-                    <a href="{% url 'products:admin_product_list' %}">Gestionar Productos</a>
-                    <a href="{% url 'orders:admin_order_list' %}">Gestionar Órdenes</a>
-                    <a href="{% url 'room_chats:chat_list' %}" class="text-success position-relative">
-                        <i class="fas fa-comments"></i> Cotizaciones
-                        {% if admin_unread_chats > 0 %}
-                        <span class="badge badge-danger" style="position: absolute; top: -5px; right: -10px; font-size: 0.75rem;">
-                            {{ admin_unread_chats }}
-                        </span>
-                        {% endif %}
-                    </a>
+                    <!-- Dropdown de Gestión -->
+                    <div class="management-dropdown">
+                        <button class="management-dropdown-toggle" id="managementDropdownToggle">
+                            <i class="fas fa-cog"></i> Gestión <i class="fas fa-chevron-down" style="font-size: 0.8em;"></i>
+                        </button>
+                        <div class="management-dropdown-menu" id="managementDropdownMenu">
+                            <a href="{% url 'products:admin_product_list' %}" class="management-dropdown-item">
+                                <i class="fas fa-box"></i> Productos
+                            </a>
+                            <a href="{% url 'orders:admin_order_list' %}" class="management-dropdown-item">
+                                <i class="fas fa-clipboard-list"></i> Órdenes
+                            </a>
+                            <a href="{% url 'room_chats:chat_list' %}" class="management-dropdown-item">
+                                <i class="fas fa-comments"></i> Cotizaciones
+                                {% if admin_unread_chats > 0 %}
+                                <span class="badge badge-danger" style="margin-left: auto; font-size: 0.75rem;">
+                                    {{ admin_unread_chats }}
+                                </span>
+                                {% endif %}
+                            </a>
+                        </div>
+                    </div>
                     <a href="{% url 'admin:index' %}">Panel Admin</a>
                     {% endif %}
                     <a href="{% url 'website:contact' %}">Contáctanos</a>
@@ -155,6 +167,47 @@
                         navbarToggle.classList.remove('active');
                         navbarMenu.classList.remove('active');
                     }
+                });
+            });
+        }
+
+        // Management Dropdown Toggle Script
+        const managementDropdownToggle = document.getElementById('managementDropdownToggle');
+        const managementDropdownMenu = document.getElementById('managementDropdownMenu');
+        
+        if (managementDropdownToggle && managementDropdownMenu) {
+            managementDropdownToggle.addEventListener('click', (event) => {
+                event.stopPropagation();
+                const isVisible = managementDropdownMenu.style.display === 'block';
+                managementDropdownMenu.style.display = isVisible ? 'none' : 'block';
+            });
+
+            // Cerrar dropdown al hacer clic fuera
+            document.addEventListener('click', (event) => {
+                if (!managementDropdownToggle.contains(event.target) && !managementDropdownMenu.contains(event.target)) {
+                    managementDropdownMenu.style.display = 'none';
+                }
+            });
+
+            // Cerrar dropdown en móvil después de hacer clic en un enlace
+            const managementDropdownItems = managementDropdownMenu.querySelectorAll('.management-dropdown-item');
+            managementDropdownItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    managementDropdownMenu.style.display = 'none';
+                    if (window.innerWidth <= 768) {
+                        navbarToggle.classList.remove('active');
+                        navbarMenu.classList.remove('active');
+                    }
+                });
+            });
+
+            // Efecto hover para los items
+            managementDropdownItems.forEach(item => {
+                item.addEventListener('mouseenter', () => {
+                    item.style.background = '#f0f0f0';
+                });
+                item.addEventListener('mouseleave', () => {
+                    item.style.background = 'transparent';
                 });
             });
         }

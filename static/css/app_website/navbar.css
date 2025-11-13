@@ -163,6 +163,76 @@ body {
     text-align: center;
 }
 
+/* Management Dropdown */
+.management-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.management-dropdown-toggle {
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 8px 15px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.management-dropdown-toggle:hover {
+    background-color: var(--bg-secondary);
+    color: var(--accent-color);
+}
+
+.management-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    background-color: var(--bg-primary);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 8px 20px var(--shadow-color);
+    min-width: 200px;
+    z-index: 1001;
+    overflow: hidden;
+}
+
+.management-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.management-dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.management-dropdown-item:hover {
+    background-color: var(--bg-secondary);
+    color: var(--accent-color);
+    padding-left: 20px;
+}
+
+.management-dropdown-item i {
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+}
+
 /* Cart Dropdown */
 .cart-dropdown {
     position: relative;
@@ -422,6 +492,49 @@ body {
     .navbar-links a:hover {
         background-color: var(--bg-secondary);
         padding-left: 30px;
+    }
+    
+    /* Management Dropdown en móvil */
+    .management-dropdown {
+        width: 100%;
+    }
+    
+    .management-dropdown-toggle {
+        width: 100%;
+        height: 50px;
+        border-radius: 0;
+        justify-content: flex-start;
+        padding-left: 25px;
+        gap: 15px;
+        border-bottom: 1px solid var(--border-color);
+        text-transform: uppercase;
+        font-size: 14px;
+    }
+    
+    .management-dropdown-menu {
+        position: static;
+        width: 100%;
+        box-shadow: none;
+        border: none;
+        border-radius: 0;
+        background-color: var(--bg-secondary);
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+    
+    .management-dropdown-menu[style*="display: block"] {
+        max-height: 200px;
+    }
+    
+    .management-dropdown-item {
+        padding: 12px 25px 12px 45px;
+        font-size: 13px;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .management-dropdown-item:hover {
+        padding-left: 50px;
     }
     
     /* Cart Dropdown en móvil */
