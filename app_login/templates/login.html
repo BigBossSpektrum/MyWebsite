@@ -1,4 +1,5 @@
 {% load static %}
+{% load socialaccount %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -93,12 +94,18 @@
                             <span class="divider-text">O continuar con</span>
                         </div>
 
-                        <div class="d-grid gap-2">
-                            {% load socialaccount %}
-                            <a href="{% provider_login_url 'google' %}" class="btn btn-outline-danger btn-lg">
-                                <i class="fab fa-google me-2"></i>Continuar con Google
+                        
+                        {% if not user.is_authenticated %}
+                            <h2>Inicia con Google</h2>
+                            <a href="{% provider_login_url "google" %}" class="btn btn-outline-danger btn-lg w-100">
+                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" class="me-2">
+                                    <path d="M17.64 9.20455C17.64 8.56636 17.5827 7.95182 17.4755 7.36364H9.18V10.8455H13.8436C13.6709 11.8545 12.9936 12.6364 11.9782 13.0909V15.1818H15.0345C16.89 13.7727 17.64 11.7727 17.64 9.20455Z" fill="#4285F4"/>
+                                    <path d="M9.18 18C11.61 18 13.5436 17.1136 14.9909 15.6591L11.9345 13.5682C11.2909 13.9545 10.4909 14.1364 9.18 14.1364C6.79091 14.1364 4.79091 12.4091 3.95455 10.2045H0.818359V12.3636C2.27273 15.5455 5.40909 18 9.18 18Z" fill="#34A853"/>
+                                    <path d="M3.95455 10.2045C3.77273 9.65909 3.68182 9.06818 3.68182 8.45455C3.68182 7.84091 3.77273 7.25 3.95455 6.70455V4.54545H0.818359C0.181182 6.11364 -0.181818 7.84091 -0.181818 9.45455C-0.181818 11.0682 0.181182 12.7955 0.818359 14.3636L3.95455 10.2045Z" fill="#FBBC05"/>
+                                    <path d="M9.18 3.77273C10.7227 3.77273 11.9818 4.43182 12.8364 5.65909L15.0909 3.40909C13.
+                                </svg>
                             </a>
-                        </div>
+                        {% endif %}
             </div>
         </div>
     </div>
