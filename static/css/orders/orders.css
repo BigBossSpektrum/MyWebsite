@@ -61,21 +61,45 @@
 .orders-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 2.5rem;
 }
 
 /* Order Card */
 .order-card {
     background: white;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
     overflow: hidden;
     transition: transform 0.2s, box-shadow 0.2s;
+    border-left: 6px solid #dee2e6;
+    position: relative;
+}
+
+/* Bordes de colores según estado */
+.order-card:has(.status-pending) {
+    border-left-color: #ffc107;
+}
+
+.order-card:has(.status-processing) {
+    border-left-color: #17a2b8;
+}
+
+.order-card:has(.status-shipped) {
+    border-left-color: #007bff;
+}
+
+.order-card:has(.status-delivered),
+.order-card:has(.status-completed) {
+    border-left-color: #28a745;
+}
+
+.order-card:has(.status-cancelled) {
+    border-left-color: #dc3545;
 }
 
 .order-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
 }
 
 /* Order Card Header */
@@ -83,9 +107,9 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 1.5rem;
-    padding: 1.5rem;
-    background: #f8f9fa;
-    border-bottom: 1px solid #e9ecef;
+    padding: 1.75rem 2rem;
+    background: linear-gradient(to right, #f8f9fa 0%, #ffffff 100%);
+    border-bottom: 2px solid #e9ecef;
 }
 
 .order-info-item {
@@ -157,7 +181,8 @@
 
 /* Order Card Body */
 .order-card-body {
-    padding: 1.5rem;
+    padding: 2rem;
+    background: #ffffff;
 }
 
 .order-items-preview {
@@ -206,9 +231,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem;
-    background: #f8f9fa;
-    border-top: 1px solid #e9ecef;
+    padding: 1.75rem 2rem;
+    background: linear-gradient(to right, #ffffff 0%, #f8f9fa 100%);
+    border-top: 2px solid #e9ecef;
     gap: 1rem;
 }
 
@@ -507,6 +532,10 @@
     padding: 1.5rem;
 }
 
+.modal-header.bg-danger {
+    border-bottom: none;
+}
+
 .modal-header .modal-title {
     font-weight: 600;
     color: #2c3e50;
@@ -520,6 +549,47 @@
     border-top: 1px solid #e9ecef;
     padding: 1.5rem;
     gap: 0.75rem;
+}
+
+/* Order Cancel Details */
+.order-cancel-details {
+    border: 1px solid #dee2e6;
+}
+
+.order-cancel-details h6 {
+    margin-bottom: 0.75rem;
+}
+
+.order-cancel-details .row {
+    margin-bottom: 0.5rem;
+}
+
+.order-cancel-details hr {
+    margin: 1rem 0;
+    opacity: 0.5;
+}
+
+/* Cancel Order Card Improvements */
+.cancel-order-card {
+    animation: pulse-border 2s ease-in-out infinite;
+}
+
+@keyframes pulse-border {
+    0%, 100% {
+        border-color: #dc3545;
+    }
+    50% {
+        border-color: #ff6b7a;
+    }
+}
+
+.cancel-order-card-body .btn-danger {
+    transition: all 0.3s ease;
+}
+
+.cancel-order-card-body .btn-danger:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
 }
 
 /* Pagination */
@@ -688,6 +758,18 @@
 
     .orders-empty h3 {
         font-size: 1.25rem;
+    }
+    
+    .modal-footer {
+        flex-direction: column;
+    }
+    
+    .modal-footer .btn {
+        width: 100%;
+    }
+    
+    .modal-footer form {
+        width: 100%;
     }
 }
 

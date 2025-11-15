@@ -116,8 +116,8 @@
                     </a>
                     {% endif %}
                     {% if order.can_cancel %}
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" 
-                            data-bs-target="#cancelOrderModal{{ order.id }}">
+                    <button type="button" class="btn btn-danger" data-toggle="modal" 
+                            data-target="#cancelOrderModal{{ order.id }}">
                         <i class="fas fa-times"></i> Cancelar
                     </button>
                     {% endif %}
@@ -127,27 +127,41 @@
 
         <!-- Modal de Cancelación -->
         {% if order.can_cancel %}
-        <div class="modal fade" id="cancelOrderModal{{ order.id }}" tabindex="-1" aria-labelledby="cancelOrderModalLabel{{ order.id }}" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+        <div class="modal fade" id="cancelOrderModal{{ order.id }}" tabindex="-1" role="dialog" aria-labelledby="cancelOrderModalLabel{{ order.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header bg-danger text-white">
                         <h5 class="modal-title" id="cancelOrderModalLabel{{ order.id }}">
-                            <i class="fas fa-exclamation-triangle"></i> Confirmar Cancelación
+                            <i class="fas fa-exclamation-triangle mr-2"></i> Confirmar Cancelación
                         </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                     <div class="modal-body">
-                        <p>¿Estás seguro de que deseas cancelar la orden <strong>#{{ order.id|truncatechars:12 }}</strong>?</p>
-                        <p class="text-muted mb-0">Esta acción devolverá el stock de los productos a la tienda.</p>
+                        <div class="alert alert-warning mb-3">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            <strong>¿Estás seguro de que deseas cancelar esta orden?</strong>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <h6 class="font-weight-bold"><i class="fas fa-file-invoice mr-2"></i>Orden: #{{ order.id|truncatechars:12 }}</h6>
+                            <p class="text-muted mb-2"><i class="far fa-calendar-alt mr-2"></i>Fecha: {{ order.created_at|date:"d/m/Y H:i" }}</p>
+                            <p class="text-muted mb-0"><i class="fas fa-dollar-sign mr-2"></i>Total: ${{ order.total }}</p>
+                        </div>
+                        
+                        <div class="alert alert-info mb-0">
+                            <i class="fas fa-undo mr-2"></i> Esta acción devolverá el stock de los productos a la tienda automáticamente.
+                        </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            <i class="fas fa-arrow-left"></i> No, mantener orden
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            <i class="fas fa-times mr-2"></i> No, mantener orden
                         </button>
                         <form method="post" action="{% url 'orders:cancel_order' order.id %}" class="d-inline">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger">
-                                <i class="fas fa-times-circle"></i> Sí, cancelar orden
+                                <i class="fas fa-check mr-2"></i> Sí, cancelar orden
                             </button>
                         </form>
                     </div>

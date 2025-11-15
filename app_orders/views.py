@@ -21,7 +21,7 @@ def order_list(request):
 
 @login_required
 def order_history(request):
-    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    orders = Order.objects.filter(user=request.user).order_by('created_at')
     
     # Paginación
     page = request.GET.get('page', 1)
@@ -86,24 +86,48 @@ def order_detail(request, order_id):
 
 @login_required
 def cancel_order(request, order_id):
+    # Solo permitir POST para cancelar
+    if request.method != 'POST':
+        messages.error(request, 'Método no permitido.')
+        return redirect('orders:order_history')
+    
     order = get_object_or_404(Order, id=order_id, user=request.user)
     
-    if order.status == 'pending':
-        # Devolver stock
+    # Verificar si la orden puede ser cancelada
+    if not order.can_cancel:
+        messages.error(request, f'No se puede cancelar esta orden. Estado actual: {order.get_status_display()}')
+        return redirect('orders:order_detail', order_id=order.id)
+    
+    try:
+        # Devolver stock de cada producto
+        items_restored = []
         for item in order.items.all():
-            product = item.product
-            product.stock += item.quantity
-            product.save()
+            if item.product:  # Solo si el producto todavía existe
+                product = item.product
+                product.stock += item.quantity
+                product.save()
+                items_restored.append(f"{item.product.name} ({item.quantity} unidades)")
         
+        # Actualizar el estado de la orden
         order.status = 'cancelled'
         order.cancelled_at = timezone.now()
         order.save()
         
-        messages.success(request, 'Orden cancelada exitosamente.')
-    else:
-        messages.error(request, 'No se puede cancelar esta orden.')
+        # Mensaje de éxito con detalles
+        if items_restored:
+            messages.success(
+                request, 
+                f'Orden #{str(order.id)[:8]}... cancelada exitosamente. '
+                f'Se restauró el stock de {len(items_restored)} producto(s).'
+            )
+        else:
+            messages.success(request, f'Orden #{str(order.id)[:8]}... cancelada exitosamente.')
+        
+    except Exception as e:
+        messages.error(request, f'Error al cancelar la orden: {str(e)}')
+        return redirect('orders:order_detail', order_id=order.id)
     
-    return redirect('orders:order_detail', order_id=order.id)
+    return redirect('orders:order_history')
 
 # Vistas para administradores
 @staff_member_required
