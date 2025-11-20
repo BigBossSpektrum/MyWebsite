@@ -1,0 +1,170 @@
+/* Social Logins Styles */
+
+/* Contenedor del separador "O CONTINÚA CON" */
+.social-divider {
+    display: flex;
+    align-items: center;
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem 0;
+    text-align: center;
+}
+
+.social-divider hr {
+    flex-grow: 1;
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    margin: 0;
+}
+
+.social-divider span {
+    padding: 0 1.5rem;
+    color: #666666;
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* Contenedor de botones sociales */
+.social-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.social-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.social-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
+.social-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Google - Rojo */
+.social-btn:nth-child(1) {
+    background: linear-gradient(135deg, #ea4335 0%, #c5221f 100%);
+}
+
+.social-btn:nth-child(1) svg path {
+    fill: white;
+}
+
+/* GitHub - Negro */
+.social-btn:nth-child(2) {
+    background: linear-gradient(135deg, #333 0%, #000 100%);
+}
+
+.social-btn:nth-child(2) svg path {
+    fill: white;
+}
+
+/* X (Twitter) - Negro */
+.social-btn:nth-child(3) {
+    background: linear-gradient(135deg, #000 0%, #333 100%);
+}
+
+.social-btn:nth-child(3) svg path {
+    fill: white;
+}
+
+/* Facebook - Azul */
+.social-btn:nth-child(4) {
+    background: linear-gradient(135deg, #1877f2 0%, #0c63d4 100%);
+}
+
+.social-btn:nth-child(4) svg path {
+    fill: white;
+}
+
+/* ========================================
+   DARK MODE STYLES
+   ======================================== */
+
+[data-theme="dark"] .social-divider span {
+    color: #b0b0b0;
+}
+
+[data-theme="dark"] .social-divider hr {
+    border-top-color: #333333;
+}
+
+[data-theme="dark"] .social-btn {
+    border-color: transparent;
+}
+
+[data-theme="dark"] .social-btn:hover {
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+}
+
+/* Mantener los colores originales en dark mode */
+[data-theme="dark"] .social-btn:nth-child(1) {
+    background: linear-gradient(135deg, #ea4335 0%, #c5221f 100%);
+}
+
+[data-theme="dark"] .social-btn:nth-child(2) {
+    background: linear-gradient(135deg, #333 0%, #000 100%);
+}
+
+[data-theme="dark"] .social-btn:nth-child(3) {
+    background: linear-gradient(135deg, #000 0%, #333 100%);
+}
+
+[data-theme="dark"] .social-btn:nth-child(4) {
+    background: linear-gradient(135deg, #1877f2 0%, #0c63d4 100%);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .social-divider {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        padding: 0.75rem 0;
+    }
+    
+    .social-divider span {
+        padding: 0 1rem;
+        font-size: 0.8rem;
+    }
+    
+    .social-buttons {
+        gap: 12px;
+    }
+    
+    .social-btn {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .social-btn svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .social-divider {
+        margin-top: 2.5rem;
+        margin-bottom: 1.25rem;
+    }
+    
+    .social-divider span {
+        font-size: 0.85rem;
+    }
+}

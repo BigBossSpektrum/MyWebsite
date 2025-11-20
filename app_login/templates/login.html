@@ -17,13 +17,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login_app/social_logins.css' %}">
 </head>
 <body>
     <div class="login-container">
         <div class="login-card">
             <a href="{% url 'website:Dashboard' %}" class="btn btn-link" title="Volver al inicio">
-                <i class="fas fa-home" style="font-size: 20px;"></i>
+                <i class="fas fa-home"></i>
             </a>
+            
+            <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle dark mode" title="Cambiar tema">
+                <i class="fas fa-moon"></i>
+            </button>
 
             <div class="login-header">
                 <h3>Bienvenido a Zultech</h3>
@@ -58,23 +63,17 @@
                     {% csrf_token %}
                     <div class="form-floating mb-3">
                         <input type="text" name="username" class="form-control" id="username" placeholder="Usuario" required>
-                        <label for="username">Usuario o Correo Electrónico</label>
-                        <div class="invalid-feedback">
-                            Por favor ingresa tu nombre de usuario o correo electrónico
-                        </div>
+
                     </div>
 
                     <div class="form-floating mb-3">
                         <input type="password" name="password" class="form-control" id="password" placeholder="Contraseña" required>
-                        <label for="password">Contraseña</label>
-                        <div class="invalid-feedback">
-                            Por favor ingresa tu contraseña
-                        </div>
+
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-6">
-                            <div class="form-check">
+                            <div class="fo</div>rm-check">
                                 <input class="form-check-input" type="checkbox" id="remember-me" name="remember">
                                 <label class="form-check-label" for="remember-me">
                                     Recordarme
@@ -88,13 +87,13 @@
 
                     <input type="hidden" name="expected_role" id="expected-role" value="CUSTOMER">
 
-                    <div class="d-grid gap-1">
+                    <div class="d-grid gap-2 mt-4">
                         <button type="submit" class="btn btn-primary btn-lg" id="login-button">
                             <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
                         </button>
-                        <a href="{% url 'login:register' %}" class="btn btn-outline-secondary">
+                        <button type="button" class="btn btn-outline-secondary btn-lg" onclick="window.location.href='{% url 'login:register' %}'">
                             <i class="fas fa-user-plus me-2"></i>Crear Cuenta
-                        </a>
+                        </button>
                     </div>
                 </form>
 
@@ -135,6 +134,36 @@
                     loginButton.classList.add('btn-primary');
                 }
             });
+        });
+
+        // Dark Mode Toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const htmlElement = document.documentElement;
+        
+        // Verificar preferencia guardada o preferencia del sistema
+        const currentTheme = localStorage.getItem('theme') || 
+            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        
+        // Aplicar tema al cargar la página
+        if (currentTheme === 'dark') {
+            htmlElement.setAttribute('data-theme', 'dark');
+            darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+        
+        // Toggle al hacer clic
+        darkModeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Cambiar icono
+            if (newTheme === 'dark') {
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            }
         });
     </script>
 </body>

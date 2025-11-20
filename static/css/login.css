@@ -1,56 +1,60 @@
 html, body {
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
+    width: 100%;
     margin: 0;
     padding: 0;
-    overflow-x: hidden;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    overflow: hidden;
+    background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+    background-image: 
+        linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(230, 240, 250, 0.9) 100%),
+        radial-gradient(circle at top right, rgba(0, 123, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at bottom left, rgba(0, 123, 255, 0.05) 0%, transparent 50%);
     color: #333333;
     font-family: 'Orbitron', 'Segoe UI', sans-serif;
 }
 
 .login-container {
-    min-height: 100vh;
+    height: 100vh;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 20px;
-    overflow-y: auto;
+    box-sizing: border-box;
 }
 
 .login-card {
     position: relative;
     z-index: 2;
-    background: #ffffff;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
     border-radius: 20px;
     padding: 2.5rem 3rem;
     width: 100%;
     max-width: 650px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-    max-height: 90vh;
-    overflow-y: auto;
-    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 0 1px rgba(0, 123, 255, 0.2) inset;
+    border: 2px solid rgba(0, 123, 255, 0.15);
     transition: all 0.3s ease;
     margin: 20px auto;
 }
 
 .login-header {
     text-align: center;
-    margin-bottom: 1.5rem;
-    padding-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding-top: 0rem;
 }
 
 .login-header h3 {
-    color: #333333;
-    margin-bottom: 0.5rem;
+    color: #0062cc;
+    margin-bottom: 0.1rem;
     font-size: 2rem;
     font-weight: 700;
     letter-spacing: 0.5px;
+    text-shadow: 0 2px 10px rgba(0, 98, 204, 0.2);
 }
 
 .login-header p {
-    color: #666666;
+    color: #6c757d;
     font-size: 0.95rem;
 }
 
@@ -77,17 +81,17 @@ html, body {
 }
 
 .btn-check:checked + .btn-outline-primary {
-    background-color: #333333;
-    border-color: #333333;
+    background-color: #0062cc;
+    border-color: #0062cc;
     color: white;
-    box-shadow: 0 4px 15px rgba(51, 51, 51, 0.3);
+    box-shadow: 0 4px 15px rgba(0, 98, 204, 0.3);
 }
 
 .btn-check:checked + .btn-outline-warning {
-    background-color: #ffd700;
-    border-color: #ffd700;
-    color: #333333;
-    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #000000;
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
 }
 
 .form-floating {
@@ -95,9 +99,9 @@ html, body {
 }
 
 .form-floating input {
-    background-color: #f8f9fa;
-    border: 2px solid #e0e0e0;
-    color: #333333;
+    background-color: #ffffff;
+    border: 2px solid #ced4da;
+    color: #212529;
     min-height: 48px;
     border-radius: 10px;
     transition: all 0.3s ease;
@@ -108,12 +112,12 @@ html, body {
 /* Inputs específicos de username y password más anchos */
 #username,
 #password {
-    width: 100%;
-    padding: 0.75rem 1rem;
+    width: 80%;
+    padding: 0.1rem 1rem;
 }
 
 .form-floating label {
-    color: #666666;
+    color: #6c757d;
     padding: 0.75rem 1rem;
     font-weight: 500;
     font-size: 0.9rem;
@@ -121,18 +125,18 @@ html, body {
 
 .form-floating input:focus {
     background-color: #ffffff;
-    color: #333333;
-    border-color: #ffd700;
-    box-shadow: 0 0 0 0.25rem rgba(255, 215, 0, 0.15);
+    color: #212529;
+    border-color: #0062cc;
+    box-shadow: 0 0 0 0.25rem rgba(0, 98, 204, 0.25), 0 0 15px rgba(0, 98, 204, 0.15);
     transform: translateY(-1px);
 }
 
 .form-floating input::placeholder {
-    color: #999999;
+    color: #adb5bd;
 }
 
 .forgot-password {
-    color: #666666;
+    color: #6c757d;
     text-decoration: none;
     transition: all 0.3s ease;
     font-size: 0.9rem;
@@ -140,7 +144,7 @@ html, body {
 }
 
 .forgot-password:hover {
-    color: #ffd700;
+    color: #0062cc;
     text-decoration: underline;
 }
 
@@ -160,62 +164,80 @@ html, body {
 }
 
 .btn-primary {
-    background-color: #333333;
+    background: linear-gradient(135deg, #0062cc 0%, #0095ff 100%);
     border: none;
     color: #ffffff;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(0, 98, 204, 0.4);
 }
 
 .btn-primary:hover {
-    background-color: #555555;
+    background: linear-gradient(135deg, #004da7 0%, #007bff 100%);
+    box-shadow: 0 6px 25px rgba(0, 123, 255, 0.5);
+    transform: translateY(-2px);
 }
 
 .btn-warning {
-    background-color: #ffd700;
-    color: #333333;
+    background-color: #ffc107;
+    color: #000000;
     border: none;
 }
 
 .btn-warning:hover {
-    background-color: #ffed4e;
+    background-color: #ffca2c;
 }
 
 .btn-outline-secondary {
-    border: 2px solid #e0e0e0;
-    color: #333333;
+    border: 2px solid #6c757d;
+    color: #6c757d;
     background-color: transparent;
 }
 
 .btn-outline-secondary:hover {
-    background-color: #f8f9fa;
-    border-color: #333333;
-    color: #333333;
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: #ffffff;
 }
 
 .btn-outline-warning {
-    border: 2px solid #ffd700;
-    color: #333333;
+    border: 2px solid #ffc107;
+    color: #ffc107;
     background-color: transparent;
 }
 
 .btn-outline-warning:hover {
-    background-color: #ffd700;
-    border-color: #ffd700;
-    color: #333333;
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #000000;
+}
+
+/* Grid de botones */
+.d-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.d-grid.gap-2 {
+    gap: 0.5rem;
+}
+
+.d-grid .btn {
+    width: 100%;
 }
 
 .form-check-input {
     border-radius: 6px;
     transition: all 0.3s ease;
-    border: 2px solid #e0e0e0;
+    border: 2px solid #ced4da;
 }
 
 .form-check-input:checked {
-    background-color: #ffd700;
-    border-color: #ffd700;
+    background-color: #0062cc;
+    border-color: #0062cc;
 }
 
 .form-check-label {
-    color: #666666;
+    color: #6c757d;
     font-weight: 500;
 }
 
@@ -225,76 +247,8 @@ html, body {
     margin-bottom: 1.5rem;
 }
 
-/* Social Buttons Styles */
-.social-buttons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
-.social-btn {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid transparent;
-    transition: all 0.3s ease;
-    text-decoration: none;
-}
-
-.social-btn svg {
-    width: 24px;
-    height: 24px;
-}
-
-.social-btn:hover {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-}
-
-/* Google - Rojo */
-.social-btn:nth-child(1) {
-    background: linear-gradient(135deg, #ea4335 0%, #c5221f 100%);
-}
-
-.social-btn:nth-child(1) svg path {
-    fill: white;
-}
-
-/* GitHub - Negro */
-.social-btn:nth-child(2) {
-    background: linear-gradient(135deg, #333 0%, #000 100%);
-}
-
-.social-btn:nth-child(2) svg path {
-    fill: white;
-}
-
-/* X (Twitter) - Negro */
-.social-btn:nth-child(3) {
-    background: linear-gradient(135deg, #000 0%, #333 100%);
-}
-
-.social-btn:nth-child(3) svg path {
-    fill: white;
-}
-
-/* Facebook - Azul */
-.social-btn:nth-child(4) {
-    background: linear-gradient(135deg, #1877f2 0%, #0c63d4 100%);
-}
-
-.social-btn:nth-child(4) svg path {
-    fill: white;
-}
-
 .text-muted {
-    color: #666666 !important;
+    color: #6c757d !important;
     font-size: 0.95rem;
 }
 
@@ -305,15 +259,22 @@ html, body {
     left: 15px;
     padding: 8px;
     border-radius: 50%;
-    background-color: #f8f9fa;
-    border: 2px solid #e0e0e0;
+    background-color: rgba(0, 98, 204, 0.1);
+    border: 2px solid rgba(0, 98, 204, 0.3);
     transition: all 0.3s ease;
+    color: #0062cc;
+}
+
+.btn-link i {
+    font-size: 20px;
 }
 
 .btn-link:hover {
-    background-color: #ffd700;
-    border-color: #ffd700;
+    background-color: #0062cc;
+    border-color: #0062cc;
+    color: #ffffff;
     transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(0, 98, 204, 0.4);
 }
 
 .btn-link img {
@@ -324,12 +285,45 @@ html, body {
     filter: brightness(0);
 }
 
+/* Botón de Dark Mode Toggle */
+.dark-mode-toggle {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 45px;
+    height: 45px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: rgba(0, 98, 204, 0.1);
+    border: 2px solid rgba(0, 98, 204, 0.3);
+    color: #0062cc;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.dark-mode-toggle:hover {
+    background-color: #0062cc;
+    border-color: #0062cc;
+    color: #ffffff;
+    transform: scale(1.1) rotate(15deg);
+    box-shadow: 0 0 20px rgba(0, 98, 204, 0.4);
+}
+
+.dark-mode-toggle i {
+    font-size: 20px;
+    transition: transform 0.3s ease;
+}
+
+.dark-mode-toggle:hover i {
+    transform: scale(1.1);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
-    html, body {
-        overflow-y: auto;
-    }
-    
     .login-container {
         padding: 15px;
         min-height: 100vh;
@@ -341,7 +335,6 @@ html, body {
         padding: 1.5rem;
         width: 100%;
         max-width: 100%;
-        max-height: none;
         margin: 10px 0;
         border-radius: 15px;
     }
@@ -386,6 +379,17 @@ html, body {
         top: 10px;
         left: 10px;
         padding: 6px;
+    }
+    
+    .dark-mode-toggle {
+        top: 10px;
+        right: 10px;
+        width: 40px;
+        height: 40px;
+    }
+    
+    .dark-mode-toggle i {
+        font-size: 18px;
     }
     
     /* Ajustes para filas en formularios */
@@ -491,6 +495,17 @@ html, body {
     }
     
     .btn-link i {
+        font-size: 16px;
+    }
+    
+    .dark-mode-toggle {
+        width: 36px;
+        height: 36px;
+        top: 10px;
+        right: 10px;
+    }
+    
+    .dark-mode-toggle i {
         font-size: 16px;
     }
 }
@@ -690,28 +705,16 @@ html, body {
     color-scheme: dark;
 }
 
-/* Dark Mode - Social Buttons */
-[data-theme="dark"] .social-btn {
-    border-color: transparent;
+/* Dark Mode Toggle Styles */
+[data-theme="dark"] .dark-mode-toggle {
+    background-color: rgba(255, 215, 0, 0.2);
+    border-color: rgba(255, 215, 0, 0.3);
+    color: #ffd700;
 }
 
-[data-theme="dark"] .social-btn:hover {
-    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
-}
-
-/* Mantener los colores originales en dark mode */
-[data-theme="dark"] .social-btn:nth-child(1) {
-    background: linear-gradient(135deg, #ea4335 0%, #c5221f 100%);
-}
-
-[data-theme="dark"] .social-btn:nth-child(2) {
-    background: linear-gradient(135deg, #333 0%, #000 100%);
-}
-
-[data-theme="dark"] .social-btn:nth-child(3) {
-    background: linear-gradient(135deg, #000 0%, #333 100%);
-}
-
-[data-theme="dark"] .social-btn:nth-child(4) {
-    background: linear-gradient(135deg, #1877f2 0%, #0c63d4 100%);
+[data-theme="dark"] .dark-mode-toggle:hover {
+    background-color: #ffd700;
+    border-color: #ffd700;
+    color: #000000;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
 }
