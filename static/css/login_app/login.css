@@ -154,3 +154,29 @@
     border: none;
     color: #ffffff;
 }
+
+.divider {
+    position: relative;
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #dee2e6, transparent);
+}
+
+.divider-text {
+    position: relative;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 0 1.5rem;
+    color: #6c757d;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+}

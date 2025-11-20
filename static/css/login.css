@@ -252,6 +252,29 @@ html, body {
     font-size: 0.95rem;
 }
 
+/* Divider styles */
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 1.5rem 0;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #ced4da;
+}
+
+.divider-text {
+    padding: 0 1rem;
+    color: #6c757d;
+    font-size: 0.9rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
 /* Botón de volver al inicio */
 .btn-link {
     position: absolute;
@@ -690,6 +713,16 @@ html, body {
 
 [data-theme="dark"] .form-control.is-invalid {
     border-color: #ff6b6b;
+}
+
+/* Divider dark mode */
+[data-theme="dark"] .divider::before,
+[data-theme="dark"] .divider::after {
+    border-bottom-color: var(--border-color);
+}
+
+[data-theme="dark"] .divider-text {
+    color: var(--text-secondary);
 }
 
 /* Ajustes para el formulario de registro */

@@ -382,29 +382,25 @@ input[type="file"]:focus {
 
 /* Divisor con texto */
 .divider {
-    position: relative;
+    display: flex;
+    align-items: center;
     text-align: center;
-    margin: 2rem 0;
+    margin: 1.5rem 0;
 }
 
-.divider::before {
+.divider::before,
+.divider::after {
     content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(to right, transparent, #dee2e6, transparent);
+    flex: 1;
+    border-bottom: 1px solid #ced4da;
 }
 
 .divider-text {
-    position: relative;
-    background: rgba(255, 255, 255, 0.95);
-    padding: 0 1.5rem;
+    padding: 0 1rem;
     color: #6c757d;
-    font-weight: 600;
     font-size: 0.9rem;
-    letter-spacing: 0.5px;
+    font-weight: 500;
+    white-space: nowrap;
 }
 
 /* Grid de botones */
@@ -742,12 +738,13 @@ input[type="file"]:focus {
     color: white;
 }
 
-[data-theme="dark"] .divider::before {
-    background: linear-gradient(to right, transparent, var(--input-border), transparent);
+/* Divider dark mode */
+[data-theme="dark"] .divider::before,
+[data-theme="dark"] .divider::after {
+    border-bottom-color: var(--input-border);
 }
 
 [data-theme="dark"] .divider-text {
-    background: var(--card-bg);
     color: var(--text-secondary);
 }
 
