@@ -211,15 +211,10 @@ SOCIALACCOUNT_ADAPTER = 'app_login.adapters.CustomSocialAccountAdapter'
 # NO las configures aquí para evitar conflictos
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
-        'EMAIL_AUTOMATICALLY_VERIFIED': True,
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        },
-        'FETCH_USERINFO': True,
+        'APP': {
+            'client_id': os.environ.get('OAUTH_GOOGLE_ID'),
+            'secret': os.environ.get('OAUTH_GOOGLE_SECRET'),
+        }
     },
 }
 

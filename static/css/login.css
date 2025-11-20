@@ -191,18 +191,6 @@ html, body {
     color: #333333;
 }
 
-.btn-outline-primary {
-    border: 2px solid #333333;
-    color: #333333;
-    background-color: transparent;
-}
-
-.btn-outline-primary:hover {
-    background-color: #333333;
-    border-color: #333333;
-    color: #ffffff;
-}
-
 .btn-outline-warning {
     border: 2px solid #ffd700;
     color: #333333;
@@ -213,45 +201,6 @@ html, body {
     background-color: #ffd700;
     border-color: #ffd700;
     color: #333333;
-}
-
-/* Estilos para los botones sociales */
-.divider {
-    display: flex;
-    align-items: center;
-    text-align: center;
-    margin: 2rem 0;
-}
-
-.divider::before,
-.divider::after {
-    content: '';
-    flex: 1;
-    border-bottom: 2px solid #e0e0e0;
-}
-
-.divider-text {
-    padding: 0 1rem;
-    color: #666666;
-    font-weight: 500;
-    font-size: 0.9rem;
-}
-
-.btn-outline-danger {
-    border: 2px solid #db4437;
-    color: #db4437;
-    background-color: transparent;
-}
-
-.btn-outline-danger:hover {
-    background-color: #db4437;
-    border-color: #db4437;
-    color: #ffffff;
-}
-
-.btn-outline-danger i,
-.btn-outline-primary i {
-    font-size: 1.2rem;
 }
 
 .form-check-input {
@@ -365,14 +314,6 @@ html, body {
         font-size: 0.85rem;
     }
     
-    .divider {
-        margin: 1.5rem 0;
-    }
-    
-    .divider-text {
-        font-size: 0.85rem;
-    }
-    
     .btn-link {
         top: 10px;
         left: 10px;
@@ -472,15 +413,6 @@ html, body {
         gap: 0.75rem !important;
     }
     
-    .divider {
-        margin: 1.25rem 0;
-    }
-    
-    .divider-text {
-        font-size: 0.8rem;
-        padding: 0 0.75rem;
-    }
-    
     .btn-link {
         width: 36px;
         height: 36px;
@@ -515,4 +447,177 @@ html, body {
         width: 70%;
         padding: 2.5rem 3.5rem;
     }
+}
+
+/* ========================================
+   DARK MODE STYLES
+   ======================================== */
+
+[data-theme="dark"] {
+    --bg-primary: #121212;
+    --bg-secondary: #1e1e1e;
+    --text-primary: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --border-color: #333333;
+    --accent-color: #ffd700;
+    --accent-hover: #ffed4e;
+}
+
+[data-theme="dark"] html,
+[data-theme="dark"] body {
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .login-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .login-header h3 {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .login-header p,
+[data-theme="dark"] .text-muted {
+    color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .form-floating input {
+    background-color: var(--bg-primary);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .form-floating input:focus {
+    background-color: #252525;
+    border-color: var(--accent-color);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .form-floating label {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .form-floating input::placeholder {
+    color: #666666;
+}
+
+[data-theme="dark"] .btn-primary {
+    background-color: var(--accent-color);
+    color: #000000;
+}
+
+[data-theme="dark"] .btn-primary:hover {
+    background-color: var(--accent-hover);
+}
+
+[data-theme="dark"] .btn-warning {
+    background-color: var(--accent-color);
+    color: #000000;
+}
+
+[data-theme="dark"] .btn-warning:hover {
+    background-color: var(--accent-hover);
+}
+
+[data-theme="dark"] .btn-outline-secondary {
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .btn-outline-secondary:hover {
+    background-color: var(--bg-primary);
+    border-color: var(--accent-color);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .btn-outline-warning {
+    border-color: var(--accent-color);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .btn-outline-warning:hover {
+    background-color: var(--accent-color);
+    color: #000000;
+}
+
+[data-theme="dark"] .btn-check:checked + .btn-outline-primary {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    color: #000000;
+}
+
+[data-theme="dark"] .btn-check:checked + .btn-outline-warning {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    color: #000000;
+}
+
+[data-theme="dark"] .forgot-password {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .forgot-password:hover {
+    color: var(--accent-color);
+}
+
+[data-theme="dark"] .form-check-label {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .form-check-input {
+    background-color: var(--bg-primary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .form-check-input:checked {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+[data-theme="dark"] .btn-link {
+    background-color: var(--bg-primary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .btn-link:hover {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+[data-theme="dark"] .btn-link i {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .btn-link:hover i {
+    color: #000000;
+}
+
+[data-theme="dark"] .alert {
+    background-color: var(--bg-primary);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .invalid-feedback {
+    color: #ff6b6b;
+}
+
+[data-theme="dark"] .form-control.is-invalid {
+    border-color: #ff6b6b;
+}
+
+/* Ajustes para el formulario de registro */
+[data-theme="dark"] .form-label {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] input[type="file"] {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] input[type="date"] {
+    color-scheme: dark;
 }
