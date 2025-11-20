@@ -61,6 +61,20 @@
                         <div class="col-md-6">
                             <p><strong>Cliente:</strong> {{ order.user.email }}</p>
                             <p><strong>Total:</strong> ${{ order.total }}</p>
+                            {% if chat_room.attended_by %}
+                            <p><strong><i class="fas fa-user-check text-success"></i> Atendido por:</strong> 
+                                <span class="text-success">{{ chat_room.attended_by.email }}</span>
+                                {% if chat_room.attended_at %}
+                                <br><small class="text-muted">Fecha: {{ chat_room.attended_at|date:"d/m/Y H:i" }}</small>
+                                {% endif %}
+                            </p>
+                            {% elif chat_room.admin %}
+                            <p><strong><i class="fas fa-user-shield text-info"></i> Asignado a:</strong> 
+                                <span class="text-info">{{ chat_room.admin.email }}</span>
+                            </p>
+                            {% else %}
+                            <p><strong class="text-warning"><i class="fas fa-exclamation-triangle"></i> Sin atender</strong></p>
+                            {% endif %}
                         </div>
                         <div class="col-md-6">
                             <p><strong>Fecha creación:</strong> {{ order.created_at|date:"d/m/Y H:i" }}</p>

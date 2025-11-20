@@ -28,6 +28,7 @@ class ChatRoomAdmin(admin.ModelAdmin):
         'order',
         'customer',
         'admin',
+        'attended_by_display',
         'status_colored',
         'messages_count',
         'unread_messages',
@@ -41,7 +42,7 @@ class ChatRoomAdmin(admin.ModelAdmin):
         ('admin', admin.EmptyFieldListFilter)
     )
     search_fields = ('customer__email', 'customer__username', 'admin__email', 'admin__username', 'order__id', 'id')
-    readonly_fields = ('id', 'created_at', 'updated_at', 'messages_count', 'unread_messages', 'last_message_time')
+    readonly_fields = ('id', 'created_at', 'updated_at', 'attended_at', 'messages_count', 'unread_messages', 'last_message_time')
     list_per_page = 25
     date_hierarchy = 'created_at'
     inlines = [MessageInline]
@@ -50,6 +51,10 @@ class ChatRoomAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Información General', {
             'fields': ('id', 'order', 'customer', 'admin', 'is_active')
+        }),
+        ('Atención', {
+            'fields': ('attended_by', 'attended_at'),
+            'description': 'Información del administrador que atendió la cotización'
         }),
         ('Estadísticas', {
             'fields': ('messages_count', 'unread_messages', 'last_message_time')
@@ -63,7 +68,7 @@ class ChatRoomAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         """Optimiza las consultas con select_related y annotate"""
         queryset = super().get_queryset(request)
-        return queryset.select_related('order', 'customer', 'admin').annotate(
+        return queryset.select_related('order', 'customer', 'admin', 'attended_by').annotate(
             _messages_count=Count('messages'),
             _unread_count=Count('messages', filter=Q(messages__is_read=False)),
             _last_message_time=Max('messages__created_at')
@@ -80,6 +85,17 @@ class ChatRoomAdmin(admin.ModelAdmin):
         )
     status_colored.short_description = 'Estado'
     status_colored.admin_order_field = 'is_active'
+    
+    def attended_by_display(self, obj):
+        """Muestra el admin que atendió con formato"""
+        if obj.attended_by:
+            return format_html(
+                '<span style="color: #28a745; font-weight: bold;"><i class="fas fa-user-check"></i> {}</span>',
+                obj.attended_by.email
+            )
+        return format_html('<span style="color: #ffc107;">Sin atender</span>')
+    attended_by_display.short_description = 'Atendido Por'
+    attended_by_display.admin_order_field = 'attended_by'
     
     def messages_count(self, obj):
         """Muestra el número de mensajes"""

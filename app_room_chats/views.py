@@ -70,9 +70,15 @@ def create_or_get_chat(request, order_id):
         }
     )
     
-    # Si es un admin entrando, asignarlo
-    if is_admin and not chat_room.admin:
-        chat_room.admin = request.user
+    # Si es un admin entrando, asignarlo y registrar como quien atendió
+    if is_admin:
+        if not chat_room.admin:
+            chat_room.admin = request.user
+        # Registrar como quien atendió la cotización si aún no se ha registrado
+        if not chat_room.attended_by:
+            from django.utils import timezone
+            chat_room.attended_by = request.user
+            chat_room.attended_at = timezone.now()
         chat_room.save()
     
     if created:

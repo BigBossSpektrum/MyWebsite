@@ -212,10 +212,16 @@
                                 <div class="mb-2">
                                     <i class="fas fa-user"></i> 
                                     <strong>Cliente:</strong> {{ chat.customer.email }}
-                                    {% if chat.admin %}
+                                    {% if chat.attended_by %}
+                                        <span class="ms-2">
+                                            | <i class="fas fa-user-check text-success"></i> 
+                                            <strong>Atendido por:</strong> 
+                                            <span class="text-success">{{ chat.attended_by.email }}</span>
+                                        </span>
+                                    {% elif chat.admin %}
                                         <span class="ms-2">
                                             | <i class="fas fa-user-shield text-success"></i> 
-                                            <strong>Atendido por:</strong> 
+                                            <strong>Asignado a:</strong> 
                                             <span class="text-success">{{ chat.admin.email }}</span>
                                         </span>
                                     {% else %}

@@ -13,6 +13,8 @@ urlpatterns = [
     path('admin/orders/<uuid:order_id>/', views.admin_order_detail, name='admin_order_detail'),
     path('admin/orders/<uuid:order_id>/update/', views.admin_order_update, name='admin_order_update'),
     path('admin/orders/<uuid:order_id>/update-prices/', views.admin_update_order_prices, name='admin_update_prices'),
+    path('admin/orders/<uuid:order_id>/add-product/', views.admin_add_product_to_order, name='admin_add_product'),
+    path('admin/orders/<uuid:order_id>/remove-product/<uuid:item_id>/', views.admin_remove_product_from_order, name='admin_remove_product'),
     
     # URLs genéricas de usuario (DEBEN IR DESPUÉS de las rutas específicas)
     path('<uuid:order_id>/', views.order_detail, name='order_detail'),

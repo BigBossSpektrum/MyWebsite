@@ -162,7 +162,12 @@ def admin_order_list(request):
 @staff_member_required
 def admin_order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id)
-    return render(request, 'orders/admin/order_detail.html', {'order': order})
+    # Obtener todos los productos disponibles para agregar a la cotización
+    products = Product.objects.filter(available=True).order_by('name')
+    return render(request, 'orders/admin/order_detail.html', {
+        'order': order,
+        'products': products
+    })
 
 @staff_member_required
 def admin_order_update(request, order_id):
@@ -266,4 +271,105 @@ def admin_update_order_prices(request, order_id):
         
     except Exception as e:
         messages.error(request, f'Error al actualizar la cotización: {str(e)}')
+        return redirect('orders:admin_order_detail', order_id=order.id)
+
+
+@staff_member_required
+def admin_add_product_to_order(request, order_id):
+    """
+    Agregar un nuevo producto a una orden existente (cotización)
+    """
+    from decimal import Decimal
+    
+    order = get_object_or_404(Order, id=order_id)
+    
+    if request.method != 'POST':
+        messages.error(request, 'Método no permitido')
+        return redirect('orders:admin_order_detail', order_id=order.id)
+    
+    try:
+        product_id = request.POST.get('product_id')
+        quantity = int(request.POST.get('quantity', 1))
+        custom_price = request.POST.get('custom_price', '')
+        
+        if not product_id:
+            messages.error(request, 'Debes seleccionar un producto')
+            return redirect('orders:admin_order_detail', order_id=order.id)
+        
+        product = get_object_or_404(Product, id=product_id)
+        
+        if quantity < 1:
+            messages.error(request, 'La cantidad debe ser al menos 1')
+            return redirect('orders:admin_order_detail', order_id=order.id)
+        
+        # Determinar el precio
+        if custom_price:
+            try:
+                price = Decimal(custom_price)
+                if price < 0:
+                    messages.error(request, 'El precio no puede ser negativo')
+                    return redirect('orders:admin_order_detail', order_id=order.id)
+            except:
+                messages.error(request, 'Precio inválido')
+                return redirect('orders:admin_order_detail', order_id=order.id)
+        else:
+            price = product.price
+        
+        # Verificar si el producto ya existe en la orden
+        existing_item = order.items.filter(product=product).first()
+        
+        if existing_item:
+            # Si ya existe, actualizar cantidad
+            existing_item.quantity += quantity
+            existing_item.subtotal = existing_item.price * existing_item.quantity
+            existing_item.save()
+            messages.success(request, f'Se agregaron {quantity} unidades más de {product.name} a la cotización')
+        else:
+            # Crear nuevo item
+            subtotal = price * quantity
+            OrderItem.objects.create(
+                order=order,
+                product=product,
+                quantity=quantity,
+                price=price,
+                subtotal=subtotal
+            )
+            messages.success(request, f'Producto {product.name} agregado a la cotización')
+        
+        # Recalcular el total de la orden
+        order.total = sum(item.subtotal for item in order.items.all())
+        order.save()
+        
+        return redirect('orders:admin_order_detail', order_id=order.id)
+        
+    except Exception as e:
+        messages.error(request, f'Error al agregar el producto: {str(e)}')
+        return redirect('orders:admin_order_detail', order_id=order.id)
+
+
+@staff_member_required
+def admin_remove_product_from_order(request, order_id, item_id):
+    """
+    Eliminar un producto de una orden existente (cotización)
+    """
+    order = get_object_or_404(Order, id=order_id)
+    item = get_object_or_404(OrderItem, id=item_id, order=order)
+    
+    if request.method != 'POST':
+        messages.error(request, 'Método no permitido')
+        return redirect('orders:admin_order_detail', order_id=order.id)
+    
+    try:
+        product_name = item.product.name if item.product else 'Producto eliminado'
+        item.delete()
+        
+        # Recalcular el total de la orden
+        order.total = sum(item.subtotal for item in order.items.all())
+        order.save()
+        
+        messages.success(request, f'Producto {product_name} eliminado de la cotización')
+        return redirect('orders:admin_order_detail', order_id=order.id)
+        
+    except Exception as e:
+        messages.error(request, f'Error al eliminar el producto: {str(e)}')
         return redirect('orders:admin_order_detail', order_id=order.id)

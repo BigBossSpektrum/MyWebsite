@@ -13,6 +13,8 @@ class ChatRoom(models.Model):
     order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='chat_room')
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='customer_chats')
     admin = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='admin_chats')
+    attended_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='attended_chats', help_text='Administrador que atendió la cotización')
+    attended_at = models.DateTimeField(null=True, blank=True, help_text='Fecha y hora en que se atendió la cotización')
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
