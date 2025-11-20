@@ -24,22 +24,21 @@ class CustomUserAdmin(UserAdmin):
         'date_joined',
         'last_login'
     )
-    search_fields = ('username', 'email', 'first_name', 'last_name', 'Telefono')
+    search_fields = ('username', 'email', 'Correo_Electronico', 'first_name', 'last_name', 'Telefono')
     ordering = ('-date_joined',)
     list_per_page = 25
     date_hierarchy = 'date_joined'
-    actions = ['activate_users', 'deactivate_users', 'make_clients', 'make_admins']
+    actions = ['activate_users', 'deactivate_users', 'make_clients', 'make_admins', 'delete_selected_users']
     
     fieldsets = (
         (None, {
             'fields': ('username', 'password')
         }),
         ('Información Personal', {
-            'fields': ('first_name', 'last_name', 'email', 'Foto_Perfil', 'Fecha_de_Nacimiento')
+            'fields': ('first_name', 'last_name', 'email', 'Correo_Electronico', 'Foto_Perfil', 'Fecha_de_Nacimiento')
         }),
         ('Información de Contacto', {
             'fields': ('Telefono', 'Direccion', 'Ciudad', 'Estado', 'Codigo_Postal'),
-            'classes': ('collapse',)
         }),
         ('Permisos y Rol', {
             'fields': ('role', 'is_active', 'is_staff', 'is_superuser')
@@ -57,11 +56,32 @@ class CustomUserAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'email', 'password1', 'password2', 'role', 'first_name', 'last_name'),
+            'fields': ('username', 'email', 'Correo_Electronico', 'password1', 'password2'),
+        }),
+        ('Información Personal', {
+            'classes': ('wide',),
+            'fields': ('first_name', 'last_name', 'Telefono', 'Fecha_de_Nacimiento', 'Foto_Perfil'),
+        }),
+        ('Información de Contacto', {
+            'classes': ('wide',),
+            'fields': ('Direccion', 'Ciudad', 'Estado', 'Codigo_Postal'),
+        }),
+        ('Rol y Permisos', {
+            'classes': ('wide',),
+            'fields': ('role', 'is_staff', 'is_active'),
         }),
     )
     
     readonly_fields = ('date_joined', 'last_login')
+    
+    def has_delete_permission(self, request, obj=None):
+        """Permite eliminar usuarios y sus objetos relacionados"""
+        return request.user.is_superuser
+    
+    def delete_queryset(self, request, queryset):
+        """Elimina múltiples usuarios y sus objetos relacionados"""
+        for obj in queryset:
+            obj.delete()
     
     def get_queryset(self, request):
         """Optimiza las consultas con annotate"""
@@ -78,8 +98,8 @@ class CustomUserAdmin(UserAdmin):
     def role_colored(self, obj):
         """Muestra el rol con colores"""
         colors = {
-            'admin': '#dc3545',
-            'client': '#28a745',
+            'ADMIN': '#dc3545',
+            'CUSTOMER': '#28a745',
         }
         color = colors.get(obj.role, '#6c757d')
         return format_html(
@@ -119,12 +139,23 @@ class CustomUserAdmin(UserAdmin):
     
     @admin.action(description='Cambiar rol a Cliente')
     def make_clients(self, request, queryset):
-        updated = queryset.update(role='client')
+        updated = queryset.update(role='CUSTOMER')
         self.message_user(request, f'{updated} usuario(s) cambiado(s) a Cliente.')
     
     @admin.action(description='Cambiar rol a Administrador')
     def make_admins(self, request, queryset):
-        updated = queryset.update(role='admin')
+        updated = queryset.update(role='ADMIN')
         self.message_user(request, f'{updated} usuario(s) cambiado(s) a Administrador.')
+    
+    @admin.action(description='Eliminar usuarios seleccionados')
+    def delete_selected_users(self, request, queryset):
+        """Elimina usuarios y todos sus objetos relacionados"""
+        if request.user.is_superuser:
+            count = queryset.count()
+            for user in queryset:
+                user.delete()
+            self.message_user(request, f'{count} usuario(s) eliminado(s) junto con sus datos relacionados.')
+        else:
+            self.message_user(request, 'No tienes permisos para eliminar usuarios.', level='error')
 
 admin.site.register(CustomUser, CustomUserAdmin)

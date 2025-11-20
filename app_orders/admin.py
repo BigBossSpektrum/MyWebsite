@@ -10,10 +10,14 @@ class OrderItemInline(admin.TabularInline):
     model = OrderItem
     extra = 0
     readonly_fields = ('id', 'product', 'quantity', 'price', 'subtotal')
-    can_delete = False
+    can_delete = True
     
     def has_add_permission(self, request, obj=None):
         return False
+    
+    def has_delete_permission(self, request, obj=None):
+        """Permite eliminar items si el usuario es superusuario"""
+        return request.user.is_superuser
 
 
 @admin.register(Order)
@@ -164,7 +168,8 @@ class OrderItemAdmin(admin.ModelAdmin):
         return False
     
     def has_delete_permission(self, request, obj=None):
-        return False
+        """Permite eliminar OrderItems si el usuario es superusuario"""
+        return request.user.is_superuser
     
     def get_queryset(self, request):
         """Optimiza las consultas con select_related"""

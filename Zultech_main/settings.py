@@ -206,16 +206,23 @@ SOCIALACCOUNT_EMAIL_REQUIRED = True  # Email obligatorio para cuentas sociales
 # Configuración para que las cuentas sociales se conecten automáticamente
 SOCIALACCOUNT_ADAPTER = 'app_login.adapters.CustomSocialAccountAdapter'
 
-# Configurar proveedores de OAuth
-# Las credenciales se configuran en el admin de Django (/admin/socialaccount/socialapp/)
-# NO las configures aquí para evitar conflictos
+# Configurar proveedores de OAuth usando variables de entorno (más seguro)
+# Las credenciales se cargan desde el archivo .env
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
         'APP': {
             'client_id': os.environ.get('OAUTH_GOOGLE_ID'),
             'secret': os.environ.get('OAUTH_GOOGLE_SECRET'),
+            'key': ''
         }
-    },
+    }
 }
 
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
