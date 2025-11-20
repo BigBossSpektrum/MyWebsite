@@ -212,26 +212,52 @@
                                 <div class="mb-2">
                                     <i class="fas fa-user"></i> 
                                     <strong>Cliente:</strong> {{ chat.customer.email }}
-                                    {% if chat.attended_by %}
-                                        <span class="ms-2">
-                                            | <i class="fas fa-user-check text-success"></i> 
-                                            <strong>Atendido por:</strong> 
-                                            <span class="text-success">{{ chat.attended_by.email }}</span>
-                                        </span>
-                                    {% elif chat.admin %}
-                                        <span class="ms-2">
-                                            | <i class="fas fa-user-shield text-success"></i> 
-                                            <strong>Asignado a:</strong> 
-                                            <span class="text-success">{{ chat.admin.email }}</span>
-                                        </span>
-                                    {% else %}
-                                        <span class="ms-2">
-                                            | <span class="badge bg-warning text-dark">
-                                                <i class="fas fa-exclamation-triangle"></i> Sin Atender
-                                            </span>
-                                        </span>
+                                </div>
+                                
+                                {% if chat.attended_by %}
+                                <div class="mb-2 p-2" style="background-color: #d4edda; border-left: 4px solid #28a745; border-radius: 4px;">
+                                    <i class="fas fa-user-check text-success"></i> 
+                                    <strong>Atendido por:</strong> 
+                                    <span class="text-success fw-bold">
+                                        {% if chat.attended_by.get_full_name %}
+                                            {{ chat.attended_by.get_full_name }}
+                                        {% elif chat.attended_by.email %}
+                                            {{ chat.attended_by.email }}
+                                        {% else %}
+                                            {{ chat.attended_by.username }}
+                                        {% endif %}
+                                    </span>
+                                    {% if chat.attended_at %}
+                                    <br>
+                                    <small class="text-muted">
+                                        <i class="far fa-clock"></i> {{ chat.attended_at|date:"d/m/Y H:i" }}
+                                    </small>
                                     {% endif %}
                                 </div>
+                                {% elif chat.admin %}
+                                <div class="mb-2 p-2" style="background-color: #d1ecf1; border-left: 4px solid #17a2b8; border-radius: 4px;">
+                                    <i class="fas fa-user-shield text-info"></i> 
+                                    <strong>Asignado a:</strong> 
+                                    <span class="text-info fw-bold">
+                                        {% if chat.admin.get_full_name %}
+                                            {{ chat.admin.get_full_name }}
+                                        {% elif chat.admin.email %}
+                                            {{ chat.admin.email }}
+                                        {% else %}
+                                            {{ chat.admin.username }}
+                                        {% endif %}
+                                    </span>
+                                    <br>
+                                    <small class="text-muted">Pendiente de registro de atención</small>
+                                </div>
+                                {% else %}
+                                <div class="mb-2 p-2" style="background-color: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">
+                                    <i class="fas fa-exclamation-triangle text-warning"></i> 
+                                    <strong class="text-warning">Sin Atender</strong>
+                                    <br>
+                                    <small class="text-muted">Esperando asignación de asesor</small>
+                                </div>
+                                {% endif %}
                                 
                                 {% if not chat.admin %}
                                     <div class="alert alert-warning py-2 px-3 mb-2" role="alert">

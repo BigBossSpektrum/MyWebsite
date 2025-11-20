@@ -18,23 +18,23 @@ class ChatRoom(models.Model):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
     class Meta:
         ordering = ['-updated_at']
-    
+
     def __str__(self):
         return f"Chat para Orden {self.order.id}"
-    
+
     @property
     def room_name(self):
         """Nombre único de la sala para WebSocket"""
         return f"chat_{self.id}"
-    
+
     @property
     def unread_count_for_customer(self):
         """Cuenta mensajes no leídos por el cliente"""
         return self.messages.filter(sender__role='admin', is_read=False).count()
-    
+
     @property
     def unread_count_for_admin(self):
         """Cuenta mensajes no leídos por el admin"""
@@ -51,9 +51,9 @@ class Message(models.Model):
     content = models.TextField()
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    
+
     class Meta:
         ordering = ['created_at']
-    
+
     def __str__(self):
         return f"{self.sender.email}: {self.content[:50]}"
