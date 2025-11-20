@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Zultech{% endblock %}</title>
     {% load static %}
-    {% static "static/img/logos/" %}
+
     <link rel="icon" type="image/png" href="{% static 'img/logos/logo-zultech.png' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,11 +38,7 @@
                 <div class="navbar-links">
                     <a href="{% url 'website:Dashboard' %}">Servicios</a>
                     <a href="{% url 'products:product_list' %}">Productos</a>
-                    {% if user.is_authenticated %}
-                    <!-- Dropdown del carrito -->
-                    <a href="{% url 'login:profile' %}">Perfil</a>
-                    {% endif %}
-                    
+
                     {% if user.is_staff or user.is_superuser %}
                     <!-- Dropdown de Gestión -->
                     <div class="management-dropdown">
@@ -70,39 +66,57 @@
                     {% endif %}
                     <a href="{% url 'website:contact' %}">Contáctanos</a>
                 </div>
-                
-                {% if user.is_authenticated and not user.is_staff and not user.is_superuser %}
-                <div class="cart-dropdown">
-                    <button class="cart-dropdown-toggle" id="cartDropdownToggle">
-                        <i class="fas fa-shopping-cart"></i>
-                        {% if cart_count %}
+            </div>
+
+            <div class="navbar-actions">
+                <!-- Botón modo oscuro -->
+                <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+
+                {% if user.is_authenticated %}
+                <!-- Dropdown del perfil de usuario -->
+                <div class="user-profile-dropdown">
+                    <button class="user-profile-toggle" id="userProfileToggle">
+                        {% if user.Foto_Perfil %}
+                        <img src="{{ user.Foto_Perfil.url }}" alt="Perfil" class="user-avatar">
+                        {% else %}
+                        <div class="user-avatar-placeholder">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        {% endif %}
+                        {% if cart_count and not user.is_staff and not user.is_superuser %}
                         <span class="cart-badge">{{ cart_count }}</span>
                         {% endif %}
                     </button>
-                    <div class="cart-dropdown-menu" id="cartDropdownMenu">
-                        <a href="{% url 'cart:cart_view' %}" class="cart-dropdown-item">
+                    <div class="user-profile-menu" id="userProfileMenu">
+                        {% if not user.is_staff and not user.is_superuser %}
+                        <a href="{% url 'cart:cart_view' %}" class="user-profile-item">
                             <i class="fas fa-shopping-cart"></i> Carrito
+                            {% if cart_count %}
+                            <span class="badge badge-primary ml-auto">{{ cart_count }}</span>
+                            {% endif %}
                         </a>
-                        <a href="{% url 'orders:order_history' %}" class="cart-dropdown-item">
+                        <a href="{% url 'orders:order_history' %}" class="user-profile-item">
                             <i class="fas fa-box"></i> Mis Pedidos
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        {% endif %}
+                        <a href="{% url 'login:profile' %}" class="user-profile-item">
+                            <i class="fas fa-user-circle"></i> Mi Perfil
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="{% url 'login:logout' %}" class="user-profile-item">
+                            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
                         </a>
                     </div>
                 </div>
-                {% endif %}
-                
+                {% else %}
                 <div class="navbar-auth">
-                    <!-- Botón modo oscuro -->
-                    <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
-                        <i class="fas fa-moon"></i>
-                    </button>
-                    
-                    {% if user.is_authenticated %}
-                        <a href="{% url 'login:logout' %}" class="btn-logout">Cerrar Sesión</a>
-                    {% else %}
-                        <a href="{% url 'login:login' %}" class="btn-login">Iniciar Sesión</a>
-                        <a href="{% url 'login:register' %}" class="btn-register">Registrarse</a>
-                    {% endif %}
+                    <a href="{% url 'login:login' %}" class="btn-login">Iniciar Sesión</a>
+                    <a href="{% url 'login:register' %}" class="btn-register">Registrarse</a>
                 </div>
+                {% endif %}
             </div>
         </div>
     </nav>
@@ -141,28 +155,58 @@
             }
         });
 
-        // Cart Dropdown Toggle Script
-        const cartDropdownToggle = document.getElementById('cartDropdownToggle');
-        const cartDropdownMenu = document.getElementById('cartDropdownMenu');
+        // User Profile Dropdown Toggle Script (Authenticated)
+        const userProfileToggle = document.getElementById('userProfileToggle');
+        const userProfileMenu = document.getElementById('userProfileMenu');
         
-        if (cartDropdownToggle && cartDropdownMenu) {
-            cartDropdownToggle.addEventListener('click', (event) => {
+        if (userProfileToggle && userProfileMenu) {
+            userProfileToggle.addEventListener('click', (event) => {
                 event.stopPropagation();
-                cartDropdownMenu.classList.toggle('active');
+                userProfileMenu.classList.toggle('active');
             });
 
             // Cerrar dropdown al hacer clic fuera
             document.addEventListener('click', (event) => {
-                if (!cartDropdownToggle.contains(event.target) && !cartDropdownMenu.contains(event.target)) {
-                    cartDropdownMenu.classList.remove('active');
+                if (!userProfileToggle.contains(event.target) && !userProfileMenu.contains(event.target)) {
+                    userProfileMenu.classList.remove('active');
                 }
             });
 
             // Cerrar dropdown en móvil después de hacer clic en un enlace
-            const cartDropdownItems = cartDropdownMenu.querySelectorAll('.cart-dropdown-item');
-            cartDropdownItems.forEach(item => {
+            const userProfileItems = userProfileMenu.querySelectorAll('.user-profile-item');
+            userProfileItems.forEach(item => {
                 item.addEventListener('click', () => {
-                    cartDropdownMenu.classList.remove('active');
+                    userProfileMenu.classList.remove('active');
+                    if (window.innerWidth <= 768) {
+                        navbarToggle.classList.remove('active');
+                        navbarMenu.classList.remove('active');
+                    }
+                });
+            });
+        }
+
+        // Guest Profile Dropdown Toggle Script (Not Authenticated)
+        const guestProfileToggle = document.getElementById('guestProfileToggle');
+        const guestProfileMenu = document.getElementById('guestProfileMenu');
+        
+        if (guestProfileToggle && guestProfileMenu) {
+            guestProfileToggle.addEventListener('click', (event) => {
+                event.stopPropagation();
+                guestProfileMenu.classList.toggle('active');
+            });
+
+            // Cerrar dropdown al hacer clic fuera
+            document.addEventListener('click', (event) => {
+                if (!guestProfileToggle.contains(event.target) && !guestProfileMenu.contains(event.target)) {
+                    guestProfileMenu.classList.remove('active');
+                }
+            });
+
+            // Cerrar dropdown en móvil después de hacer clic en un enlace
+            const guestProfileItems = guestProfileMenu.querySelectorAll('.user-profile-item');
+            guestProfileItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    guestProfileMenu.classList.remove('active');
                     if (window.innerWidth <= 768) {
                         navbarToggle.classList.remove('active');
                         navbarMenu.classList.remove('active');

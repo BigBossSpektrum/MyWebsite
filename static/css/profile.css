@@ -654,6 +654,8 @@
     .profile-header {
         flex-direction: column;
         text-align: center;
+        gap: 20px;
+        padding: 30px 25px;
     }
     
     .profile-avatar {
@@ -668,6 +670,10 @@
     .profile-header-info h1 {
         font-size: 2em;
     }
+    
+    .dashboard-stats {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
 }
 
 @media (max-width: 768px) {
@@ -676,12 +682,43 @@
     }
     
     .profile-header {
-        padding: 30px 20px;
+        padding: 25px 20px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .profile-avatar {
+        width: 90px;
+        height: 90px;
+        border-width: 3px;
+    }
+    
+    .avatar-placeholder {
+        font-size: 36px;
+    }
+    
+    .profile-header-info h1 {
+        font-size: 1.75em;
+    }
+    
+    .profile-role {
+        font-size: 1em;
+    }
+    
+    .profile-joined {
+        font-size: 0.9em;
+    }
+    
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        margin-bottom: 20px;
     }
     
     .stat-card {
-        flex-direction: column;
-        text-align: center;
+        flex-direction: row;
+        text-align: left;
+        padding: 20px;
     }
     
     .stat-icon {
@@ -690,12 +727,32 @@
         font-size: 24px;
     }
     
+    .stat-info h3 {
+        font-size: 0.85em;
+    }
+    
     .stat-info p {
         font-size: 1.8em;
     }
     
+    .profile-sections {
+        gap: 20px;
+    }
+    
+    .profile-section {
+        border-radius: 15px;
+    }
+    
     .section-header {
         padding: 20px;
+    }
+    
+    .section-header h2 {
+        font-size: 1.3em;
+    }
+    
+    .section-subtitle {
+        font-size: 0.85em;
     }
     
     .section-content {
@@ -704,31 +761,66 @@
     
     .info-grid {
         grid-template-columns: 1fr;
+        gap: 15px;
     }
     
     .info-item {
         padding: 15px;
+        border-radius: 10px;
+    }
+    
+    .info-label {
+        font-size: 0.8em;
+    }
+    
+    .info-value {
+        font-size: 1em;
     }
     
     .btn-edit-small {
         top: 10px;
         right: 10px;
-        width: 30px;
-        height: 30px;
-        font-size: 12px;
+        width: 32px;
+        height: 32px;
+        font-size: 13px;
     }
     
     .security-actions {
         grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .security-btn {
+        padding: 18px;
+        font-size: 0.95em;
+    }
+    
+    .security-btn i {
+        font-size: 22px;
     }
     
     .modal-content {
         width: 95%;
         max-width: 100%;
+        border-radius: 15px;
     }
     
     .modal-header {
         padding: 20px;
+    }
+    
+    .modal-header h3 {
+        font-size: 1.25em;
+    }
+    
+    .modal-description {
+        font-size: 0.85em;
+    }
+    
+    .close-modal {
+        font-size: 28px;
+        width: 32px;
+        height: 32px;
     }
     
     .modal-body {
@@ -737,12 +829,230 @@
     
     .modal-footer {
         padding: 15px 20px;
-        flex-direction: column;
+        flex-direction: column-reverse;
+        gap: 10px;
     }
     
     .btn-primary,
     .btn-secondary {
         width: 100%;
         justify-content: center;
+        padding: 14px 30px;
+    }
+    
+    .form-group {
+        margin-bottom: 18px;
+    }
+    
+    .form-control {
+        padding: 12px 14px;
+        font-size: 0.95em;
+    }
+    
+    .form-label {
+        font-size: 0.9em;
+    }
+    
+    .form-hint {
+        font-size: 0.8em;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-content {
+        padding: 15px 10px;
+    }
+    
+    .profile-header {
+        padding: 20px 15px;
+        border-radius: 12px;
+        gap: 15px;
+    }
+    
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
+        border-width: 3px;
+    }
+    
+    .avatar-placeholder {
+        font-size: 32px;
+    }
+    
+    .profile-header-info h1 {
+        font-size: 1.5em;
+    }
+    
+    .profile-role {
+        font-size: 0.95em;
+    }
+    
+    .profile-joined {
+        font-size: 0.85em;
+    }
+    
+    .dashboard-stats {
+        gap: 12px;
+    }
+    
+    .stat-card {
+        padding: 18px 15px;
+        gap: 15px;
+    }
+    
+    .stat-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+    }
+    
+    .stat-info h3 {
+        font-size: 0.8em;
+    }
+    
+    .stat-info p {
+        font-size: 1.6em;
+    }
+    
+    .profile-sections {
+        gap: 15px;
+    }
+    
+    .profile-section {
+        border-radius: 12px;
+    }
+    
+    .section-header {
+        padding: 18px 15px;
+    }
+    
+    .section-header h2 {
+        font-size: 1.2em;
+    }
+    
+    .section-header h2 i {
+        margin-right: 8px;
+    }
+    
+    .section-subtitle {
+        font-size: 0.8em;
+    }
+    
+    .section-content {
+        padding: 18px 15px;
+    }
+    
+    .info-grid {
+        gap: 12px;
+    }
+    
+    .info-item {
+        padding: 14px 12px;
+        padding-right: 45px;
+    }
+    
+    .info-label {
+        font-size: 0.75em;
+        margin-bottom: 6px;
+    }
+    
+    .info-label i {
+        margin-right: 6px;
+    }
+    
+    .info-value {
+        font-size: 0.95em;
+    }
+    
+    .btn-edit-small {
+        top: 8px;
+        right: 8px;
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
+        border-radius: 6px;
+    }
+    
+    .security-actions {
+        gap: 12px;
+    }
+    
+    .security-btn {
+        padding: 16px 14px;
+        font-size: 0.9em;
+        gap: 12px;
+        border-radius: 10px;
+    }
+    
+    .security-btn i {
+        font-size: 20px;
+    }
+    
+    .modal-content {
+        width: 98%;
+        margin: 10px;
+        border-radius: 12px;
+    }
+    
+    .modal-header {
+        padding: 18px 15px;
+    }
+    
+    .modal-header h3 {
+        font-size: 1.15em;
+    }
+    
+    .modal-header h3 i {
+        margin-right: 8px;
+    }
+    
+    .modal-description {
+        font-size: 0.8em;
+    }
+    
+    .close-modal {
+        font-size: 26px;
+        width: 30px;
+        height: 30px;
+    }
+    
+    .modal-body {
+        padding: 18px 15px;
+    }
+    
+    .modal-footer {
+        padding: 12px 15px;
+        gap: 8px;
+    }
+    
+    .btn-primary,
+    .btn-secondary {
+        padding: 12px 24px;
+        font-size: 0.95em;
+        border-radius: 8px;
+    }
+    
+    .form-group {
+        margin-bottom: 16px;
+    }
+    
+    .form-control {
+        padding: 11px 12px;
+        font-size: 0.9em;
+        border-radius: 8px;
+    }
+    
+    .form-label {
+        font-size: 0.85em;
+        margin-bottom: 6px;
+    }
+    
+    .form-hint {
+        font-size: 0.75em;
+        margin-top: 4px;
+    }
+    
+    textarea.form-control {
+        min-height: 100px;
     }
 }
