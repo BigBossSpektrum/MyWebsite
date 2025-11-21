@@ -281,3 +281,30 @@
 [data-theme="dark"] .text-muted a:hover {
     color: #ffed4e;
 }
+
+/* Botones en modo oscuro */
+[data-theme="dark"] .btn-primary,
+[data-theme="dark"] .add-to-cart-btn.btn-primary {
+    background-color: #ffd700;
+    border-color: #ffd700;
+    color: #000000;
+}
+
+[data-theme="dark"] .btn-primary:hover,
+[data-theme="dark"] .add-to-cart-btn.btn-primary:hover {
+    background-color: #ffed4e;
+    border-color: #ffed4e;
+    color: #000000;
+}
+
+[data-theme="dark"] .btn-success {
+    background-color: #ffd700;
+    border-color: #ffd700;
+    color: #000000;
+}
+
+[data-theme="dark"] .btn-success:hover {
+    background-color: #ffed4e;
+    border-color: #ffed4e;
+    color: #000000;
+}

@@ -5,37 +5,37 @@
 
 {% block content %}
 <!-- Hero Section - Propuesta de Valor Principal -->
-<section class="hero-home">
-    <div class="hero-overlay"></div>
+<section class="hero-home" role="banner">
+    <div class="hero-overlay" aria-hidden="true"></div>
     <div class="hero-content">
         <h1 class="hero-title">
             <span class="hero-highlight">Protegemos</span> lo que más valoras
         </h1>
         <p class="hero-subtitle">
             Soluciones tecnológicas de seguridad electrónica con respaldo profesional.<br>
-            <strong>Tu tranquilidad es nuestra prioridad.</strong>
+            <strong class="hero-priority">Tu tranquilidad es nuestra prioridad.</strong>
         </p>
         <div class="hero-cta-group">
-            <a href="{% url 'website:contact' %}" class="btn-primary-cta">
-                <i class="fas fa-file-invoice"></i> Solicitar Cotización Gratis
+            <a href="{% url 'website:contact' %}" class="btn-primary-cta" aria-label="Solicitar cotización gratis">
+                <i class="fas fa-file-invoice" aria-hidden="true"></i> Solicitar Cotización Gratis
             </a>
-            <a href="{% url 'products:product_list' %}" class="btn-secondary-cta">
-                <i class="fas fa-box-open"></i> Ver Catálogo
+            <a href="{% url 'products:product_list' %}" class="btn-secondary-cta" aria-label="Ver catálogo de productos">
+                <i class="fas fa-box-open" aria-hidden="true"></i> Ver Catálogo
             </a>
         </div>
 
         <!-- Indicadores de confianza -->
-        <div class="trust-indicators">
-            <div class="trust-item">
-                <i class="fas fa-shield-alt"></i>
+        <div class="trust-indicators" role="list" aria-label="Indicadores de confianza">
+            <div class="trust-item" role="listitem">
+                <i class="fas fa-shield-alt" aria-hidden="true"></i>
                 <span>+10 años de experiencia</span>
             </div>
-            <div class="trust-item">
-                <i class="fas fa-check-circle"></i>
+            <div class="trust-item" role="listitem">
+                <i class="fas fa-check-circle" aria-hidden="true"></i>
                 <span>+500 instalaciones exitosas</span>
             </div>
-            <div class="trust-item">
-                <i class="fas fa-map-marker-alt"></i>
+            <div class="trust-item" role="listitem">
+                <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
                 <span>Cobertura en Quito y alrededores</span>
             </div>
         </div>
@@ -46,18 +46,18 @@
 </section>
 
 <!-- Productos y Servicios Destacados -->
-<section class="products-showcase">
+<section class="products-showcase" aria-labelledby="products-title">
     <div class="section-header">
-        <h2 class="section-title">Nuestras Soluciones de Seguridad</h2>
+        <h2 id="products-title" class="section-title">Nuestras Soluciones de Seguridad</h2>
         <p class="section-description">Tecnología de última generación para proteger tu hogar o empresa</p>
     </div>
 
-    <div class="products-grid">
+    <div class="products-grid" role="list">
         <!-- Cámaras de Seguridad -->
-        <div class="product-card">
+        <article class="product-card" role="listitem">
             <div class="product-card-image">
-                <img src="{% static 'img/products/Camaras-seguridad.jpg' %}" alt="Cámaras de Seguridad">
-                <div class="product-badge">Más Vendido</div>
+                <img src="{% static 'img/products/Camaras-seguridad.jpg' %}" alt="Cámaras de Seguridad" loading="lazy">
+                <div class="product-badge" aria-label="Producto más vendido">Más Vendido</div>
             </div>
             <div class="product-card-content">
                 <div class="product-icon">
@@ -70,15 +70,15 @@
                     <li><i class="fas fa-check"></i> Visión nocturna infrarroja</li>
                     <li><i class="fas fa-check"></i> Grabación en la nube</li>
                 </ul>
-                <a href="{% url 'products:product_list' %}" class="btn-product">Ver Cámaras</a>
+                <a href="{% url 'products:product_list' %}" class="btn-product" aria-label="Ver cámaras de seguridad">Ver Cámaras</a>
             </div>
-        </div>
+        </article>
 
         <!-- Control Biométrico -->
-        <div class="product-card">
+        <article class="product-card" role="listitem">
             <div class="product-card-image">
-                <img src="{% static 'img/products/Control-acceso.webp' %}" alt="Control Biométrico">
-                <div class="product-badge badge-tech">Alta Tecnología</div>
+                <img src="{% static 'img/products/Control-acceso.webp' %}" alt="Control Biométrico" loading="lazy">
+                <div class="product-badge badge-tech" aria-label="Producto de alta tecnología">Alta Tecnología</div>
             </div>
             <div class="product-card-content">
                 <div class="product-icon">
@@ -91,15 +91,15 @@
                     <li><i class="fas fa-check"></i> Registro de asistencia</li>
                     <li><i class="fas fa-check"></i> Integración empresarial</li>
                 </ul>
-                <a href="{% url 'products:product_list' %}" class="btn-product">Ver Sistemas</a>
+                <a href="{% url 'products:product_list' %}" class="btn-product" aria-label="Ver sistemas de control biométrico">Ver Sistemas</a>
             </div>
-        </div>
+        </article>
 
         <!-- Cercado Eléctrico -->
-        <div class="product-card">
+        <article class="product-card" role="listitem">
             <div class="product-card-image">
-                <img src="{% static 'img/products/Cerco-electrico.jpg' %}" alt="Cercado Eléctrico">
-                <div class="product-badge badge-security">Máxima Seguridad</div>
+                <img src="{% static 'img/products/Cerco-electrico.jpg' %}" alt="Cercado Eléctrico" loading="lazy">
+                <div class="product-badge badge-security" aria-label="Producto de máxima seguridad">Máxima Seguridad</div>
             </div>
             <div class="product-card-content">
                 <div class="product-icon">
@@ -112,15 +112,15 @@
                     <li><i class="fas fa-check"></i> Sistema anti-sabotaje</li>
                     <li><i class="fas fa-check"></i> Certificado de seguridad</li>
                 </ul>
-                <a href="{% url 'products:product_list' %}" class="btn-product">Ver Cercados</a>
+                <a href="{% url 'products:product_list' %}" class="btn-product" aria-label="Ver cercados eléctricos">Ver Cercados</a>
             </div>
-        </div>
+        </article>
 
         <!-- Alarmas Inteligentes -->
-        <div class="product-card">
+        <article class="product-card" role="listitem">
             <div class="product-card-image">
-                <img src="{% static 'img/products/Sistemas-alarmas.jpg' %}" alt="Alarmas Inteligentes">
-                <div class="product-badge badge-alert">Alerta Inmediata</div>
+                <img src="{% static 'img/products/Sistemas-alarmas.jpg' %}" alt="Alarmas Inteligentes" loading="lazy">
+                <div class="product-badge badge-alert" aria-label="Producto con alerta inmediata">Alerta Inmediata</div>
             </div>
             <div class="product-card-content">
                 <div class="product-icon">
@@ -133,62 +133,62 @@
                     <li><i class="fas fa-check"></i> Alerta a móvil</li>
                     <li><i class="fas fa-check"></i> Sirena de alta potencia</li>
                 </ul>
-                <a href="{% url 'products:product_list' %}" class="btn-product">Ver Alarmas</a>
+                <a href="{% url 'products:product_list' %}" class="btn-product" aria-label="Ver alarmas inteligentes">Ver Alarmas</a>
             </div>
-        </div>
+        </article>
     </div>
 </section>
 
 <!-- Por Qué Elegirnos -->
-<section class="why-choose-us">
+<section class="why-choose-us" aria-labelledby="benefits-title">
     <div class="section-header-dark">
-        <h2 class="section-title-white">¿Por Qué Elegir Zultech?</h2>
+        <h2 id="benefits-title" class="section-title-white">¿Por Qué Elegir Zultech?</h2>
         <p class="section-description-white">La confianza de cientos de clientes satisfechos nos respalda</p>
     </div>
     
-    <div class="benefits-grid">
-        <div class="benefit-item">
-            <div class="benefit-icon">
+    <div class="benefits-grid" role="list">
+        <div class="benefit-item" role="listitem">
+            <div class="benefit-icon" aria-hidden="true">
                 <i class="fas fa-award"></i>
             </div>
             <h3>Experiencia Comprobada</h3>
             <p>Más de 10 años protegiendo hogares y empresas con tecnología de punta</p>
         </div>
         
-        <div class="benefit-item">
-            <div class="benefit-icon">
+        <div class="benefit-item" role="listitem">
+            <div class="benefit-icon" aria-hidden="true">
                 <i class="fas fa-tools"></i>
             </div>
             <h3>Instalación Profesional</h3>
             <p>Técnicos certificados garantizan instalaciones impecables y funcionamiento óptimo</p>
         </div>
         
-        <div class="benefit-item">
-            <div class="benefit-icon">
+        <div class="benefit-item" role="listitem">
+            <div class="benefit-icon" aria-hidden="true">
                 <i class="fas fa-headset"></i>
             </div>
             <h3>Soporte Técnico 24/7</h3>
             <p>Atención inmediata cuando más lo necesitas. Estamos siempre disponibles</p>
         </div>
         
-        <div class="benefit-item">
-            <div class="benefit-icon">
+        <div class="benefit-item" role="listitem">
+            <div class="benefit-icon" aria-hidden="true">
                 <i class="fas fa-certificate"></i>
             </div>
             <h3>Garantía Extendida</h3>
             <p>Productos originales con garantía de fábrica y respaldo local</p>
         </div>
         
-        <div class="benefit-item">
-            <div class="benefit-icon">
+        <div class="benefit-item" role="listitem">
+            <div class="benefit-icon" aria-hidden="true">
                 <i class="fas fa-dollar-sign"></i>
             </div>
             <h3>Precios Competitivos</h3>
             <p>Mejor relación calidad-precio del mercado. Cotizaciones sin compromiso</p>
         </div>
         
-        <div class="benefit-item">
-            <div class="benefit-icon">
+        <div class="benefit-item" role="listitem">
+            <div class="benefit-icon" aria-hidden="true">
                 <i class="fas fa-shipping-fast"></i>
             </div>
             <h3>Entrega Rápida</h3>
@@ -198,20 +198,20 @@
 </section>
 
 <!-- Testimonios -->
-<section class="testimonials">
+<section class="testimonials" aria-labelledby="testimonials-title">
     <div class="section-header">
-        <h2 class="section-title">Lo Que Dicen Nuestros Clientes</h2>
+        <h2 id="testimonials-title" class="section-title">Lo Que Dicen Nuestros Clientes</h2>
         <p class="section-description">La satisfacción de nuestros clientes es nuestra mejor carta de presentación</p>
     </div>
     
-    <div class="testimonials-grid">
-        <div class="testimonial-card">
-            <div class="testimonial-rating">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
+    <div class="testimonials-grid" role="list">
+        <article class="testimonial-card" role="listitem">
+            <div class="testimonial-rating" aria-label="Calificación: 5 de 5 estrellas" role="img">
+                <i class="fas fa-star" aria-hidden="true"></i>
+                <i class="fas fa-star" aria-hidden="true"></i>
+                <i class="fas fa-star" aria-hidden="true"></i>
+                <i class="fas fa-star" aria-hidden="true"></i>
+                <i class="fas fa-star" aria-hidden="true"></i>
             </div>
             <p class="testimonial-text">
                 "Excelente servicio. Instalaron cámaras y cercado eléctrico en mi casa. El equipo fue muy profesional y el sistema funciona perfectamente. Me siento mucho más seguro ahora."
@@ -225,15 +225,15 @@
                     <span>Residencial La Carolina</span>
                 </div>
             </div>
-        </div>
+        </article>
         
-        <div class="testimonial-card">
-            <div class="testimonial-rating">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
+        <article class="testimonial-card" role="listitem">
+            <div class="testimonial-rating" aria-label="Calificación: 5 de 5 estrellas" role="img">
+                <i class="fas fa-star" aria-hidden="true"></i>
+                <i class="fas fa-star" aria-hidden="true"></i>
+                <i class="fas fa-star" aria-hidden="true"></i>
+                <i class="fas fa-star" aria-hidden="true"></i>
+                <i class="fas fa-star" aria-hidden="true"></i>
             </div>
             <p class="testimonial-text">
                 "Contraté el sistema de control de acceso biométrico para mi empresa. La instalación fue rápida y el personal muy capacitado. Ahora tengo control total de entradas y salidas."
@@ -247,15 +247,15 @@
                     <span>Empresa Logística QuiPort</span>
                 </div>
             </div>
-        </div>
+        </article>
         
-        <div class="testimonial-card">
-            <div class="testimonial-rating">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
+        <article class="testimonial-card" role="listitem">
+            <div class="testimonial-rating" aria-label="Calificación: 5 de 5 estrellas" role="img">
+                <i class="fas fa-star" aria-hidden="true"></i>
+                <i class="fas fa-star" aria-hidden="true"></i>
+                <i class="fas fa-star" aria-hidden="true"></i>
+                <i class="fas fa-star" aria-hidden="true"></i>
+                <i class="fas fa-star" aria-hidden="true"></i>
             </div>
             <p class="testimonial-text">
                 "Recomiendo totalmente a Zultech. Las alarmas inteligentes que instalaron funcionan de maravilla. Recibo notificaciones en tiempo real y me da mucha tranquilidad."
@@ -269,15 +269,15 @@
                     <span>Conjunto Los Cipreses</span>
                 </div>
             </div>
-        </div>
+        </article>
     </div>
 </section>
 
 <!-- CTA Final - Cotización -->
-<section class="cta-final">
+<section class="cta-final" aria-labelledby="cta-title">
     <div class="cta-final-content">
         <div class="cta-final-text">
-            <h2>¿Listo para Proteger tu Espacio?</h2>
+            <h2 id="cta-title">¿Listo para Proteger tu Espacio?</h2>
             <p>Agenda una asesoría técnica gratuita. Analizamos tus necesidades y diseñamos la solución perfecta para ti.</p>
             <ul class="cta-benefits">
                 <li><i class="fas fa-check-circle"></i> Cotización sin compromiso</li>
@@ -286,16 +286,16 @@
             </ul>
         </div>
         <div class="cta-final-action">
-            <a href="{% url 'website:contact' %}" class="btn-cta-large">
-                <i class="fas fa-calendar-check"></i>
+            <a href="{% url 'website:contact' %}" class="btn-cta-large" aria-label="Cotizar sistema de seguridad">
+                <i class="fas fa-calendar-check" aria-hidden="true"></i>
                 <span>Cotiza tu Sistema de Seguridad Ahora</span>
             </a>
             <div class="cta-contact-options">
-                <a href="tel:+593987550600" class="contact-option">
-                    <i class="fas fa-phone"></i> (593) 987-550600
+                <a href="tel:+593987550600" class="contact-option" aria-label="Llamar al teléfono 593 987 550600">
+                    <i class="fas fa-phone" aria-hidden="true"></i> (593) 987-550600
                 </a>
-                <a href="https://wa.me/593987550600" target="_blank" class="contact-option whatsapp">
-                    <i class="fab fa-whatsapp"></i> WhatsApp
+                <a href="https://wa.me/593987550600" target="_blank" rel="noopener noreferrer" class="contact-option whatsapp" aria-label="Contactar por WhatsApp">
+                    <i class="fab fa-whatsapp" aria-hidden="true"></i> WhatsApp
                 </a>
             </div>
             <p class="cta-urgency">⚡ Respuesta en menos de 24 horas</p>
@@ -304,18 +304,18 @@
 </section>
 
 <!-- Marcas Asociadas -->
-<section class="brands-section">
+<section class="brands-section" aria-labelledby="brands-title">
     <div class="section-header">
-        <h2 class="section-title">Trabajamos con las Mejores Marcas</h2>
+        <h2 id="brands-title" class="section-title">Trabajamos con las Mejores Marcas</h2>
         <p class="section-description">Productos originales de fabricantes líderes a nivel mundial</p>
     </div>
-    <div class="brands-showcase">
-        <img src="{% static 'img/logos/hikvision.png' %}" alt="Hikvision">
-        <img src="{% static 'img/logos/dahua.png' %}" alt="Dahua">
-        <img src="{% static 'img/logos/imou.png' %}" alt="Imou">
-        <img src="{% static 'img/logos/dsc.png' %}" alt="DSC">
-        <img src="{% static 'img/logos/intelbras.png' %}" alt="Intelbras">
-        <img src="{% static 'img/logos/pysecure.png' %}" alt="PySecure">
+    <div class="brands-showcase" role="list" aria-label="Marcas asociadas">
+        <img src="{% static 'img/logos/hikvision.png' %}" alt="Marca Hikvision" loading="lazy" role="listitem">
+        <img src="{% static 'img/logos/dahua.png' %}" alt="Marca Dahua" loading="lazy" role="listitem">
+        <img src="{% static 'img/logos/imou.png' %}" alt="Marca Imou" loading="lazy" role="listitem">
+        <img src="{% static 'img/logos/dsc.png' %}" alt="Marca DSC" loading="lazy" role="listitem">
+        <img src="{% static 'img/logos/intelbras.png' %}" alt="Marca Intelbras" loading="lazy" role="listitem">
+        <img src="{% static 'img/logos/pysecure.png' %}" alt="Marca PySecure" loading="lazy" role="listitem">
     </div>
 </section>
 

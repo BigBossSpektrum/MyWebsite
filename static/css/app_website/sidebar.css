@@ -56,3 +56,9 @@
         margin-left: 0;
     }
 }
+
+/* === MODO OSCURO === */
+[data-theme="dark"] .sidebar a:hover {
+    background-color: #ffd700;
+    color: #000000;
+}

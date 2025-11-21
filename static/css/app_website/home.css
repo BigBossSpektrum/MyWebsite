@@ -80,6 +80,11 @@
     line-height: 1.6;
 }
 
+.hero-priority {
+    color: #ffd700;
+    font-weight: 700;
+}
+
 .hero-cta-group {
     display: flex;
     gap: 20px;
@@ -94,7 +99,7 @@
     gap: 12px;
     padding: 20px 45px;
     background: #ffd700;
-    color: #000000;
+    color: #000000 !important;
     font-size: 1.2em;
     font-weight: 700;
     text-decoration: none;
@@ -127,7 +132,7 @@
     background: #ffed4e;
     transform: translateY(-5px);
     box-shadow: 0 12px 35px rgba(255, 215, 0, 0.6);
-    color: #000000;
+    color: #000000 !important;
 }
 
 .btn-secondary-cta {
@@ -380,9 +385,13 @@
 
 .btn-product:hover {
     background: #ffd700;
-    color: #000000;
+    color: #000000 !important;
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);
+}
+
+.btn-product i {
+    color: inherit;
 }
 
 /* ========================================
@@ -630,7 +639,7 @@
     gap: 10px;
     padding: 30px 50px;
     background: #000000;
-    color: #ffd700;
+    color: #ffd700 !important;
     text-decoration: none;
     border-radius: 20px;
     font-weight: 700;
@@ -651,7 +660,15 @@
     background: #1a1a1a;
     transform: translateY(-5px);
     box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
-    color: #ffd700;
+    color: #ffd700 !important;
+}
+
+.btn-cta-large i {
+    color: inherit;
+}
+
+.btn-cta-large span {
+    color: inherit;
 }
 
 .cta-contact-options {
@@ -867,10 +884,28 @@
 [data-theme="dark"] .testimonial-card {
     background: #1a1a1a;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    border-left-color: #ffd700;
+}
+
+[data-theme="dark"] .testimonial-card:hover {
+    box-shadow: 0 20px 60px rgba(255, 215, 0, 0.3);
+}
+
+[data-theme="dark"] .testimonial-rating i {
+    color: #ffd700;
 }
 
 [data-theme="dark"] .testimonial-text {
     color: #cccccc;
+}
+
+[data-theme="dark"] .testimonial-text::before {
+    color: #ffd700;
+}
+
+[data-theme="dark"] .author-avatar {
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+    color: #000000;
 }
 
 [data-theme="dark"] .author-info h4 {
@@ -891,4 +926,103 @@
 
 [data-theme="dark"] .brands-showcase img:hover {
     filter: grayscale(0%) brightness(1);
+}
+
+/* Dark mode - Buttons */
+[data-theme="dark"] .btn-product {
+    background: #ffd700;
+    color: #000000 !important;
+}
+
+[data-theme="dark"] .btn-product:hover {
+    background: #ffed4e;
+    color: #000000 !important;
+}
+
+[data-theme="dark"] .btn-product i {
+    color: #000000 !important;
+}
+
+[data-theme="dark"] .btn-primary-cta {
+    background: #ffd700;
+    color: #000000 !important;
+}
+
+[data-theme="dark"] .btn-primary-cta:hover {
+    background: #ffed4e;
+    color: #000000 !important;
+}
+
+[data-theme="dark"] .btn-primary-cta i {
+    color: #000000 !important;
+}
+
+[data-theme="dark"] .btn-secondary-cta {
+    background: transparent;
+    color: #ffd700;
+    border-color: #ffd700;
+}
+
+[data-theme="dark"] .btn-secondary-cta:hover {
+    background: #ffd700;
+    color: #000000;
+}
+
+[data-theme="dark"] .btn-cta-large {
+    background: #ffd700;
+    color: #000000 !important;
+}
+
+[data-theme="dark"] .btn-cta-large:hover {
+    background: #ffed4e;
+    color: #000000 !important;
+}
+
+[data-theme="dark"] .btn-cta-large i,
+[data-theme="dark"] .btn-cta-large span {
+    color: #000000 !important;
+}
+
+[data-theme="dark"] .contact-option {
+    background: rgba(255, 215, 0, 0.2);
+    color: #ffd700;
+}
+
+[data-theme="dark"] .contact-option:hover {
+    background: rgba(255, 215, 0, 0.3);
+    color: #ffd700;
+}
+
+[data-theme="dark"] .contact-option.whatsapp {
+    background: #25d366;
+    color: #ffffff;
+}
+
+[data-theme="dark"] .contact-option.whatsapp:hover {
+    background: #1fb855;
+    color: #ffffff;
+}
+
+[data-theme="dark"] .cta-final {
+    background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+}
+
+[data-theme="dark"] .cta-final-text h2 {
+    color: #ffd700;
+}
+
+[data-theme="dark"] .cta-final-text p {
+    color: #cccccc;
+}
+
+[data-theme="dark"] .cta-benefits li {
+    color: #ffffff;
+}
+
+[data-theme="dark"] .cta-benefits li i {
+    color: #ffd700;
+}
+
+[data-theme="dark"] .cta-urgency {
+    color: #ffd700;
 }
