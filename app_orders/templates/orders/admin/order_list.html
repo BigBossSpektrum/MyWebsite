@@ -5,7 +5,12 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h2>Panel de Órdenes</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Panel de Órdenes</h2>
+        <a href="{% url 'room_chats:chat_list' %}" class="btn btn-success btn-lg">
+            <i class="fas fa-comments"></i> Gestionar Cotizaciones (Chat)
+        </a>
+    </div>
 
     <!-- Filtros -->
     <div class="card mb-4">

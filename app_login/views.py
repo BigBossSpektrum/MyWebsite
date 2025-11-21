@@ -25,14 +25,25 @@ def login_view(request):
         return HttpResponseRedirect(reverse('login:customer_dashboard'))
     
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        username = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '')
         remember_me = request.POST.get('remember')
         expected_role = request.POST.get('expected_role', 'CUSTOMER')
         
+        # Validar que los campos no estén vacíos
+        if not username or not password:
+            messages.error(request, 'Por favor ingresa tu usuario/email y contraseña.')
+            return render(request, 'login.html')
+        
+        # Autenticar usuario (el backend personalizado maneja username/email)
         user = authenticate(request, username=username, password=password)
         
         if user is not None:
+            # Verificar si el usuario está activo
+            if not user.is_active:
+                messages.error(request, 'Tu cuenta está desactivada. Contacta al administrador.')
+                return render(request, 'login.html')
+            
             # Verificar si el rol del usuario coincide con el rol esperado
             if user.role != expected_role:
                 if expected_role == 'ADMIN':
@@ -41,10 +52,16 @@ def login_view(request):
                     messages.error(request, 'Por favor, use el inicio de sesión de administrador.')
                 return render(request, 'login.html')
             
+            # Login exitoso
             login(request, user)
+            
+            # Configurar duración de la sesión
             if not remember_me:
                 request.session.set_expiry(0)
+            else:
+                request.session.set_expiry(1209600)  # 2 semanas
             
+            # Obtener la URL de redirección
             next_url = request.GET.get('next')
             if next_url:
                 return HttpResponseRedirect(next_url)
@@ -56,7 +73,7 @@ def login_view(request):
                 return HttpResponseRedirect(reverse('login:admin_dashboard'))
             return HttpResponseRedirect(reverse('login:customer_dashboard'))
         else:
-            messages.error(request, 'Usuario o contraseña incorrectos')
+            messages.error(request, 'Usuario/email o contraseña incorrectos. Por favor, intenta de nuevo.')
     
     return render(request, 'login.html')
 

@@ -1,108 +1,324 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Nuestros Servicios - Zultech{% endblock %}
+{% block title %}Zultech{% endblock %}
 
 {% block content %}
-<div class="services-page">
-    <div class="hero-section">
-        <h1>Nuestros Servicios de Seguridad</h1>
-        <p>Soluciones integrales para proteger lo que más valoras</p>
+<!-- Hero Section - Propuesta de Valor Principal -->
+<section class="hero-home" role="banner">
+    <div class="hero-overlay" aria-hidden="true"></div>
+    <div class="hero-content">
+        <h1 class="hero-title">
+            <span class="hero-highlight">Protegemos</span> lo que más valoras
+        </h1>
+        <p class="hero-subtitle">
+            Soluciones tecnológicas de seguridad electrónica con respaldo profesional.<br>
+            <strong class="hero-priority">Tu tranquilidad es nuestra prioridad.</strong>
+        </p>
+        <div class="hero-cta-group">
+            <a href="{% url 'website:contact' %}" class="btn-primary-cta" aria-label="Solicitar cotización gratis">
+                <i class="fas fa-file-invoice" aria-hidden="true"></i> Solicitar Cotización Gratis
+            </a>
+            <a href="{% url 'products:product_list' %}" class="btn-secondary-cta" aria-label="Ver catálogo de productos">
+                <i class="fas fa-box-open" aria-hidden="true"></i> Ver Catálogo
+            </a>
+        </div>
+
+        <!-- Indicadores de confianza -->
+        <div class="trust-indicators" role="list" aria-label="Indicadores de confianza">
+            <div class="trust-item" role="listitem">
+                <i class="fas fa-shield-alt" aria-hidden="true"></i>
+                <span>+10 años de experiencia</span>
+            </div>
+            <div class="trust-item" role="listitem">
+                <i class="fas fa-check-circle" aria-hidden="true"></i>
+                <span>+500 instalaciones exitosas</span>
+            </div>
+            <div class="trust-item" role="listitem">
+                <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                <span>Cobertura en Quito y alrededores</span>
+            </div>
+        </div>
+    </div>
+    <div class="hero-scroll-indicator">
+        <i class="fas fa-chevron-down"></i>
+    </div>
+</section>
+
+<!-- Productos y Servicios Destacados -->
+<section class="products-showcase" aria-labelledby="products-title">
+    <div class="section-header">
+        <h2 id="products-title" class="section-title">Nuestras Soluciones de Seguridad</h2>
+        <p class="section-description">Tecnología de última generación para proteger tu hogar o empresa</p>
     </div>
 
-    <!-- Servicio 1: Cámara de Seguridad - Imagen Izquierda -->
-    <section class="service-section">
-        <div class="service-container">
-            <div class="service-image">
-                <img src="{% static 'img/products/Camaras-seguridad.jpg' %}" alt="Cámara de Seguridad">
+    <div class="products-grid" role="list">
+        <!-- Cámaras de Seguridad -->
+        <article class="product-card" role="listitem">
+            <div class="product-card-image">
+                <img src="{% static 'img/products/Camaras-seguridad.jpg' %}" alt="Cámaras de Seguridad" loading="lazy">
+                <div class="product-badge" aria-label="Producto más vendido">Más Vendido</div>
             </div>
-            <div class="service-content">
-                <h2>Cámaras de Seguridad</h2>
-                <p>Monitoreo 24/7 con tecnología de punta. Nuestras cámaras de seguridad ofrecen vigilancia continua con grabación en alta definición, visión nocturna y acceso remoto desde tu smartphone.</p>
-                <ul>
-                    <li>Resolución HD y 4K disponible</li>
-                    <li>Visión nocturna infrarroja</li>
-                    <li>Detección de movimiento inteligente</li>
-                    <li>Almacenamiento en la nube</li>
-                    <li>Acceso remoto desde cualquier dispositivo</li>
+            <div class="product-card-content">
+                <div class="product-icon">
+                    <i class="fas fa-video"></i>
+                </div>
+                <h3>Cámaras de Seguridad</h3>
+                <p>Monitoreo 24/7 en alta definición con visión nocturna y acceso remoto. Vigila tu propiedad desde cualquier lugar.</p>
+                <ul class="product-features">
+                    <li><i class="fas fa-check"></i> HD/4K disponible</li>
+                    <li><i class="fas fa-check"></i> Visión nocturna infrarroja</li>
+                    <li><i class="fas fa-check"></i> Grabación en la nube</li>
                 </ul>
-                <a href="{% url 'products:product_list' %}" class="btn-service">Ver Productos</a>
+                <a href="{% url 'products:product_list' %}" class="btn-product" aria-label="Ver cámaras de seguridad">Ver Cámaras</a>
             </div>
-        </div>
-    </section>
+        </article>
 
-    <!-- Servicio 2: Sistema de Alarma - Imagen Derecha -->
-    <section class="service-section reverse">
-        <div class="service-container">
-            <div class="service-content">
-                <h2>Sistema de Alarma</h2>
-                <p>Protección integral para tu hogar o negocio. Sistemas de alarma inteligentes que detectan intrusiones, incendios y emergencias, notificándote al instante.</p>
-                <ul>
-                    <li>Sensores de movimiento y apertura</li>
-                    <li>Detección de humo y monóxido de carbono</li>
-                    <li>Sirena de alta potencia</li>
-                    <li>Notificaciones instantáneas a tu móvil</li>
-                    <li>Integración con servicios de emergencia</li>
+        <!-- Control Biométrico -->
+        <article class="product-card" role="listitem">
+            <div class="product-card-image">
+                <img src="{% static 'img/products/Control-acceso.webp' %}" alt="Control Biométrico" loading="lazy">
+                <div class="product-badge badge-tech" aria-label="Producto de alta tecnología">Alta Tecnología</div>
+            </div>
+            <div class="product-card-content">
+                <div class="product-icon">
+                    <i class="fas fa-fingerprint"></i>
+                </div>
+                <h3>Control Biométrico</h3>
+                <p>Gestión de acceso inteligente mediante huella digital, tarjetas RFID y códigos. Control total de entradas y salidas.</p>
+                <ul class="product-features">
+                    <li><i class="fas fa-check"></i> Reconocimiento biométrico</li>
+                    <li><i class="fas fa-check"></i> Registro de asistencia</li>
+                    <li><i class="fas fa-check"></i> Integración empresarial</li>
                 </ul>
-                <a href="{% url 'products:product_list' %}" class="btn-service">Ver Productos</a>
+                <a href="{% url 'products:product_list' %}" class="btn-product" aria-label="Ver sistemas de control biométrico">Ver Sistemas</a>
             </div>
-            <div class="service-image">
-                <img src="{% static 'img/products/Sistemas-alarmas.jpg' %}" alt="Sistema de Alarma">
-            </div>
-        </div>
-    </section>
+        </article>
 
-    <!-- Servicio 3: Cerco Eléctrico - Imagen Izquierda -->
-    <section class="service-section">
-        <div class="service-container">
-            <div class="service-image">
-                <img src="{% static 'img/products/Cerco-electrico.jpg' %}" alt="Cerco Eléctrico">
+        <!-- Cercado Eléctrico -->
+        <article class="product-card" role="listitem">
+            <div class="product-card-image">
+                <img src="{% static 'img/products/Cerco-electrico.jpg' %}" alt="Cercado Eléctrico" loading="lazy">
+                <div class="product-badge badge-security" aria-label="Producto de máxima seguridad">Máxima Seguridad</div>
             </div>
-            <div class="service-content">
-                <h2>Cerco Eléctrico</h2>
-                <p>Barrera de seguridad perimetral efectiva. Instalación profesional de cercos eléctricos que disuaden y previenen intrusiones en tu propiedad.</p>
-                <ul>
-                    <li>Pulsos de alto voltaje no letales</li>
-                    <li>Instalación en muros y perímetros</li>
-                    <li>Sistema anti-sabotaje</li>
-                    <li>Alarma integrada ante cortes</li>
-                    <li>Certificado de seguridad eléctrica</li>
+            <div class="product-card-content">
+                <div class="product-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3>Cercado Eléctrico</h3>
+                <p>Protección perimetral efectiva con pulsos de alto voltaje no letales. Disuasión visible y certificada.</p>
+                <ul class="product-features">
+                    <li><i class="fas fa-check"></i> Instalación profesional</li>
+                    <li><i class="fas fa-check"></i> Sistema anti-sabotaje</li>
+                    <li><i class="fas fa-check"></i> Certificado de seguridad</li>
                 </ul>
-                <a href="{% url 'products:product_list' %}" class="btn-service">Ver Productos</a>
+                <a href="{% url 'products:product_list' %}" class="btn-product" aria-label="Ver cercados eléctricos">Ver Cercados</a>
             </div>
-        </div>
-    </section>
+        </article>
 
-    <!-- Servicio 4: Control de Acceso - Imagen Derecha -->
-    <section class="service-section reverse">
-        <div class="service-container">
-            <div class="service-content">
-                <h2>Control de Acceso</h2>
-                <p>Gestiona quién entra y cuándo. Sistemas de control de acceso biométricos y con tarjetas inteligentes para edificios, oficinas y residencias.</p>
-                <ul>
-                    <li>Lectores biométricos de huella digital</li>
-                    <li>Tarjetas de proximidad y códigos PIN</li>
-                    <li>Registro de entradas y salidas</li>
-                    <li>Control de acceso multinivel</li>
-                    <li>Integración con sistemas de seguridad</li>
+        <!-- Alarmas Inteligentes -->
+        <article class="product-card" role="listitem">
+            <div class="product-card-image">
+                <img src="{% static 'img/products/Sistemas-alarmas.jpg' %}" alt="Alarmas Inteligentes" loading="lazy">
+                <div class="product-badge badge-alert" aria-label="Producto con alerta inmediata">Alerta Inmediata</div>
+            </div>
+            <div class="product-card-content">
+                <div class="product-icon">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <h3>Alarmas Inteligentes</h3>
+                <p>Detección de intrusión, incendios y emergencias con notificaciones instantáneas a tu smartphone.</p>
+                <ul class="product-features">
+                    <li><i class="fas fa-check"></i> Sensores de movimiento</li>
+                    <li><i class="fas fa-check"></i> Alerta a móvil</li>
+                    <li><i class="fas fa-check"></i> Sirena de alta potencia</li>
                 </ul>
-                <a href="{% url 'products:product_list' %}" class="btn-service">Ver Productos</a>
+                <a href="{% url 'products:product_list' %}" class="btn-product" aria-label="Ver alarmas inteligentes">Ver Alarmas</a>
             </div>
-            <div class="service-image">
-                <img src="{% static 'img/products/Control-acceso.webp' %}" alt="Control de Acceso">
-            </div>
-        </div>
-    </section>
+        </article>
+    </div>
+</section>
 
-    <!-- Call to Action -->
-    <section class="cta-section">
-        <div class="cta-content">
-            <h2>¿Listo para proteger tu espacio?</h2>
-            <p>Contáctanos para una consultoría gratuita y cotización personalizada</p>
-            <a href="{% url 'website:contact' %}" class="btn-cta">Solicitar Cotización</a>
+<!-- Por Qué Elegirnos -->
+<section class="why-choose-us" aria-labelledby="benefits-title">
+    <div class="section-header-dark">
+        <h2 id="benefits-title" class="section-title-white">¿Por Qué Elegir Zultech?</h2>
+        <p class="section-description-white">La confianza de cientos de clientes satisfechos nos respalda</p>
+    </div>
+    
+    <div class="benefits-grid" role="list">
+        <div class="benefit-item" role="listitem">
+            <div class="benefit-icon" aria-hidden="true">
+                <i class="fas fa-award"></i>
+            </div>
+            <h3>Experiencia Comprobada</h3>
+            <p>Más de 10 años protegiendo hogares y empresas con tecnología de punta</p>
         </div>
-    </section>
-</div>
+        
+        <div class="benefit-item" role="listitem">
+            <div class="benefit-icon" aria-hidden="true">
+                <i class="fas fa-tools"></i>
+            </div>
+            <h3>Instalación Profesional</h3>
+            <p>Técnicos certificados garantizan instalaciones impecables y funcionamiento óptimo</p>
+        </div>
+        
+        <div class="benefit-item" role="listitem">
+            <div class="benefit-icon" aria-hidden="true">
+                <i class="fas fa-headset"></i>
+            </div>
+            <h3>Soporte Técnico 24/7</h3>
+            <p>Atención inmediata cuando más lo necesitas. Estamos siempre disponibles</p>
+        </div>
+        
+        <div class="benefit-item" role="listitem">
+            <div class="benefit-icon" aria-hidden="true">
+                <i class="fas fa-certificate"></i>
+            </div>
+            <h3>Garantía Extendida</h3>
+            <p>Productos originales con garantía de fábrica y respaldo local</p>
+        </div>
+        
+        <div class="benefit-item" role="listitem">
+            <div class="benefit-icon" aria-hidden="true">
+                <i class="fas fa-dollar-sign"></i>
+            </div>
+            <h3>Precios Competitivos</h3>
+            <p>Mejor relación calidad-precio del mercado. Cotizaciones sin compromiso</p>
+        </div>
+        
+        <div class="benefit-item" role="listitem">
+            <div class="benefit-icon" aria-hidden="true">
+                <i class="fas fa-shipping-fast"></i>
+            </div>
+            <h3>Entrega Rápida</h3>
+            <p>Stock permanente y tiempos de instalación optimizados</p>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonios -->
+<section class="testimonials" aria-labelledby="testimonials-title">
+    <div class="section-header">
+        <h2 id="testimonials-title" class="section-title">Lo Que Dicen Nuestros Clientes</h2>
+        <p class="section-description">La satisfacción de nuestros clientes es nuestra mejor carta de presentación</p>
+    </div>
+    
+    <div class="testimonials-grid" role="list">
+        <article class="testimonial-card" role="listitem">
+            <div class="testimonial-rating" aria-label="Calificación: 5 de 5 estrellas" role="img">
+                <i class="fas fa-star" aria-hidden="true"></i>
+                <i class="fas fa-star" aria-hidden="true"></i>
+                <i class="fas fa-star" aria-hidden="true"></i>
+                <i class="fas fa-star" aria-hidden="true"></i>
+                <i class="fas fa-star" aria-hidden="true"></i>
+            </div>
+            <p class="testimonial-text">
+                "Excelente servicio. Instalaron cámaras y cercado eléctrico en mi casa. El equipo fue muy profesional y el sistema funciona perfectamente. Me siento mucho más seguro ahora."
+            </p>
+            <div class="testimonial-author">
+                <div class="author-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="author-info">
+                    <h4>Carlos Mendoza</h4>
+                    <span>Residencial La Carolina</span>
+                </div>
+            </div>
+        </article>
+        
+        <article class="testimonial-card" role="listitem">
+            <div class="testimonial-rating" aria-label="Calificación: 5 de 5 estrellas" role="img">
+                <i class="fas fa-star" aria-hidden="true"></i>
+                <i class="fas fa-star" aria-hidden="true"></i>
+                <i class="fas fa-star" aria-hidden="true"></i>
+                <i class="fas fa-star" aria-hidden="true"></i>
+                <i class="fas fa-star" aria-hidden="true"></i>
+            </div>
+            <p class="testimonial-text">
+                "Contraté el sistema de control de acceso biométrico para mi empresa. La instalación fue rápida y el personal muy capacitado. Ahora tengo control total de entradas y salidas."
+            </p>
+            <div class="testimonial-author">
+                <div class="author-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="author-info">
+                    <h4>María Rodríguez</h4>
+                    <span>Empresa Logística QuiPort</span>
+                </div>
+            </div>
+        </article>
+        
+        <article class="testimonial-card" role="listitem">
+            <div class="testimonial-rating" aria-label="Calificación: 5 de 5 estrellas" role="img">
+                <i class="fas fa-star" aria-hidden="true"></i>
+                <i class="fas fa-star" aria-hidden="true"></i>
+                <i class="fas fa-star" aria-hidden="true"></i>
+                <i class="fas fa-star" aria-hidden="true"></i>
+                <i class="fas fa-star" aria-hidden="true"></i>
+            </div>
+            <p class="testimonial-text">
+                "Recomiendo totalmente a Zultech. Las alarmas inteligentes que instalaron funcionan de maravilla. Recibo notificaciones en tiempo real y me da mucha tranquilidad."
+            </p>
+            <div class="testimonial-author">
+                <div class="author-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="author-info">
+                    <h4>Jorge Villacrés</h4>
+                    <span>Conjunto Los Cipreses</span>
+                </div>
+            </div>
+        </article>
+    </div>
+</section>
+
+<!-- CTA Final - Cotización -->
+<section class="cta-final" aria-labelledby="cta-title">
+    <div class="cta-final-content">
+        <div class="cta-final-text">
+            <h2 id="cta-title">¿Listo para Proteger tu Espacio?</h2>
+            <p>Agenda una asesoría técnica gratuita. Analizamos tus necesidades y diseñamos la solución perfecta para ti.</p>
+            <ul class="cta-benefits">
+                <li><i class="fas fa-check-circle"></i> Cotización sin compromiso</li>
+                <li><i class="fas fa-check-circle"></i> Asesoría técnica gratuita</li>
+                <li><i class="fas fa-check-circle"></i> Visita a domicilio</li>
+            </ul>
+        </div>
+        <div class="cta-final-action">
+            <a href="{% url 'website:contact' %}" class="btn-cta-large" aria-label="Cotizar sistema de seguridad">
+                <i class="fas fa-calendar-check" aria-hidden="true"></i>
+                <span>Cotiza tu Sistema de Seguridad Ahora</span>
+            </a>
+            <div class="cta-contact-options">
+                <a href="tel:+593987550600" class="contact-option" aria-label="Llamar al teléfono 593 987 550600">
+                    <i class="fas fa-phone" aria-hidden="true"></i> (593) 987-550600
+                </a>
+                <a href="https://wa.me/593987550600" target="_blank" rel="noopener noreferrer" class="contact-option whatsapp" aria-label="Contactar por WhatsApp">
+                    <i class="fab fa-whatsapp" aria-hidden="true"></i> WhatsApp
+                </a>
+            </div>
+            <p class="cta-urgency">⚡ Respuesta en menos de 24 horas</p>
+        </div>
+    </div>
+</section>
+
+<!-- Marcas Asociadas -->
+<section class="brands-section" aria-labelledby="brands-title">
+    <div class="section-header">
+        <h2 id="brands-title" class="section-title">Trabajamos con las Mejores Marcas</h2>
+        <p class="section-description">Productos originales de fabricantes líderes a nivel mundial</p>
+    </div>
+    <div class="brands-showcase" role="list" aria-label="Marcas asociadas">
+        <img src="{% static 'img/logos/hikvision.png' %}" alt="Marca Hikvision" loading="lazy" role="listitem">
+        <img src="{% static 'img/logos/dahua.png' %}" alt="Marca Dahua" loading="lazy" role="listitem">
+        <img src="{% static 'img/logos/imou.png' %}" alt="Marca Imou" loading="lazy" role="listitem">
+        <img src="{% static 'img/logos/dsc.png' %}" alt="Marca DSC" loading="lazy" role="listitem">
+        <img src="{% static 'img/logos/intelbras.png' %}" alt="Marca Intelbras" loading="lazy" role="listitem">
+        <img src="{% static 'img/logos/pysecure.png' %}" alt="Marca PySecure" loading="lazy" role="listitem">
+    </div>
+</section>
+
 {% endblock %}
 
 {% block extra_css %}

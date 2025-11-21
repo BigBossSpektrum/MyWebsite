@@ -559,3 +559,74 @@
     background-color: #ffd700 !important;
     color: #000000 !important;
 }
+
+/* Botones en modo oscuro */
+[data-theme="dark"] .btn-primary {
+    background-color: #ffd700;
+    border-color: #ffd700;
+    color: #000000;
+}
+
+[data-theme="dark"] .btn-primary:hover {
+    background-color: #ffed4e;
+    border-color: #ffed4e;
+    color: #000000;
+}
+
+[data-theme="dark"] .btn-success {
+    background-color: #ffd700;
+    border-color: #ffd700;
+    color: #000000;
+}
+
+[data-theme="dark"] .btn-success:hover {
+    background-color: #ffed4e;
+    border-color: #ffed4e;
+    color: #000000;
+}
+
+[data-theme="dark"] .btn-warning {
+    background-color: #ffd700;
+    border-color: #ffd700;
+    color: #000000;
+}
+
+[data-theme="dark"] .btn-warning:hover {
+    background-color: #ffed4e;
+    border-color: #ffed4e;
+    color: #000000;
+}
+
+[data-theme="dark"] .btn-outline-secondary {
+    color: #e0e0e0;
+    border-color: #3a3a3a;
+}
+
+[data-theme="dark"] .btn-outline-secondary:hover {
+    background-color: #3a3a3a;
+    border-color: #ffd700;
+    color: #ffd700;
+}
+
+[data-theme="dark"] .btn-outline-primary {
+    color: #ffd700;
+    border-color: #ffd700;
+}
+
+[data-theme="dark"] .btn-outline-primary:hover {
+    background-color: #ffd700;
+    border-color: #ffd700;
+    color: #000000;
+}
+
+[data-theme="dark"] .quantity-add-group button {
+    background-color: #ffd700;
+    border-color: #ffd700;
+    color: #000000;
+}
+
+[data-theme="dark"] .quantity-add-group button:hover {
+    background-color: #ffed4e;
+    border-color: #ffed4e;
+    color: #000000;
+}

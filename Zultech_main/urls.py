@@ -19,14 +19,29 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+# Import debug views for GitHub OAuth
+if settings.DEBUG:
+    from app_login.github_debug_views import oauth2_callback, oauth2_login
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(('app_website.urls', 'website'))),
     path('accounts/', include('app_login.urls')),
+]
+
+# Add GitHub debug URLs in DEBUG mode
+if settings.DEBUG:
+    urlpatterns += [
+        path('accounts/github/login/', oauth2_login, name='github_login'),
+        path('accounts/github/login/callback/', oauth2_callback, name='github_callback'),
+    ]
+
+urlpatterns += [
     path('accounts/', include('allauth.urls')),  # URLs de django-allauth para OAuth
     path('products/', include('app_products.urls')),
     path('orders/', include('app_orders.urls')),
     path('cart/', include('app_cart.urls')),
+    path('chat/', include('app_room_chats.urls')),
 ]
 
 # Servir archivos media en desarrollo

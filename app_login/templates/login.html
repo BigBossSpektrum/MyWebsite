@@ -1,7 +1,14 @@
 {% load static %}
+{% load socialaccount %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
+    <script>
+        // Aplicar tema inmediatamente para evitar parpadeo
+        const savedTheme = localStorage.getItem('theme') || 
+            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - Zultech</title>
@@ -10,17 +17,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login_app/social_logins.css' %}">
 </head>
 <body>
     <div class="login-container">
         <div class="login-card">
             <a href="{% url 'website:Dashboard' %}" class="btn btn-link" title="Volver al inicio">
-                <i class="fas fa-home" style="font-size: 20px;"></i>
+                <i class="fas fa-home"></i>
             </a>
+            
+            <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle dark mode" title="Cambiar tema">
+                <i class="fas fa-moon"></i>
+            </button>
+
             <div class="login-header">
                 <h3>Bienvenido a Zultech</h3>
                 <p class="text-muted">Inicia sesión para acceder a tu cuenta</p>
             </div>
+
             <div class="login-body">
                 {% if messages %}
                     {% for message in messages %}
@@ -45,97 +59,107 @@
                     </div>
                 </div>
 
-                        <form method="POST" class="needs-validation" novalidate>
-                            {% csrf_token %}
-                            <div class="form-floating mb-3">
-                                <input type="text" name="username" class="form-control" id="username" placeholder="Usuario" required>
-                                <label for="username">Usuario o Correo Electrónico</label>
-                                <div class="invalid-feedback">
-                                    Por favor ingresa tu nombre de usuario o correo electrónico
-                                </div>
-                            </div>
+                <form method="POST" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    <div class="form-floating mb-3">
+                        <input type="text" name="username" class="form-control" id="username" placeholder="Usuario" required>
 
-                            <div class="form-floating mb-4">
-                                <input type="password" name="password" class="form-control" id="password" placeholder="Contraseña" required>
-                                <label for="password">Contraseña</label>
-                                <div class="invalid-feedback">
-                                    Por favor ingresa tu contraseña
-                                </div>
-                            </div>
+                    </div>
 
-                            <div class="row mb-4">
-                                <div class="col-6">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="remember-me" name="remember">
-                                        <label class="form-check-label" for="remember-me">
-                                            Recordarme
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-6 text-end">
-                                    <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
-                                </div>
-                            </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" name="password" class="form-control" id="password" placeholder="Contraseña" required>
 
-                            <input type="hidden" name="expected_role" id="expected-role" value="CUSTOMER">
+                    </div>
 
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary btn-lg" id="login-button">
-                                    <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
-                                </button>
-                                <a href="{% url 'login:register' %}" class="btn btn-outline-secondary">
-                                    <i class="fas fa-user-plus me-2"></i>Crear Cuenta
-                                </a>
-                            </div>
-                        </form>
-
-                        <div class="divider my-4">
-                            <span class="divider-text">O continuar con</span>
+                    <div class="row mb-3">
+                        <div class="col-6">
                         </div>
-
-                        <div class="d-grid gap-2">
-                            {% load socialaccount %}
-                            <a href="{% provider_login_url 'google' %}" class="btn btn-outline-danger btn-lg">
-                                <i class="fab fa-google me-2"></i>Continuar con Google
-                            </a>
+                        <div class="col-6 text-end">
+                            <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
                         </div>
+                    </div>
+
+                    <input type="hidden" name="expected_role" id="expected-role" value="CUSTOMER">
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg" id="login-button">
+                            <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
+                        </button>
+                    </div>
+                </form>
+
+                <div class="divider my-4">
+                    <span class="divider-text">O inicia sesión con</span>
+                </div>
+
+                {% include "social_logins.html" %}
             </div>
         </div>
     </div>
 
     <script>
-    // Validación de formulario Bootstrap
-    (function () {
-        'use strict'
-        var forms = document.querySelectorAll('.needs-validation')
-        Array.prototype.slice.call(forms)
-            .forEach(function (form) {
-                form.addEventListener('submit', function (event) {
-                    if (!form.checkValidity()) {
-                        event.preventDefault()
-                        event.stopPropagation()
-                    }
-                    form.classList.add('was-validated')
-                }, false)
-            })
-    })()
+        // Validación de formulario Bootstrap
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
 
-    // Manejo del selector de rol
-    document.querySelectorAll('input[name="user-role"]').forEach(radio => {
-        radio.addEventListener('change', function() {
-            const expectedRole = this.value;
-            document.getElementById('expected-role').value = expectedRole;
+        // Manejo del selector de rol
+        document.querySelectorAll('input[name="user-role"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const expectedRole = this.value;
+                document.getElementById('expected-role').value = expectedRole;
+
+                const loginButton = document.getElementById('login-button');
+                if (expectedRole === 'ADMIN') {
+                    loginButton.classList.remove('btn-primary');
+                    loginButton.classList.add('btn-warning');
+                } else {
+                    loginButton.classList.remove('btn-warning');
+                    loginButton.classList.add('btn-primary');
+                }
+            });
+        });
+
+        // Dark Mode Toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const htmlElement = document.documentElement;
+        
+        // Verificar preferencia guardada o preferencia del sistema
+        const currentTheme = localStorage.getItem('theme') || 
+            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        
+        // Aplicar tema al cargar la página
+        if (currentTheme === 'dark') {
+            htmlElement.setAttribute('data-theme', 'dark');
+            darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+        
+        // Toggle al hacer clic
+        darkModeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             
-            const loginButton = document.getElementById('login-button');
-            if (expectedRole === 'ADMIN') {
-                loginButton.classList.remove('btn-primary');
-                loginButton.classList.add('btn-warning');
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Cambiar icono
+            if (newTheme === 'dark') {
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
             } else {
-                loginButton.classList.remove('btn-warning');
-                loginButton.classList.add('btn-primary');
+                darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
             }
         });
-    });
     </script>
 </body>
 </html>

@@ -9,9 +9,14 @@
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2>Detalles de Orden #{{ order.id|truncatechars:8 }}</h2>
-                <a href="{% url 'orders:admin_order_list' %}" class="btn btn-secondary">
-                    Volver a la Lista
-                </a>
+                <div>
+                    <a href="{% url 'room_chats:create_or_get_chat' order.id %}" class="btn btn-success mr-2">
+                        <i class="fas fa-comments"></i> Abrir Chat con Cliente
+                    </a>
+                    <a href="{% url 'orders:admin_order_list' %}" class="btn btn-secondary">
+                        Volver a la Lista
+                    </a>
+                </div>
             </div>
 
             {% if messages %}
@@ -69,8 +74,16 @@
 
             <!-- Detalles de la Orden -->
             <div class="card mb-4">
-                <div class="card-header">
-                    <h4>Detalles de la Orden</h4>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Detalles de la Orden y Cotización</h4>
+                    <div>
+                        <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#addProductModal">
+                            <i class="fas fa-plus"></i> Agregar Producto
+                        </button>
+                        <button type="button" class="btn btn-warning" id="editPricesBtn">
+                            <i class="fas fa-edit"></i> Editar Cotización
+                        </button>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="row mb-4">
@@ -88,46 +101,351 @@
                         </div>
                     </div>
 
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Producto</th>
-                                    <th>Precio Unitario</th>
-                                    <th>Cantidad</th>
-                                    <th>Subtotal</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for item in order.items.all %}
-                                <tr>
-                                    <td>
-                                        {% if item.product %}
-                                            {{ item.product.name }}
-                                            {% if item.product.stock < item.quantity %}
-                                            <span class="badge badge-warning">Stock Bajo</span>
+                    <form method="post" action="{% url 'orders:admin_update_prices' order.id %}" id="pricesForm">
+                        {% csrf_token %}
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th width="180">Precio Unitario</th>
+                                        <th width="120">Cantidad</th>
+                                        <th width="150">Subtotal</th>
+                                        <th width="100">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in order.items.all %}
+                                    <tr data-item-id="{{ item.id }}">
+                                        <td>
+                                            {% if item.product %}
+                                                {{ item.product.name }}
+                                                {% if item.product.stock < item.quantity %}
+                                                <span class="badge badge-warning">Stock Bajo</span>
+                                                {% endif %}
+                                                <br>
+                                                <small class="text-muted">Precio Original: ${{ item.product.price }}</small>
+                                            {% else %}
+                                                Producto no disponible
                                             {% endif %}
-                                        {% else %}
-                                            Producto no disponible
-                                        {% endif %}
-                                    </td>
-                                    <td>${{ item.price }}</td>
-                                    <td>{{ item.quantity }}</td>
-                                    <td>${{ item.subtotal }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="3" class="text-right"><strong>Total:</strong></td>
-                                    <td><strong>${{ order.total }}</strong></td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
+                                        </td>
+                                        <td>
+                                            <div class="price-display" data-item-id="{{ item.id }}">
+                                                ${{ item.price }}
+                                            </div>
+                                            <div class="price-edit" style="display: none;" data-item-id="{{ item.id }}">
+                                                <div class="input-group input-group-sm">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">$</span>
+                                                    </div>
+                                                    <input type="number" 
+                                                           name="price_{{ item.id }}" 
+                                                           class="form-control price-input" 
+                                                           value="{{ item.price }}" 
+                                                           step="0.01" 
+                                                           min="0"
+                                                           data-item-id="{{ item.id }}">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="quantity-display" data-item-id="{{ item.id }}">
+                                                {{ item.quantity }}
+                                            </div>
+                                            <div class="quantity-edit" style="display: none;" data-item-id="{{ item.id }}">
+                                                <input type="number" 
+                                                       name="quantity_{{ item.id }}" 
+                                                       class="form-control form-control-sm quantity-input" 
+                                                       value="{{ item.quantity }}" 
+                                                       min="1"
+                                                       data-item-id="{{ item.id }}">
+                                            </div>
+                                        </td>
+                                        <td class="subtotal-cell" data-item-id="{{ item.id }}">
+                                            <strong>${{ item.subtotal }}</strong>
+                                        </td>
+                                        <td>
+                                            <form method="post" action="{% url 'orders:admin_remove_product' order.id item.id %}" 
+                                                  onsubmit="return confirm('¿Estás seguro de eliminar este producto de la cotización?');" 
+                                                  style="display: inline;">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-danger btn-sm" title="Eliminar producto">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tfoot>
+                                    <tr class="table-info">
+                                        <td colspan="3" class="text-right"><strong>Total de la Cotización:</strong></td>
+                                        <td><strong id="orderTotal">${{ order.total }}</strong></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        
+                        <div class="mt-3" id="editActions" style="display: none;">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save"></i> Guardar Cotización
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="cancelEditBtn">
+                                <i class="fas fa-times"></i> Cancelar
+                            </button>
+                            <div class="alert alert-info mt-3">
+                                <i class="fas fa-info-circle"></i>
+                                <strong>Nota:</strong> Los cambios en los precios se guardarán solo para esta orden (cotización). 
+                                Los precios originales de los productos en el catálogo no serán modificados.
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Modal para agregar producto -->
+<div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addProductModalLabel">Agregar Producto a la Cotización</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" action="{% url 'orders:admin_add_product' order.id %}" id="addProductForm">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="product_id">Producto <span class="text-danger">*</span></label>
+                        <select name="product_id" id="product_id" class="form-control" required>
+                            <option value="">Selecciona un producto...</option>
+                            {% for product in products %}
+                            <option value="{{ product.id }}" 
+                                    data-price="{{ product.price }}" 
+                                    data-stock="{{ product.stock }}">
+                                {{ product.name }} - ${{ product.price }} (Stock: {{ product.stock }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="quantity">Cantidad <span class="text-danger">*</span></label>
+                                <input type="number" name="quantity" id="quantity" class="form-control" 
+                                       value="1" min="1" required>
+                                <small class="form-text text-muted" id="stockInfo"></small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="custom_price">Precio Personalizado (opcional)</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                    </div>
+                                    <input type="number" name="custom_price" id="custom_price" class="form-control" 
+                                           step="0.01" min="0" placeholder="Dejar vacío para usar precio del producto">
+                                </div>
+                                <small class="form-text text-muted">
+                                    Precio original: <span id="originalPrice">$0.00</span>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Subtotal:</strong> $<span id="modalSubtotal">0.00</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-plus"></i> Agregar Producto
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const editBtn = document.getElementById('editPricesBtn');
+    const cancelBtn = document.getElementById('cancelEditBtn');
+    const editActions = document.getElementById('editActions');
+    const pricesForm = document.getElementById('pricesForm');
+    
+    // Variables para el modal de agregar producto
+    const productSelect = document.getElementById('product_id');
+    const quantityInput = document.getElementById('quantity');
+    const customPriceInput = document.getElementById('custom_price');
+    const originalPriceSpan = document.getElementById('originalPrice');
+    const modalSubtotalSpan = document.getElementById('modalSubtotal');
+    const stockInfo = document.getElementById('stockInfo');
+    
+    let isEditing = false;
+    
+    // Función para alternar modo edición
+    function toggleEditMode() {
+        isEditing = !isEditing;
+        
+        // Mostrar/ocultar displays y campos de edición
+        document.querySelectorAll('.price-display').forEach(el => {
+            el.style.display = isEditing ? 'none' : 'block';
+        });
+        
+        document.querySelectorAll('.price-edit').forEach(el => {
+            el.style.display = isEditing ? 'block' : 'none';
+        });
+        
+        document.querySelectorAll('.quantity-display').forEach(el => {
+            el.style.display = isEditing ? 'none' : 'block';
+        });
+        
+        document.querySelectorAll('.quantity-edit').forEach(el => {
+            el.style.display = isEditing ? 'block' : 'none';
+        });
+        
+        // Mostrar/ocultar acciones
+        editActions.style.display = isEditing ? 'block' : 'none';
+        editBtn.style.display = isEditing ? 'none' : 'inline-block';
+    }
+    
+    // Función para calcular subtotal
+    function calculateSubtotal(itemId) {
+        const priceInput = document.querySelector(`.price-input[data-item-id="${itemId}"]`);
+        const quantityInput = document.querySelector(`.quantity-input[data-item-id="${itemId}"]`);
+        const subtotalCell = document.querySelector(`.subtotal-cell[data-item-id="${itemId}"]`);
+        
+        if (priceInput && quantityInput && subtotalCell) {
+            const price = parseFloat(priceInput.value) || 0;
+            const quantity = parseInt(quantityInput.value) || 0;
+            const subtotal = price * quantity;
+            
+            subtotalCell.innerHTML = `<strong>$${subtotal.toFixed(2)}</strong>`;
+            
+            // Recalcular total
+            calculateTotal();
+        }
+    }
+    
+    // Función para calcular total
+    function calculateTotal() {
+        let total = 0;
+        
+        document.querySelectorAll('.subtotal-cell').forEach(cell => {
+            const subtotalText = cell.textContent.replace('$', '').replace(',', '');
+            const subtotal = parseFloat(subtotalText) || 0;
+            total += subtotal;
+        });
+        
+        document.getElementById('orderTotal').textContent = `$${total.toFixed(2)}`;
+    }
+    
+    // Función para actualizar el subtotal del modal
+    function updateModalSubtotal() {
+        const quantity = parseInt(quantityInput.value) || 0;
+        let price = 0;
+        
+        if (customPriceInput.value) {
+            price = parseFloat(customPriceInput.value) || 0;
+        } else {
+            const selectedOption = productSelect.options[productSelect.selectedIndex];
+            price = parseFloat(selectedOption.getAttribute('data-price')) || 0;
+        }
+        
+        const subtotal = price * quantity;
+        modalSubtotalSpan.textContent = subtotal.toFixed(2);
+    }
+    
+    // Event listener para cambio de producto en el modal
+    if (productSelect) {
+        productSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            if (selectedOption.value) {
+                const price = selectedOption.getAttribute('data-price');
+                const stock = selectedOption.getAttribute('data-stock');
+                
+                originalPriceSpan.textContent = `$${parseFloat(price).toFixed(2)}`;
+                stockInfo.textContent = `Stock disponible: ${stock} unidades`;
+                
+                // Actualizar subtotal
+                updateModalSubtotal();
+            } else {
+                originalPriceSpan.textContent = '$0.00';
+                stockInfo.textContent = '';
+                modalSubtotalSpan.textContent = '0.00';
+            }
+        });
+        
+        // Event listeners para cantidad y precio personalizado
+        quantityInput.addEventListener('input', updateModalSubtotal);
+        customPriceInput.addEventListener('input', updateModalSubtotal);
+    }
+    
+    // Event listeners para edición de precios
+    editBtn.addEventListener('click', function() {
+        toggleEditMode();
+    });
+    
+    cancelBtn.addEventListener('click', function() {
+        // Recargar la página para restaurar valores originales
+        if (confirm('¿Deseas cancelar los cambios? Se perderán las modificaciones no guardadas.')) {
+            location.reload();
+        }
+    });
+    
+    // Listeners para inputs de precio
+    document.querySelectorAll('.price-input').forEach(input => {
+        input.addEventListener('input', function() {
+            const itemId = this.getAttribute('data-item-id');
+            calculateSubtotal(itemId);
+        });
+    });
+    
+    // Listeners para inputs de cantidad
+    document.querySelectorAll('.quantity-input').forEach(input => {
+        input.addEventListener('input', function() {
+            const itemId = this.getAttribute('data-item-id');
+            calculateSubtotal(itemId);
+        });
+    });
+    
+    // Validación del formulario
+    pricesForm.addEventListener('submit', function(e) {
+        let hasErrors = false;
+        
+        document.querySelectorAll('.price-input').forEach(input => {
+            if (parseFloat(input.value) < 0) {
+                alert('Los precios no pueden ser negativos');
+                hasErrors = true;
+                e.preventDefault();
+                return;
+            }
+        });
+        
+        document.querySelectorAll('.quantity-input').forEach(input => {
+            if (parseInt(input.value) < 1) {
+                alert('Las cantidades deben ser al menos 1');
+                hasErrors = true;
+                e.preventDefault();
+                return;
+            }
+        });
+        
+        if (!hasErrors) {
+            return confirm('¿Confirmas que deseas guardar esta cotización?');
+        }
+        
+        return false;
+    });
+});
+</script>
 {% endblock %}
