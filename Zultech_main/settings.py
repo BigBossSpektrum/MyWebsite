@@ -71,6 +71,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'app_login.middleware.SessionTimeoutMiddleware',  # Middleware de timeout de sesión
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -257,3 +258,9 @@ CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_USE_SESSIONS = False
 CSRF_FAILURE_VIEW = 'django.views.csrf.csrf_failure'
 SESSION_COOKIE_SAMESITE = 'Lax'
+
+# Session Settings - Auto logout after 30 minutes of inactivity
+SESSION_COOKIE_AGE = 1800  # 30 minutos en segundos
+SESSION_SAVE_EVERY_REQUEST = True  # Actualiza la sesión en cada request
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # La sesión persiste aunque se cierre el navegador
+SESSION_COOKIE_SECURE = not DEBUG  # Solo HTTPS en producción
