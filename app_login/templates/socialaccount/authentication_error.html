@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}Error de Autenticación{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="alert alert-danger">
+                <h4 class="alert-heading">⚠️ Falló la autenticación de terceros</h4>
+                <p>Se produjo un error al intentar iniciar sesión a través de tu cuenta de terceros.</p>
+                
+                {% if exception %}
+                <hr>
+                <p class="mb-0"><strong>Detalles del error:</strong> {{ exception }}</p>
+                {% endif %}
+                
+                <hr>
+                <p><strong>Variables de debugging:</strong></p>
+                <ul>
+                    <li>Provider: {{ provider|default:"N/A" }}</li>
+                    <li>Exception: {{ exception|default:"N/A" }}</li>
+                    <li>Request method: {{ request.method }}</li>
+                    <li>Request path: {{ request.path }}</li>
+                    <li>GET params: {{ request.GET|default:"N/A" }}</li>
+                    <li>Session keys: {{ request.session.keys|default:"N/A" }}</li>
+                </ul>
+                
+                <hr>
+                <p class="mb-0">
+                    <a href="{% url 'login:login' %}" class="btn btn-primary">Volver al Login</a>
+                </p>
+            </div>
+            
+            <div class="card">
+                <div class="card-body">
+                    <h5>Posibles soluciones:</h5>
+                    <ul>
+                        <li>Verifica que tu correo electrónico en GitHub no esté configurado como privado</li>
+                        <li>Asegúrate de autorizar todos los permisos solicitados</li>
+                        <li>Intenta nuevamente en unos minutos</li>
+                        <li>Contacta al administrador si el problema persiste</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Log del error para debugging
+console.error('Social auth error:', {
+    provider: '{{ provider }}',
+    exception: '{{ exception }}',
+    path: '{{ request.path }}',
+    method: '{{ request.method }}'
+});
+</script>
+{% endblock %}

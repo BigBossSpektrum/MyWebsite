@@ -31,7 +31,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-9%5%^u$mc8fyb+t8^x&5l
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['mywebsite-tlxs.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['mywebsite-tlxs.onrender.com', 'localhost', '127.0.0.1', '.localhost']
 
 
 # Application definition
@@ -45,12 +45,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Django-allauth apps
+    # Django-allauth apps (configuración interna requiere sites framework)
     'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
     # Django Channels
     'channels',
     # Local apps
@@ -72,6 +73,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'app_login.middleware.SessionTimeoutMiddleware',  # Middleware de timeout de sesión
+    'app_login.oauth_debug_middleware.OAuthDebugMiddleware',  # Debug OAuth
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -196,21 +198,32 @@ LOGIN_REDIRECT_URL = 'website:Dashboard'
 LOGOUT_REDIRECT_URL = 'login:login'
 AUTH_USER_MODEL = 'app_login.CustomUser'
 
-# Django-allauth settings
-ACCOUNT_LOGIN_METHODS = {'username', 'email'}  # Permite login con username o email
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']  # Campos requeridos
-ACCOUNT_EMAIL_VERIFICATION = 'optional'  # Verificación de email opcional
+# Django-allauth settings - CONFIGURACIÓN MODERNA
+ACCOUNT_LOGIN_METHODS = {'username'}  # Nueva sintaxis (reemplaza ACCOUNT_AUTHENTICATION_METHOD)
+ACCOUNT_SIGNUP_FIELDS = ['email', 'username*', 'password1*', 'password2*']  # Nueva sintaxis
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_SESSION_REMEMBER = True
-SOCIALACCOUNT_AUTO_SIGNUP = True  # Crear cuenta automáticamente si no existe
-SOCIALACCOUNT_EMAIL_REQUIRED = True  # Email obligatorio para cuentas sociales
+ACCOUNT_UNIQUE_EMAIL = False  # Permitir emails duplicados temporalmente
+
+# Social account settings - TODO PERMISIVO
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_EMAIL_REQUIRED = False
+SOCIALACCOUNT_EMAIL_VERIFICATION = 'optional'
+SOCIALACCOUNT_QUERY_EMAIL = False  # No requerir email
+SOCIALACCOUNT_STORE_TOKENS = True
 
 # Configuración para que las cuentas sociales se conecten automáticamente
 SOCIALACCOUNT_ADAPTER = 'app_login.adapters.CustomSocialAccountAdapter'
 
-# Configurar proveedores de OAuth usando variables de entorno (más seguro)
-# Las credenciales se cargan desde el archivo .env
+# Configurar proveedores de OAuth - CONFIGURACIÓN INTERNA (sin admin)
+# Las credenciales se toman de las variables de entorno del archivo .env
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
+        'APP': {
+            'client_id': os.environ.get('OAUTH_GOOGLE_ID', ''),
+            'secret': os.environ.get('OAUTH_GOOGLE_SECRET', ''),
+            'key': ''
+        },
         'SCOPE': [
             'profile',
             'email',
@@ -218,16 +231,23 @@ SOCIALACCOUNT_PROVIDERS = {
         'AUTH_PARAMS': {
             'access_type': 'online',
         },
+    },
+    'github': {
         'APP': {
-            'client_id': os.environ.get('OAUTH_GOOGLE_ID'),
-            'secret': os.environ.get('OAUTH_GOOGLE_SECRET'),
+            'client_id': os.environ.get('OAUTH_GITHUB_ID', ''),
+            'secret': os.environ.get('OAUTH_GITHUB_SECRET', ''),
             'key': ''
-        }
-    }
+        },
+        'SCOPE': [
+            'read:user',
+            'user:email',
+        ],
+        'FETCH_USER_DETAILS': True,  # Forzar obtención de detalles del usuario
+    },
 }
 
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
-SOCIALACCOUNT_LOGIN_ON_GET = True  # Permite login directo sin página intermedia
+SOCIALACCOUNT_LOGIN_ON_GET = True  # Reactivado para probar login automático
 
 # Media files
 MEDIA_URL = '/media/'
@@ -264,3 +284,30 @@ SESSION_COOKIE_AGE = 1800  # 30 minutos en segundos
 SESSION_SAVE_EVERY_REQUEST = True  # Actualiza la sesión en cada request
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # La sesión persiste aunque se cierre el navegador
 SESSION_COOKIE_SECURE = not DEBUG  # Solo HTTPS en producción
+
+# Logging Configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'allauth': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}
