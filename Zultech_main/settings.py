@@ -139,14 +139,20 @@ CHANNEL_LAYERS = {
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 # Use PostgreSQL on Render (when DATABASE_URL is set), SQLite locally
-if 'DATABASE_URL' in os.environ:
+DATABASE_URL = os.environ.get('DATABASE_URL')
+
+if DATABASE_URL:
     # Production: PostgreSQL on Render
     DATABASES = {
         'default': dj_database_url.config(
+            default=DATABASE_URL,
             conn_max_age=600,
             conn_health_checks=True,
         )
     }
+    # Force PostgreSQL engine if not already set
+    if 'postgresql' not in DATABASES['default']['ENGINE']:
+        DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'
 else:
     # Development: SQLite locally
     DATABASES = {

@@ -1,20 +1,19 @@
 databases:
-  - name: Zultech_main_db
-    plan: free
-    databaseName: Zultech_main_db
-    user: Zultech_main_db
+  - name: zultech-main-db
+    databaseName: zultech_main_db
+    user: zultech_main_db
 
 services:
   - type: web
+    name: mywebsite-tlxs
+    env: python
     plan: free
-    name: Zultech_main
-    runtime: python
     buildCommand: './build.sh'
-    startCommand: 'python -m gunicorn Zultech_main.asgi:application -k uvicorn.workers.UvicornWorker'
+    startCommand: 'gunicorn Zultech_main.asgi:application -k uvicorn.workers.UvicornWorker'
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: Zultech_main_db
+          name: zultech-main-db
           property: connectionString
       - key: SECRET_KEY
         generateValue: true
