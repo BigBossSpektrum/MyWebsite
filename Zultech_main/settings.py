@@ -31,7 +31,21 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-9%5%^u$mc8fyb+t8^x&5l
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['mywebsite-tlxs.onrender.com', 'localhost', '127.0.0.1', '.localhost']
+# Determine if we're on Render
+IS_RENDER = 'RENDER' in os.environ or 'DATABASE_URL' in os.environ
+
+ALLOWED_HOSTS = [
+    'mywebsite-tlxs.onrender.com',
+    'localhost',
+    '127.0.0.1',
+    '.localhost',
+]
+
+# In production on Render, allow the Render hostname
+if IS_RENDER:
+    RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+    if RENDER_EXTERNAL_HOSTNAME:
+        ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 
 # Application definition
@@ -288,6 +302,22 @@ CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_USE_SESSIONS = False
 CSRF_FAILURE_VIEW = 'django.views.csrf.csrf_failure'
 SESSION_COOKIE_SAMESITE = 'Lax'
+
+# Production security settings
+if not DEBUG and IS_RENDER:
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = 'DENY'
+    CSRF_TRUSTED_ORIGINS = [
+        'https://mywebsite-tlxs.onrender.com',
+    ]
+    # Add dynamic Render hostname if available
+    RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+    if RENDER_EXTERNAL_HOSTNAME:
+        CSRF_TRUSTED_ORIGINS.append(f'https://{RENDER_EXTERNAL_HOSTNAME}')
 
 # Session Settings - Auto logout after 30 minutes of inactivity
 SESSION_COOKIE_AGE = 1800  # 30 minutos en segundos

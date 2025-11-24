@@ -22,3 +22,25 @@ services:
         value: 4
       - key: DEBUG
         value: False
+      - key: PYTHON_VERSION
+        value: 3.13.4
+      # OAuth Google - Add your credentials in Render dashboard
+      - key: OAUTH_GOOGLE_ID
+        sync: false
+      - key: OAUTH_GOOGLE_SECRET
+        sync: false
+      # OAuth GitHub - Add your credentials in Render dashboard
+      - key: OAUTH_GITHUB_ID
+        sync: false
+      - key: OAUTH_GITHUB_SECRET
+        sync: false
+      # OAuth Facebook - Add your credentials in Render dashboard
+      - key: OAUTH_FACEBOOK_ID
+        sync: false
+      - key: OAUTH_FACEBOOK_SECRET
+        sync: false
+      # Email Configuration (optional)
+      - key: EMAIL_BACKEND
+        value: console
+      - key: DEFAULT_FROM_EMAIL
+        value: noreply@zultech.com
