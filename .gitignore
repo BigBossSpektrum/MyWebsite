@@ -71,9 +71,9 @@ desktop.ini
 .env.local
 .env.*.local
 
-# Django migration files
-*/migrations/*.py
-!*/migrations/__init__.py
+# Django migration files - Commented out to include migrations in repo
+# */migrations/*.py
+# !*/migrations/__init__.py
 
 # Node modules (if using any JavaScript tools)
 node_modules/

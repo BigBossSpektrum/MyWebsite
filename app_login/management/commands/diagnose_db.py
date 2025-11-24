@@ -22,11 +22,17 @@ class Command(BaseCommand):
         if database_url:
             # Mask password for security
             masked_url = database_url
-            if '@' in masked_url:
-                parts = masked_url.split('@')
-                if ':' in parts[0]:
-                    user_pass = parts[0].split(':')
-                    masked_url = f"{user_pass[0].split('://')[0]}://{user_pass[0].split('://')[1]}:***@{parts[1]}"
+            try:
+                if '@' in masked_url and '://' in masked_url:
+                    protocol = masked_url.split('://')[0]
+                    rest = masked_url.split('://')[1]
+                    if '@' in rest:
+                        credentials, host = rest.split('@', 1)
+                        if ':' in credentials:
+                            user = credentials.split(':')[0]
+                            masked_url = f"{protocol}://{user}:***@{host}"
+            except Exception:
+                pass  # If masking fails, show partial URL
             self.stdout.write(f"  DATABASE_URL: {masked_url}")
         else:
             self.stdout.write(self.style.ERROR("  DATABASE_URL: Not set!"))
