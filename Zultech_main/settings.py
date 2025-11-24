@@ -249,22 +249,10 @@ SOCIALACCOUNT_PROVIDERS = {
         'APP': {
             'client_id': os.environ.get('OAUTH_FACEBOOK_ID', ''),
             'secret': os.environ.get('OAUTH_FACEBOOK_SECRET', ''),
-            'key': ''
         },
-        'METHOD': 'oauth2',
-        'SCOPE': ['email', 'public_profile'],
-        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
-        'FIELDS': [
-            'id',
-            'email',
-            'name',
-            'first_name',
-            'last_name',
-            'verified',
-        ],
-        'EXCHANGE_TOKEN': True,
-        'VERIFIED_EMAIL': False,
-        'VERSION': 'v18.0',
+        'AUTH_PARAMS': {
+            'auth_type': 'reauthenticate',
+        },
     },
 }
 
