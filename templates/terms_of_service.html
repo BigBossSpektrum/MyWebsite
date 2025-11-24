@@ -1,0 +1,116 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Términos de Servicio - Zultech</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container my-5">
+        <h1 class="mb-4">Términos de Servicio</h1>
+        
+        <p class="text-muted">Última actualización: 24 de noviembre de 2025</p>
+        
+        <section class="mb-4">
+            <h2>1. Aceptación de los Términos</h2>
+            <p>Al acceder y utilizar los servicios de Zultech, aceptas estar legalmente vinculado por estos Términos de Servicio. Si no estás de acuerdo con estos términos, no utilices nuestros servicios.</p>
+        </section>
+
+        <section class="mb-4">
+            <h2>2. Descripción del Servicio</h2>
+            <p>Zultech proporciona una plataforma de comercio electrónico que permite a los usuarios:</p>
+            <ul>
+                <li>Navegar y comprar productos</li>
+                <li>Gestionar pedidos y carritos de compra</li>
+                <li>Comunicarse a través de nuestro sistema de chat</li>
+                <li>Acceder mediante autenticación social (Google, Facebook, GitHub)</li>
+            </ul>
+        </section>
+
+        <section class="mb-4">
+            <h2>3. Registro y Cuenta de Usuario</h2>
+            <p>Para utilizar ciertas funciones del servicio, debes crear una cuenta. Te comprometes a:</p>
+            <ul>
+                <li>Proporcionar información precisa y actualizada</li>
+                <li>Mantener la seguridad de tu cuenta</li>
+                <li>Notificarnos de cualquier uso no autorizado</li>
+                <li>Ser responsable de todas las actividades bajo tu cuenta</li>
+            </ul>
+        </section>
+
+        <section class="mb-4">
+            <h2>4. Uso Aceptable</h2>
+            <p>Al utilizar nuestros servicios, aceptas NO:</p>
+            <ul>
+                <li>Violar leyes o regulaciones aplicables</li>
+                <li>Infringir derechos de propiedad intelectual</li>
+                <li>Transmitir contenido ofensivo, ilegal o dañino</li>
+                <li>Intentar acceder sin autorización a sistemas o datos</li>
+                <li>Interferir con el funcionamiento normal del servicio</li>
+            </ul>
+        </section>
+
+        <section class="mb-4">
+            <h2>5. Pedidos y Pagos</h2>
+            <p>Al realizar un pedido:</p>
+            <ul>
+                <li>Confirmas que la información proporcionada es correcta</li>
+                <li>Aceptas pagar el precio indicado más los costos aplicables</li>
+                <li>Entiendes que los pedidos están sujetos a disponibilidad</li>
+                <li>Nos reservamos el derecho de rechazar o cancelar pedidos</li>
+            </ul>
+        </section>
+
+        <section class="mb-4">
+            <h2>6. Propiedad Intelectual</h2>
+            <p>Todo el contenido del sitio, incluyendo texto, gráficos, logos, imágenes y software, es propiedad de Zultech y está protegido por leyes de propiedad intelectual.</p>
+        </section>
+
+        <section class="mb-4">
+            <h2>7. Limitación de Responsabilidad</h2>
+            <p>Zultech no será responsable por:</p>
+            <ul>
+                <li>Daños indirectos, incidentales o consecuentes</li>
+                <li>Pérdida de beneficios o datos</li>
+                <li>Interrupciones del servicio</li>
+                <li>Errores o inexactitudes en el contenido</li>
+            </ul>
+        </section>
+
+        <section class="mb-4">
+            <h2>8. Privacidad</h2>
+            <p>El uso de nuestros servicios también está regido por nuestra <a href="{% url 'website:privacy_policy' %}">Política de Privacidad</a>, que describe cómo recopilamos y utilizamos tu información.</p>
+        </section>
+
+        <section class="mb-4">
+            <h2>9. Modificaciones</h2>
+            <p>Nos reservamos el derecho de modificar estos términos en cualquier momento. Las modificaciones entrarán en vigor al ser publicadas en el sitio. El uso continuado del servicio después de los cambios constituye tu aceptación de los nuevos términos.</p>
+        </section>
+
+        <section class="mb-4">
+            <h2>10. Terminación</h2>
+            <p>Podemos suspender o terminar tu acceso a los servicios inmediatamente, sin previo aviso, por cualquier motivo, incluyendo el incumplimiento de estos Términos de Servicio.</p>
+        </section>
+
+        <section class="mb-4">
+            <h2>11. Ley Aplicable</h2>
+            <p>Estos términos se rigen por las leyes aplicables en tu jurisdicción. Cualquier disputa se resolverá en los tribunales competentes.</p>
+        </section>
+
+        <section class="mb-4">
+            <h2>12. Contacto</h2>
+            <p>Si tienes preguntas sobre estos Términos de Servicio, contáctanos en:</p>
+            <p>Email: silvekerhernandez@proton.me</p>
+        </section>
+
+        <div class="mt-5">
+            <a href="{% url 'website:Dashboard' %}" class="btn btn-primary">Volver al Inicio</a>
+            <a href="{% url 'website:privacy_policy' %}" class="btn btn-outline-secondary">Ver Política de Privacidad</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
