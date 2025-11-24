@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminación de Datos - Zultech</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container my-5">
+        <h1 class="mb-4">Instrucciones para Eliminación de Datos</h1>
+        
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> Esta página describe cómo puedes solicitar la eliminación de tus datos de nuestra aplicación.
+        </div>
+
+        <section class="mb-4">
+            <h2>Datos que Almacenamos</h2>
+            <p>Cuando utilizas nuestros servicios de autenticación social (Facebook, Google, GitHub), almacenamos:</p>
+            <ul>
+                <li>Tu nombre</li>
+                <li>Tu dirección de correo electrónico</li>
+                <li>Tu ID de usuario de la plataforma social</li>
+                <li>Token de acceso (si corresponde)</li>
+            </ul>
+        </section>
+
+        <section class="mb-4">
+            <h2>Cómo Solicitar la Eliminación de tus Datos</h2>
+            <p>Si deseas eliminar todos tus datos de nuestra aplicación, tienes dos opciones:</p>
+            
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Opción 1: Eliminar desde tu Cuenta</h5>
+                    <ol>
+                        <li>Inicia sesión en tu cuenta</li>
+                        <li>Ve a Configuración de la Cuenta</li>
+                        <li>Selecciona "Eliminar mi Cuenta"</li>
+                        <li>Confirma la eliminación</li>
+                    </ol>
+                    <p class="text-muted">Tus datos serán eliminados inmediatamente y de forma permanente.</p>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Opción 2: Contactar con Soporte</h5>
+                    <p>Envíanos un correo electrónico a:</p>
+                    <p><strong>silvekerhernandez@proton.me</strong></p>
+                    <p>Incluye en el asunto: "Solicitud de Eliminación de Datos"</p>
+                    <p>Procesaremos tu solicitud dentro de 30 días.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-4">
+            <h2>Eliminación de Datos de Facebook</h2>
+            <p>Si iniciaste sesión con Facebook y deseas eliminar los datos que Facebook compartió con nosotros:</p>
+            <ol>
+                <li>Ve a la configuración de tu cuenta de Facebook</li>
+                <li>Busca "Aplicaciones y Sitios Web"</li>
+                <li>Encuentra "Zultech secure system" en la lista</li>
+                <li>Haz clic en "Eliminar"</li>
+            </ol>
+            <p class="text-muted">También puedes contactarnos directamente para que eliminemos tu información manualmente.</p>
+        </section>
+
+        <section class="mb-4">
+            <h2>¿Qué Sucede Después?</h2>
+            <p>Una vez que se procese tu solicitud de eliminación:</p>
+            <ul>
+                <li>Todos tus datos personales serán eliminados permanentemente</li>
+                <li>Tu cuenta será desactivada</li>
+                <li>Ya no podrás acceder a nuestros servicios con esa cuenta</li>
+                <li>Recibirás una confirmación por correo electrónico</li>
+            </ul>
+        </section>
+
+        <div class="alert alert-warning">
+            <strong>Importante:</strong> La eliminación de datos es permanente y no se puede deshacer. Asegúrate de que realmente deseas eliminar tu cuenta antes de proceder.
+        </div>
+
+        <div class="mt-5">
+            <a href="{% url 'website:Dashboard' %}" class="btn btn-primary">Volver al Inicio</a>
+            <a href="{% url 'website:privacy_policy' %}" class="btn btn-outline-secondary">Ver Política de Privacidad</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

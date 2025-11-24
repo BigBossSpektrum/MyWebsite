@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.facebook',
     # Django Channels
     'channels',
     # Local apps
@@ -243,6 +244,15 @@ SOCIALACCOUNT_PROVIDERS = {
             'user:email',
         ],
         'FETCH_USER_DETAILS': True,  # Forzar obtención de detalles del usuario
+    },
+    'facebook': {
+        'APP': {
+            'client_id': os.environ.get('OAUTH_FACEBOOK_ID', ''),
+            'secret': os.environ.get('OAUTH_FACEBOOK_SECRET', ''),
+        },
+        'AUTH_PARAMS': {
+            'auth_type': 'reauthenticate',
+        },
     },
 }
 
