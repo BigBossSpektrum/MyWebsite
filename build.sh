@@ -14,6 +14,9 @@ echo ""
 echo "Collecting static files..."
 python manage.py collectstatic --no-input
 
+# Crear superusuario automático si no existe
+python manage.py createsuperuser --noinput || true
+
 echo ""
 echo "Running migrations..."
 python manage.py migrate
