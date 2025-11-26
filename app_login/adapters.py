@@ -31,9 +31,29 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
         """
         Se ejecuta antes del login social.
         Conecta cuentas sociales con usuarios existentes basándose en el email.
+        Actualiza la foto de perfil si está disponible.
         """
         # Si el usuario ya está autenticado, no hacemos nada
         if sociallogin.is_existing:
+            # Actualizar foto de perfil si no existe
+            user = sociallogin.user
+            extra_data = sociallogin.account.extra_data
+            picture_url = extra_data.get('picture') or extra_data.get('avatar_url')
+            
+            if picture_url and not user.Foto_Perfil:
+                try:
+                    logger.info(f"Actualizando foto de perfil para usuario existente: {user.username}")
+                    response = requests.get(picture_url, timeout=10)
+                    if response.status_code == 200:
+                        file_name = f"profile_{user.username}.jpg"
+                        user.Foto_Perfil.save(
+                            file_name,
+                            ContentFile(response.content),
+                            save=True
+                        )
+                        logger.info(f"Foto de perfil actualizada para {user.username}")
+                except Exception as e:
+                    logger.error(f"Error al actualizar foto de perfil: {e}")
             return
         
         # Intentar obtener el email de la cuenta social
@@ -49,6 +69,25 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
             user = User.objects.get(email=email)
             # Conectar la cuenta social con el usuario existente
             sociallogin.connect(request, user)
+            
+            # Actualizar foto de perfil si no existe
+            extra_data = sociallogin.account.extra_data
+            picture_url = extra_data.get('picture') or extra_data.get('avatar_url')
+            
+            if picture_url and not user.Foto_Perfil:
+                try:
+                    logger.info(f"Descargando foto de perfil para usuario conectado: {user.username}")
+                    response = requests.get(picture_url, timeout=10)
+                    if response.status_code == 200:
+                        file_name = f"profile_{user.username}.jpg"
+                        user.Foto_Perfil.save(
+                            file_name,
+                            ContentFile(response.content),
+                            save=True
+                        )
+                        logger.info(f"Foto de perfil guardada para {user.username}")
+                except Exception as e:
+                    logger.error(f"Error al descargar foto de perfil: {e}")
         except User.DoesNotExist:
             # El usuario no existe, se creará automáticamente
             pass
@@ -82,10 +121,11 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
             if len(name_parts) > 1:
                 user.last_name = name_parts[1]
         
-        # Descargar y guardar la foto de perfil de Google
-        picture_url = extra_data.get('picture')
+        # Descargar y guardar la foto de perfil
+        picture_url = extra_data.get('picture') or extra_data.get('avatar_url')
         if picture_url and not user.Foto_Perfil:
             try:
+                logger.info(f"Descargando foto de perfil desde: {picture_url}")
                 response = requests.get(picture_url, timeout=10)
                 if response.status_code == 200:
                     # Extraer el nombre del archivo del usuario
@@ -95,9 +135,11 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
                         ContentFile(response.content),
                         save=False
                     )
-            except Exception:
-                # Si falla la descarga de la imagen, continuar sin ella
-                pass
+                    logger.info(f"Foto de perfil guardada exitosamente para {user.username}")
+                else:
+                    logger.warning(f"Error al descargar foto de perfil. Status code: {response.status_code}")
+            except Exception as e:
+                logger.error(f"Error al descargar la imagen de perfil: {e}")
         
         # Asignar rol de CUSTOMER por defecto para cuentas sociales
         if not user.role:

@@ -67,6 +67,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.github',
     'allauth.socialaccount.providers.facebook',
+    # Cloudinary for media storage
+    'cloudinary_storage',
+    'cloudinary',
     # Django Channels
     'channels',
     # Local apps
@@ -248,10 +251,12 @@ SOCIALACCOUNT_PROVIDERS = {
         'SCOPE': [
             'profile',
             'email',
+            'openid',
         ],
         'AUTH_PARAMS': {
             'access_type': 'online',
         },
+        'FETCH_USERINFO': True,
     },
     'github': {
         'APP': {
@@ -279,9 +284,23 @@ SOCIALACCOUNT_PROVIDERS = {
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
 SOCIALACCOUNT_LOGIN_ON_GET = True  # Reactivado para probar login automático
 
+# Cloudinary Configuration for Media Storage (Render persistent storage)
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME', ''),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY', ''),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET', ''),
+}
+
 # Media files
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+
+# Use Cloudinary for media storage in production (Render)
+if IS_RENDER and CLOUDINARY_STORAGE['CLOUD_NAME']:
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    MEDIA_ROOT = None  # No local storage needed
+else:
+    # Local storage for development
+    MEDIA_ROOT = BASE_DIR / 'media'
 
 # Email Configuration
 EMAIL_BACKEND_ENV = os.environ.get('EMAIL_BACKEND', 'console')
