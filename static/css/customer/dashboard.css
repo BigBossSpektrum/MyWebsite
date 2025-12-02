@@ -76,6 +76,26 @@
     background: #2d2d2d;
 }
 
+.profile-info {
+    padding: 15px;
+}
+
+.profile-info p {
+    margin-bottom: 10px;
+    font-size: 1em;
+}
+
+.profile-info strong {
+    color: #ffd700;
+}
+
+.badge {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.85em;
+    font-weight: 600;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .dashboard-content {

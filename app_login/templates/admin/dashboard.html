@@ -10,17 +10,17 @@
         <div class="stat-card">
             <h3>Usuarios Totales</h3>
             <p>{{ total_users|default:"0" }}</p>
-            <a href="" class="admin-link">Gestionar Usuarios</a>
+            <a href="{% url 'admin:app_login_customuser_changelist' %}" class="admin-link">Gestionar Usuarios</a>
         </div>
         <div class="stat-card">
             <h3>Productos</h3>
             <p>{{ total_products|default:"0" }}</p>
-            <a href="#" class="admin-link">Gestionar Productos</a>
+            <a href="{% url 'admin:app_products_product_changelist' %}" class="admin-link">Gestionar Productos</a>
         </div>
         <div class="stat-card">
             <h3>Pedidos Pendientes</h3>
             <p>{{ pending_orders|default:"0" }}</p>
-            <a href="#" class="admin-link">Ver Pedidos</a>
+            <a href="{% url 'admin:app_orders_order_changelist' %}" class="admin-link">Ver Pedidos</a>
         </div>
     </div>
 
@@ -58,17 +58,37 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Cliente</th>
+                                <th>Total</th>
                                 <th>Estado</th>
+                                <th>Fecha</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for order in latest_orders %}
-                            <tr>
-                                <td>{{ order.id }}</td>
-                                <td>{{ order.user.username }}</td>
-                                <td>{{ order.get_status_display }}</td>
-                            </tr>
-                            {% endfor %}
+                            {% if latest_orders %}
+                                {% for order in latest_orders %}
+                                <tr>
+                                    <td>{{ order.id|truncatechars:8 }}</td>
+                                    <td>{{ order.user.username }}</td>
+                                    <td>${{ order.total|floatformat:2 }}</td>
+                                    <td>
+                                        <span class="badge 
+                                            {% if order.status == 'pending' %}bg-warning
+                                            {% elif order.status == 'processing' %}bg-info
+                                            {% elif order.status == 'completed' %}bg-success
+                                            {% elif order.status == 'cancelled' %}bg-danger
+                                            {% else %}bg-secondary
+                                            {% endif %}">
+                                            {{ order.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>{{ order.created_at|date:"d/m/Y H:i" }}</td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="5" class="text-center">No hay pedidos aún</td>
+                                </tr>
+                            {% endif %}
                         </tbody>
                     </table>
                 </div>

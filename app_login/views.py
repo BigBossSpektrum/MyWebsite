@@ -192,13 +192,17 @@ def profile_view(request):
 
 @admin_required
 def admin_dashboard_view(request):
+    # Importar modelos necesarios
+    from app_products.models import Product
+    from app_orders.models import Order
+    
     # Datos para el dashboard de administrador
     context = {
         'total_users': CustomUser.objects.count(),
-        'total_products': 0,  # TODO: Obtener de app_products
-        'pending_orders': 0,  # TODO: Obtener de app_orders
+        'total_products': Product.objects.count(),
+        'pending_orders': Order.objects.filter(status='pending').count(),
         'latest_users': CustomUser.objects.order_by('-date_joined')[:5],
-        'latest_orders': []  # TODO: Obtener de app_orders
+        'latest_orders': Order.objects.select_related('user').order_by('-created_at')[:10]
     }
     return render(request, 'admin/dashboard.html', context)
 
@@ -206,11 +210,28 @@ def admin_dashboard_view(request):
 def customer_dashboard_view(request):
     if request.user.is_admin():
         return HttpResponseRedirect(reverse('admin_dashboard'))
+    
+    # Importar modelos necesarios
+    from app_orders.models import Order
+    from app_cart.models import Cart
+    
+    # Obtener pedidos del usuario
+    user_orders = Order.objects.filter(user=request.user).order_by('-created_at')[:5]
+    total_orders = Order.objects.filter(user=request.user).count()
+    
+    # Obtener items del carrito
+    try:
+        cart = Cart.objects.get(user=request.user)
+        cart_items = cart.get_total_items()
+    except Cart.DoesNotExist:
+        cart_items = 0
+    
     # Datos para el dashboard de cliente
     context = {
-        'total_orders': 0,  # TODO: Obtener pedidos del cliente
-        'cart_items': 0,  # TODO: Obtener items en carrito
-        'wishlist_items': 0  # TODO: Obtener items en lista de deseos
+        'total_orders': total_orders,
+        'cart_items': cart_items,
+        'wishlist_items': 0,  # TODO: Implementar lista de deseos
+        'user_orders': user_orders,
     }
     return render(request, 'customer/dashboard.html', context)
 
